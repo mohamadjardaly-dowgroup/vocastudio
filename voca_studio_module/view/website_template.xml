@@ -2,7 +2,7 @@
     <data>
 
         <template id="homepage" inherit_id="website.homepage">
-            <xpath expr="//section[@class='s_three_columns o_colored_level pt0 pb0'][1]/div[@class='container'][1]" position="after">
+            <xpath expr="//section[hasclass('s_three_columns o_colored_level pt0 pb0')[1]/div[hasclass('container')][1]" position="after">
                 <t t-set="teachers" t-value="teacher_id"/>
                 <t t-call="voca_studio_module.slider_with_teacher"/>
 
