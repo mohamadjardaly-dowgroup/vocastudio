@@ -66,12 +66,12 @@
                 right: 10px;
                 }
             </style>
-             <div>
+<!--              <div>
                     <h6>
                                     Our Teacher
 
                     </h6>
-                </div>
+                </div> -->
             <div class="teacher-slider-wrapper">
 
                 <!-- Slider Buttons -->
