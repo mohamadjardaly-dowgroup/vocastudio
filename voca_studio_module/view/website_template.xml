@@ -2,7 +2,7 @@
     <data>
 
         <template id="homepage" inherit_id="website.homepage">
-            <xpath expr="//section[3]" position="inside">
+            <xpath expr="//t[1]/t[1]" position="inside">
                 <t t-set="teachers" t-value="teacher_id"/>
                 <t t-call="voca_studio_module.slider_with_teacher"/>
 
