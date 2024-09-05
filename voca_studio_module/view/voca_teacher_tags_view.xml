@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_voca_teacher_tags_form" model="ir.ui.view">
+            <field name="name">voca.teacher.tags.form</field>
+            <field name="model">voca.teacher.tags</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_voca_teacher_tags_tree" model="ir.ui.view">
+            <field name="name">voca.teacher.tags.tree</field>
+            <field name="model">voca.teacher.tags</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_voca_teacher_tags_tree" model="ir.actions.act_window">
+            <field name="name">Teacher</field>
+            <field name="res_model">voca.teacher.tags</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new teacher.
+                </p>
+            </field>
+        </record>
+        <!-- Menu Item -->
+        <menuitem id="menu_tags" name="Tags" parent="menu_teacher_list" action="action_voca_teacher_tags_tree"/>
+
+    </data>
+</odoo>

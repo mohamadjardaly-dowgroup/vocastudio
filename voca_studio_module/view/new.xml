@@ -1,0 +1,402 @@
+<t name="Homepage" t-name="website.homepage">
+    <t t-call="website.layout">
+        <t t-set="pageName" t-value="'homepage'"/>
+        <div id="wrap" class="oe_structure oe_empty">
+            <section class="s_text_image o_colored_level pt16 pb24" data-snippet="s_text_image" data-name="Text - Image"
+                     style="background-color: rgb(102, 86, 165); background-image: none;">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 pt16 pb16 o_colored_level">
+                            <h2 class="o_default_snippet_text">
+                                <span class="display-4-fs">
+                                    <strong>
+                                        <font class="text-o-color-4">
+                                            <span class="display-3-fs">Learn, from Experts,&amp;nbsp;</span>
+                                        </font>
+                                    </strong>
+                                </span>
+                            </h2>
+                            <h2 class="o_default_snippet_text">
+                                <span class="display-4-fs">
+                                    <strong>
+                                        <font class="text-o-color-4">
+                                            <span class="display-3-fs">Professionally.</span>
+                                        </font>
+                                    </strong>
+                                </span>
+                            </h2>
+                            <p>
+                                <a href="#" class="btn btn-fill-custom bg-black rounded-circle btn-lg"
+                                   data-bs-original-title="" title="" style="border-width: 0px; border-style: solid;">
+                                    Start Today
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col-lg-6 o_colored_level pt0 pb0 rounded" style="border-radius: 50px !important;">
+                            <img src="/web/image/175-d8190ae5/2.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image rounded" data-mimetype="image/webp"
+                                 data-original-id="173" data-original-src="/web/image/173-e84e311d/2.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="690" loading="lazy"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block o_colored_level pt48 pb0" data-snippet="s_text_block" data-name="Text"
+                     wfd-invisible="true" style="background-image: none;">
+                <div class="s_allow_columns container">
+                    <h6 class="o_default_snippet_text">
+                        <span class="display-4-fs">Our Teachers</span>
+                    </h6>
+                    <h6 class="o_default_snippet_text">
+                        <span class="h3-fs">Find the Perfect Lessons for you</span>
+                    </h6>
+                </div>
+            </section>
+            <section class="s_three_columns o_colored_level pt0 pb0" data-vcss="001" data-snippet="s_three_columns"
+                     data-name="Columns" wfd-invisible="true" style="background-image: none;">
+                <div class="container">
+                    <div class="row d-flex align-items-stretch">
+                        <div class="s_col_no_bgcolor pt16 pb16 col-lg-3">
+                            <div class="card text-bg-white h-100">
+                                <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_1"
+                                     alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="77"
+                                     data-original-src="/web/image/website.library_image_11"
+                                     data-mimetype-before-conversion="image/jpeg"/>
+                                <div class="card-body">
+                                    <h3 class="card-title o_default_snippet_text">Feature One</h3>
+                                    <p class="card-text o_default_snippet_text">Adapt these three columns to fit your
+                                        design need. To duplicate, delete or move columns, select the column and use the
+                                        top icons to perform your action.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_col_no_bgcolor pt16 pb16 col-lg-3">
+                            <div class="card text-bg-white h-100">
+                                <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_2"
+                                     alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="78"
+                                     data-original-src="/web/image/website.library_image_13"
+                                     data-mimetype-before-conversion="image/jpeg"/>
+                                <div class="card-body">
+                                    <h3 class="card-title o_default_snippet_text">Feature Two</h3>
+                                    <p class="card-text o_default_snippet_text">To add a fourth column, reduce the size
+                                        of these three columns using the right icon of each block. Then, duplicate one
+                                        of the columns to create a new one as a copy.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_col_no_bgcolor pt16 pb16 col-lg-3">
+                            <div class="card text-bg-white h-100">
+                                <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_3"
+                                     alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="79"
+                                     data-original-src="/web/image/website.library_image_07"
+                                     data-mimetype-before-conversion="image/jpeg"/>
+                                <div class="card-body">
+                                    <h3 class="card-title o_default_snippet_text">Feature Three</h3>
+                                    <p class="card-text o_default_snippet_text">Delete the above image or replace it
+                                        with a picture that illustrates your message. Click on the picture to change its <em
+                                                class="o_default_snippet_text">rounded corner
+                                        </em> style.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_col_no_bgcolor pt16 pb16 col-lg-3">
+                            <div class="card text-bg-white h-100">
+                                <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_3"
+                                     alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="79"
+                                     data-original-src="/web/image/website.library_image_07"
+                                     data-mimetype-before-conversion="image/jpeg"/>
+                                <div class="card-body">
+                                    <h3 class="card-title o_default_snippet_text">Feature Three</h3>
+                                    <p class="card-text o_default_snippet_text">Delete the above image or replace it
+                                        with a picture that illustrates your message. Click on the picture to change its <em
+                                                class="o_default_snippet_text">rounded corner
+                                        </em> style.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block o_colored_level pt4 pb0" data-snippet="s_text_block" data-name="Text"
+                     wfd-invisible="true" style="background-image: none;">
+                <div class="container s_allow_columns">
+                    <p class="o_default_snippet_text">
+                        <br/>
+                    </p>
+                    <div class="s_hr text-start pt4 pb8" data-snippet="s_hr" data-name="Separator" wfd-invisible="true">
+                        <hr class="w-100 mx-auto" style="border-top: 1px solid rgb(0, 0, 0);"/>
+                    </div>
+                    <p class="o_default_snippet_text">
+                        <br/>
+                    </p>
+                </div>
+            </section>
+            <section class="s_text_block o_colored_level pb0 pt0" data-snippet="s_text_block" data-name="Text"
+                     wfd-invisible="true" style="background-image: none;">
+                <div class="container s_allow_columns">
+                    <h6 class="o_default_snippet_text">
+                        <span class="display-4-fs">How Voca Studio Works</span>
+                    </h6>
+                </div>
+            </section>
+            <section class="s_masonry_block o_colored_level pb32" data-vcss="001" data-vxml="001"
+                     data-snippet="s_masonry_block" data-name="Masonry" wfd-invisible="true"
+                     style="background-image: none;">
+                <div class="container">
+                    <div class="row o_grid_mode" data-row-count="9" style="column-gap: 20px;">
+
+
+                        <div class="o_grid_item text-center o_cc o_cc2 o_colored_level g-col-lg-4 border rounded g-height-9 col-lg-4 oe_img_bg o_bg_img_center"
+                             data-name="Block"
+                             style="z-index: 5; background-image: url(&quot;/web/image/186-07b1754b/3.webp&quot;); grid-area: 1 / 1 / 10 / 5; border-width: 1px !important; border-color: rgb(17, 24, 39) !important; border-radius: 10px !important; --grid-item-padding-x: 30px;"
+                             data-mimetype="image/webp" data-original-id="182"
+                             data-original-src="/web/image/182-15b3a3a6/3.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="572">
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <font class="text-o-color-4 bg-400">&amp;nbsp; &amp;nbsp;1&amp;nbsp; &amp;nbsp;</font>
+                            </h3>
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <span class="h2-fs">Find the perfect tutor</span>
+                            </h3>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                        </div>
+                        <div class="o_grid_item text-center o_cc o_cc2 o_colored_level g-col-lg-4 border rounded g-height-9 col-lg-4 oe_img_bg o_bg_img_center"
+                             data-name="Block"
+                             style="z-index: 5; background-image: url(&quot;/web/image/187-c62db0af/4.webp&quot;); border-width: 1px !important; border-color: rgb(17, 24, 39) !important; border-radius: 10px !important; --grid-item-padding-x: 30px; grid-area: 1 / 5 / 10 / 9;"
+                             data-mimetype="image/webp" data-original-id="183"
+                             data-original-src="/web/image/183-24895b45/4.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="572">
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <font class="text-o-color-4 bg-400">&amp;nbsp; &amp;nbsp;2&amp;nbsp; &amp;nbsp;</font>
+                            </h3>
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <span class="h2-fs">Start learning</span>
+                            </h3>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                        </div>
+                        <div class="o_grid_item text-center o_cc o_cc2 o_colored_level g-col-lg-4 border rounded g-height-9 col-lg-4 oe_img_bg o_bg_img_center"
+                             data-name="Block"
+                             style="z-index: 5; background-image: url(&quot;/web/image/188-8ea4f120/5.webp&quot;); border-width: 1px !important; border-color: rgb(17, 24, 39) !important; border-radius: 10px !important; --grid-item-padding-x: 30px; grid-area: 1 / 9 / 10 / 13;"
+                             data-mimetype="image/webp" data-original-id="184"
+                             data-original-src="/web/image/184-72d27452/5.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="572">
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <font class="text-o-color-4 bg-400">&amp;nbsp; &amp;nbsp;3&amp;nbsp; &amp;nbsp;</font>
+                            </h3>
+                            <h3 class="o_default_snippet_text" style="text-align: left;">
+                                <span class="h2-fs">Improve your musical skills</span>
+                            </h3>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="o_default_snippet_text" style="text-align: left;">
+                                <br/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block o_colored_level pt48 pb0 o_cc o_cc4" data-snippet="s_text_block"
+                     data-name="Text" wfd-invisible="true">
+                <div class="s_allow_columns container">
+                    <h6 class="o_default_snippet_text">
+                        <span class="display-4-fs">
+                            <font class="text-o-color-4">Upcoming Masterclasses</font>
+                        </span>
+                        <br/>
+                    </h6>
+                    <h6 class="o_default_snippet_text">
+                        <span class="h3-fs">
+                            <font class="text-o-color-4">Live Online Masterclasses Are Given By Music Professionals.
+                                (Limited Seats)
+                            </font>
+                        </span>
+                        <br/>
+                    </h6>
+                </div>
+            </section>
+            <section class="s_carousel_wrapper" data-vxml="001" data-snippet="s_carousel" data-name="Carousel"
+                     wfd-invisible="true">
+                <div class="s_carousel s_carousel_default carousel slide" data-bs-interval="10000"
+                     id="myCarousel1722938885806" style="background-color: rgb(102, 86, 165);">
+
+                    <ol class="carousel-indicators o_we_no_overlay d-none">
+                        <li data-bs-slide-to="0" class="active" data-bs-target="#myCarousel1722938885806"
+                            aria-current="true"/>
+
+
+                    </ol>
+
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item o_colored_level pb40 pt40 active" style="background-image: none;"
+                             data-name="Slide">
+                            <div class="oe_unremovable container">
+                                <div class="row o_grid_mode" data-row-count="6">
+
+                                    <div class="carousel-content o_colored_level o_grid_item g-col-lg-2 g-height-5 col-lg-2"
+                                         style="z-index: 1; grid-area: 1 / 1 / 6 / 3;">
+                                        <h2 class="display-3-fs o_default_snippet_text">
+                                            <img src="/web/image/185-a34abac7/6.jpg" alt=""
+                                                 class="img img-fluid o_we_custom_image rounded-circle"
+                                                 data-mimetype="image/jpeg" data-original-id="185"
+                                                 data-original-src="/web/image/185-a34abac7/6.jpg"
+                                                 data-mimetype-before-conversion="image/jpeg"
+                                                 style="width: 100% !important;" loading="lazy"/>
+                                        </h2>
+                                    </div>
+                                    <div class="carousel-content o_colored_level o_grid_item g-height-6 g-col-lg-4 col-lg-4"
+                                         style="z-index: 2; grid-area: 1 / 3 / 7 / 7;">
+                                        <h6 class="o_default_snippet_text">
+                                            <span class="h2-fs">
+                                                <font class="text-o-color-4">Subject&amp;nbsp; comes here</font>
+                                            </span>
+                                        </h6>
+                                        <p class="lead o_default_snippet_text">
+                                            <font class="text-o-color-4">Instructor/s: Steve Glazer&amp;nbsp;<br/>Date:&amp;nbsp;
+                                                <br/>Time:&amp;nbsp;<br/>Total hours: 5&amp;nbsp;<br/>lectures: 40
+                                            </font>
+                                        </p>
+                                        <p>
+                                            <a href="http://view details"
+                                               class="btn btn-outline-custom text-o-color-4 rounded-circle"
+                                               data-bs-original-title="" title=""
+                                               style="border-width: 1px; border-style: solid; border-color: rgb(233, 236, 239);">
+                                                View Details
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="carousel-content o_colored_level o_grid_item g-col-lg-2 g-height-5 col-lg-2"
+                                         style="z-index: 1; grid-area: 1 / 7 / 6 / 9;">
+                                        <h2 class="display-3-fs o_default_snippet_text">
+                                            <img src="/web/image/185-a34abac7/6.jpg" alt=""
+                                                 class="img img-fluid o_we_custom_image rounded-circle"
+                                                 data-mimetype="image/jpeg" data-original-id="185"
+                                                 data-original-src="/web/image/185-a34abac7/6.jpg"
+                                                 data-mimetype-before-conversion="image/jpeg"
+                                                 style="width: 100% !important;" loading="lazy"/>
+                                        </h2>
+                                    </div>
+                                    <div class="carousel-content o_colored_level o_grid_item g-height-6 g-col-lg-4 col-lg-4"
+                                         style="z-index: 2; grid-area: 1 / 9 / 7 / 13;">
+                                        <h6 class="o_default_snippet_text">
+                                            <span class="h2-fs">
+                                                <font class="text-o-color-4">Subject&amp;nbsp; comes here</font>
+                                            </span>
+                                        </h6>
+                                        <p class="lead o_default_snippet_text">
+                                            <font class="text-o-color-4">Instructor/s: Steve Glazer&amp;nbsp;<br/>Date:&amp;nbsp;
+                                                <br/>Time:&amp;nbsp;<br/>Total hours: 5&amp;nbsp;<br/>lectures: 40
+                                            </font>
+                                        </p>
+                                        <p>
+                                            <a href="http://view details"
+                                               class="btn btn-outline-custom text-o-color-4 rounded-circle"
+                                               data-bs-original-title="" title=""
+                                               style="border-width: 1px; border-style: solid; border-color: rgb(233, 236, 239);">
+                                                View Details
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <a class="carousel-control-prev o_not_editable o_we_no_overlay d-none" data-bs-slide="prev"
+                       role="img" aria-label="Previous" title="Previous" href="#myCarousel1722938885806">
+                        <span class="carousel-control-prev-icon"/>
+                        <span class="visually-hidden o_default_snippet_text">Previous</span>
+                    </a>
+                    <a class="carousel-control-next o_not_editable o_we_no_overlay d-none" data-bs-slide="next"
+                       role="img" aria-label="Next" title="Next" href="#myCarousel1722938885806">
+                        <span class="carousel-control-next-icon"/>
+                        <span class="visually-hidden o_default_snippet_text">Next</span>
+                    </a>
+                </div>
+            </section>
+            <section class="s_call_to_action o_colored_level pb0 pt32 o_cc o_cc3 bg-200" data-snippet="s_call_to_action"
+                     data-name="Call to Action" wfd-invisible="true">
+                <div class="container">
+                    <div class="row">
+                        <div class="pb16 o_colored_level col-lg-8">
+                            <h3 class="o_default_snippet_text">
+                                <b class="o_default_snippet_text">
+                                    <font class="text-o-color-2">
+                                        <span class="h2-fs">Join Us and Become a Teacher</span>
+                                    </font>
+                                </b>
+                                <br/>
+                            </h3>
+                            <p class="o_default_snippet_text">
+                                <font class="text-o-color-2">
+                                    <span class="h5-fs">You have the combination of technical knowledge, practical
+                                        experience, and effective communication skills, then you are ready to become a
+                                        teatcher
+                                    </span>
+                                </font>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 pt8 o_colored_level">
+                            <p style="text-align: right;">
+                                <a class="btn btn-custom bg-o-color-2 btn-lg" href="/contactus"
+                                   data-bs-original-title="" title="" style="border-width: 1px; border-style: solid;">
+                                    Join Us As A Teacher
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</t>
