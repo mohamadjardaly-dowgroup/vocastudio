@@ -91,7 +91,7 @@
                                     <t t-foreach="teacher.tag_ids" t-as="tag">
                                             <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges"
                                             >
-                                                <span t-field="tag.name"/>
+                                                <span class="badge o_wslides_channel_tag o_tag_color_3" t-field="tag.name"/>
 
                                             </div>
 
