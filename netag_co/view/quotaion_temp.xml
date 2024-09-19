@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="action_report_order_filter" model="ir.actions.report">
+            <field name="name">Quotation Template </field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">netag_co.report_quotation_custom</field>
+            <field name="report_file">netag_co.report_quotation_custom</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+        <!-- Quotation Template -->
+        <template id="report_quotation_custom">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <style>
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            th, td {
+                                border: 1px solid black;
+                                padding: 8px;
+                                text-align: left;
+                            }
+                        </style>
+                        <div class="header">
+                            <div class="container">
+                                <div class="row">
+                                <div class="col-3">
+                                    <h2><strong>Netag</strong></h2>
+                                    <p>Jadreya<br/>Baghdad, Iraq</p>
+                                    <strong>To:</strong>
+                                    <p class="no-margin" t-field="o.partner_id.name"/>
+                                    <p class="no-margin" t-field="o.partner_id.street"/>
+                                    <p class="no-margin" t-field="o.partner_id.city"/>
+                                </div>
+                               <div class="col-5 text-center align-top" style="margin-top: 20px;">
+                                <img src="netag_co/static/description/netaglogo.png" alt="No Image" height="300" width="300"/>
+                                </div>
+                                <div class="col-4">
+                                    <h2>QUOTATION</h2>
+                                    <p>QUOTATION# <span t-field="o.name"/><br/>DATE: <span t-field="o.date_order"/></p>
+                                </div>
+                            </div>
+                            </div>
+                            <table class="table table-striped table-sm"
+                               style="width: 100%; margin-top: 20px;text-align: center;">
+
+                                <thead>
+                                    <tr>
+                                        <th>SALESPERSON</th>
+                                        <th>P.O. NUMBER</th>
+                                        <th>REQUISITIONER</th>
+                                        <th>SHIPPED VIA</th>
+                                        <th>F.O.B. POINT</th>
+                                        <th>TERMS</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                        <tr>
+                                            <td>
+                                                 <t t-esc="o.user_id.name"/>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table class="table table-striped table-sm"
+                               style="width: 100%; margin-top: 20px;text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>QUANTITY</th>
+                                <th>DESCRIPTION</th>
+                                <th>UNIT PRICE</th>
+                                <th>TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.order_line" t-as="line">
+                                <tr>
+                                    <td><span t-field="line.product_uom_qty"/></td>
+                                    <td><span t-field="line.name"/></td>
+                                    <td><span t-field="line.price_unit"/></td>
+                                    <td><span t-field="line.price_subtotal"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                          <br/>
+                <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <div style="text-align: right;">
+                        <div style="border: 1px solid black; padding: 5px;">
+                            <p style="text-align: left;">SUBTOTAL: <span  t-field="o.amount_untaxed" t-options='{"widget": "monetary"}'/></p>
+                            <p style="text-align: left;">SALES TAX: <span  t-field="o.amount_tax" t-options='{"widget": "monetary"}'/></p>
+                            <!-- <p>SHIPPING HANDLING: <span t-field="o.amount_shipping" t-options='{"widget": "monetary"}'/></p> -->
+                            <p style="text-align: left;">TOTAL DUE: <span  t-field="o.amount_total" t-options='{"widget": "monetary"}'/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                            <div>
+                                <p>Make all checks payable to Netaj</p>
+                                <p>
+                                If you have any questions concerning this invoice, contact Wissam Mattout, +964-786 496 9235,
+                                </p>
+                                <p>
+                                wissam.mattout@netaj.biz
+                                </p>
+                            </div>
+
+                            <div class="text-center align-top">
+                                <strong style="text-align: center;">
+                                    THANK YOU FOR YOUR BUSINESS!
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <br/>
+                        <div>
+
+                        </div>
+                        test test
+                        <div>
+
+                        </div>
+                        <!-- Rest of the quotation template content here -->
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
