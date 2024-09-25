@@ -21,7 +21,10 @@
 #############################################################################
 
 from odoo import fields, models
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
 
+    user_password_restrict = fields.Boolean(string='User Password Restriction')
 
 class Partner(models.Model):
     """Inherited res partner model"""
