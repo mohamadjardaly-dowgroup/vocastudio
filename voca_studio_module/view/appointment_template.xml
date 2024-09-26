@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--        <template id="s2u_online_appointment.make_appointment" name="Online Appointment">-->
+<!--            <t t-call="website.layout">-->
+<!--                <style type="text/css">-->
+<!--                    .color_green a{background:green !important;}-->
+<!--                </style>-->
+<!--                <div class="container mb64" id="s2u_online_appointment">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-sm-12">-->
+<!--                            <form t-att-action="form_action" method="post" class="form-horizontal mt32"-->
+<!--                                  enctype="multipart/form-data">-->
+<!--                                <input type="hidden" name="form_criteria" id="form_criteria"-->
+<!--                                       t-att-value="form_criteria"/>-->
+<!--                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-lg-12">-->
+<!--                                        <div t-if="error_message" class="alert alert-danger" role="alert">-->
+<!--                                            <t t-foreach="error_message" t-as="err">-->
+<!--                                                <t t-esc="err"/>-->
+<!--                                                <br/>-->
+<!--                                            </t>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <t t-if="mode == 'registered'">-->
+<!--                                        <div class="form-group col-xl-6">-->
+<!--                                            <label class="control-label" for="name">Your Name</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" class="form-control" readonly="True" name="name"-->
+<!--                                                       t-att-value="name"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="form-group col-xl-6">-->
+<!--                                            <label class="control-label" for="name">Your Email</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" class="form-control" name="email" readonly="True"-->
+<!--                                                       t-att-value="email"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="form-group col-xl-6">-->
+<!--                                            <label class="control-label" for="name">Your Phone</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" class="form-control" name="phone" readonly="True"-->
+<!--                                                       t-att-value="phone"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </t>-->
+<!--                                    <t t-else="">-->
+<!--                                        <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">-->
+<!--                                            <label class="control-label" for="name">Your Name</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" name="name"-->
+<!--                                                       t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"-->
+<!--                                                       t-att-value="name" required="True"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">-->
+<!--                                            <label class="control-label" for="email">Your Email</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" name="email"-->
+<!--                                                       t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}"-->
+<!--                                                       t-att-value="email" required="True"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-xl-6">-->
+<!--                                            <label class="control-label" for="phone">Your Phone</label>-->
+<!--                                            <div>-->
+<!--                                                <input type="text" name="phone"-->
+<!--                                                       t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}"-->
+<!--                                                       t-att-value="phone" required="True"/>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </t>-->
+<!--                                    <div class="form-group col-xl-6"></div>-->
+<!--                                    <div class="form-group col-xl-6">-->
+<!--                                        <label class="control-label" for="appointment_option">Option</label>-->
+<!--                                        <div>-->
+<!--                                            <select id="appointment_option_id" required="True"-->
+<!--                                                    name="appointment_option_id" class="form-control">-->
+<!--                                                <option value="">Select</option>-->
+<!--                                                <t t-foreach="appointment_options" t-as="ao">-->
+<!--                                                    <option t-att-value="ao.id"-->
+<!--                                                            t-att-selected="ao.id == appointment_option_id">-->
+<!--                                                        <t t-esc="ao.name"/>-->
+<!--                                                    </option>-->
+<!--                                                </t>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group col-xl-6">-->
+<!--                                        <label class="control-label" for="appointee_id">With</label>-->
+<!--                                        <div>-->
+<!--                                            <select id="appointee_id" required="True" name="appointee_id"-->
+<!--                                                    class="form-control">-->
+<!--                                                <option value="">Select</option>-->
+<!--                                                <t t-foreach="appointees" t-as="o">-->
+<!--                                                    <option t-att-value="o.id" t-att-selected="o.id == appointee_id">-->
+<!--                                                        <t t-esc="o.name"/>-->
+<!--                                                    </option>-->
+<!--                                                </t>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div t-attf-class="form-group #{error and 'appointment_date' in error and 'has-error' or ''} col-xl-6">-->
+<!--                                        <label class="control-label" for="appointment_date">Appointment Date</label>-->
+<!--                                        <div>-->
+<!--                                            <div class='input-group date'>-->
+<!--                                                <input type="date" name="appointment_date" id="appointment_date"-->
+<!--                                                       class="form-control datepicker" required="True"-->
+<!--                                                       placeholder="dd/mm/yyyy" t-att-value="appointment_date"-->
+
+<!--                                                />-->
+<!--                                                &lt;!&ndash;                                               <input id ="appointment_date" name="appointment_date"  class="form-control datepicker" required="True" placeholder="dd/mm/yyyy" t-att-value="appointment_date"/>&ndash;&gt;-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group col-xl-6">-->
+<!--                                        <label class="control-label" for="timeslot_id">Timeslot</label>-->
+<!--                                        <div>-->
+<!--                                            <select id="timeslot_id" required="True" name="timeslot_id"-->
+<!--                                                    class="form-control">-->
+<!--                                                <option value="">Select</option>-->
+<!--                                                <t t-foreach="timeslots" t-as="t">-->
+<!--                                                    <option t-att-value="t['id']"-->
+<!--                                                            t-att-selected="t['id'] == timeslot_id">-->
+<!--                                                        <t t-esc="t['timeslot']"/>-->
+<!--                                                    </option>-->
+<!--                                                </t>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    &lt;!&ndash;                                    <div class="form-group col-lg-12">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <label class="control-label" for="remarks">Remarks</label>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <div>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <textarea class="form-control" cols="60" name="remarks" rows="6">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                <t t-esc="remarks"/>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </textarea>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </div>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    </div>&ndash;&gt;-->
+
+<!--                                    <div class="form-group col-lg-12">-->
+<!--                                        <div>-->
+<!--                                            <button class="btn btn-success">Submit</button>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </t>-->
+<!--        </template>-->
+
+<!--        <template id="s2u_online_appointment.only_registered_users" name="Only registered users">-->
+<!--            <t t-call="website.layout">-->
+<!--                <div id="wrap">-->
+<!--                    <div class="oe_structure">-->
+<!--                        <div class="container">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-12">-->
+<!--                                    <div class="alert alert-danger">-->
+<!--                                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>-->
+<!--                                        <h2>Sorry, no access!</h2>-->
+<!--                                        <p>To schedule an appointment please,-->
+<!--                                            <t t-if="request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'">-->
+<!--                                                <a t-attf-href="/web/signup?redirect={{ quote_plus(request.httprequest.path) }}">-->
+<!--                                                    Sign Up-->
+<!--                                                </a>-->
+<!--                                                or-->
+<!--                                            </t>-->
+<!--                                            <a t-attf-href="/web/login?redirect={{ quote_plus(request.httprequest.path) }}">-->
+<!--                                                Sign In-->
+<!--                                            </a>-->
+<!--                                            to access this page.-->
+<!--                                        </p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </t>-->
+<!--        </template>-->
+
+<!--        <template id="s2u_online_appointment.thanks" name="Appointment Scheduled">-->
+<!--            <t t-call="website.layout">-->
+<!--                <div id="wrap">-->
+<!--                    <div class="oe_structure"/>-->
+<!--                    <div class="container">-->
+<!--                        <div t-if="error_message" class="row">-->
+<!--                            <div class="col-lg-12">-->
+<!--                                <div class="alert alert-danger" role="alert">-->
+<!--                                    <t t-foreach="error_message" t-as="err">-->
+<!--                                        <t t-esc="err"/>-->
+<!--                                        <br/>-->
+<!--                                    </t>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div t-else="" class="row">-->
+<!--                            <div class="col-12">-->
+<!--                                <div class="alert alert-success">-->
+<!--                                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>-->
+<!--                                    <h2>Appointment scheduled!</h2>-->
+<!--                                    <t t-if="appointment">-->
+<!--                                        <p>Your Appointment-->
+<!--                                            <b>-->
+<!--                                                <span t-field="appointment.name"/>-->
+<!--                                            </b>-->
+<!--                                            has been scheduled for-->
+<!--                                            <b>-->
+<!--                                                <span t-field="appointment.start"/>-->
+<!--                                            </b>-->
+<!--                                            .-->
+<!--                                        </p>-->
+<!--                                    </t>-->
+<!--                                    <t t-else="">-->
+<!--                                        <p>Your Appointment has been scheduled.</p>-->
+<!--                                    </t>-->
+<!--                                    <p>Thank You!</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="oe_structure"/>-->
+<!--                </div>-->
+<!--            </t>-->
+<!--        </template>-->
+
+
+        <template id="voca_studio_module.teacher_profile_card">
+            <style>
+                .grid-container {
+                display: grid;
+                justify-content: center;
+                align-content: center;
+                grid-template-columns: auto auto auto;
+                gap: 1.5rem;
+                }
+                .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                }
+
+                .card {
+                border-radius: 25px;
+                border: 1px solid #e0e0e0;
+                padding: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                display: flex;
+                align-items: center;
+
+                /* Align the content to the center */
+                }
+
+                .card-body {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+
+                .card-left {
+                flex: 1;
+                text-align: left;
+                }
+
+                .card-right {
+                flex: 2;
+                text-align: left;
+                margin-left: 15px;
+                }
+
+                .card-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .btn-primary {
+                background-color: #00c4cc;
+                border-color: #00c4cc;
+                }
+
+                .btn-link {
+                color: #00c4cc;
+                }
+
+                .rounded-circle {
+                border-radius: 50%;
+                }
+
+                .row {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                }
+
+                .col-md-6 {
+                max-width: 50%;
+                padding: 10px;
+                box-sizing: border-box;
+                }
+
+                .back-button {
+                margin-top: 20px;
+                background-color: #f5f5f5;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                }
+
+                .back-button:hover {
+                background-color: #ddd;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <!--                                    <button class="back-button" onclick="window.location.href='/'">Back</button>-->
+                <script>
+                    var selectedCategoryId = null;
+
+                    function setCategoryId(element) {
+                    console.log("sssssssssssssssssssss ",element.id);
+
+                    selectedCategoryId = element.value;
+                    console.log("Selected Category ID: ", selectedCategoryId);
+
+                    }
+                </script>
+
+                <div class="container">
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+
+                    <!-- Back Button -->
+                    <div>
+                        <div class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
+                            <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto w-100">
+                                <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible justify-content-center">
+                                    <t t-foreach="categories" t-as="c">
+                                        <li style="margin-right: 15px;"
+                                        >
+                                            <input type="radio"
+                                                   t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                                   class="btn-check pe-none parent-category"
+                                                   t-att-id="c.id"
+
+                                                   t-att-value="c.id"/>
+                                            <div class="back-button">
+                                                <a
+                                                        onclick="setCategoryId(this)"
+                                                        t-attf-href="/teacher_profile/cat/#{c.id}?{{ keep_query() }}"
+                                                        t-att-id="c.id">
+                                                    <div
+                                                            t-att-alt="c.name "/>
+                                                    <span t-field="c.name"/>
+                                                </a>
+
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid-container">
+                        <!-- Start Profile Cards -->
+                        <t t-foreach="teachers" t-as="teacher" t-key="teacher.id">
+                            <div>
+                                <div class="card" style="height:335px;border-radius: 25px;">
+                                    <div class="card-body">
+                                        <!-- Left Section for Profile Image -->
+                                        <div class="card-left">
+                                            <img class="rounded-circle"
+                                                 t-attf-src="data:image/*;base64,{{teacher.image_1920}}"
+                                                 alt="Teacher Image"
+                                                 width="100" height="100"/>
+                                        </div>
+                                        <!-- Right Section for Name, Experience, and Details -->
+                                        <div class="card-right">
+                                            <h4 class="card-title">
+                                                <span t-field="teacher.instructor.name"/>
+                                            </h4>
+                                            <p class="card-text">
+                                                <span t-field="teacher.experience"/>
+                                            </p>
+                                            <div class="center">
+                                                <!-- Tags -->
+                                                <div style="display:flex">
+                                                    <t t-foreach="teacher.tag_ids" t-as="tag">
+                                                        <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
+                                                            <span class="badge o_wslides_channel_tag o_tag_color_3"
+                                                                  t-field="tag.name"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <!-- Short Bio -->
+                                                <p> <span t-field="teacher.about"/>
+                                                </p>
+
+
+                                                <!--                                                Book Lessons Button-->
+                                                <!--                                                <a href="/teacher_profile/#{teacher.id}" class="btn btn-primary">Book-->
+                                                <!--                                                    lessons-->
+                                                <!--                                                </a>-->
+                                                <a t-attf-href="/teacher_profile/#{teacher.id}?{{ keep_query() }}">See
+                                                    Full Profile
+                                                </a>
+                                                <button class="back-button"
+                                                        onclick="window.location.href='/online-appointment'">Book
+                                                    lessons
+                                                </button>
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+            </t>
+        </template>
+
+
+        <template id="voca_studio_module.teacher_profile_template" name="Teacher Full Profile">
+            <style>
+                .lesson-packages {
+                font-family: Arial, sans-serif;
+                }
+
+                .lesson-packages .package-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .lesson-packages .discount {
+                color: red;
+                font-weight: bold;
+                }
+
+                .lesson-packages .strikethrough {
+                text-decoration: line-through;
+                color: #888;
+                margin-left: 5px;
+                }
+
+                .lesson-packages .price {
+                font-weight: bold;
+                color: #000;
+                }
+
+                .lesson-packages td {
+                padding: 8px 16px;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+
+                <div class="container">
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+                    <t t-foreach="teacher" t-as="teacher">
+                        <div class="profile-header text-center">
+
+                            <img class="rounded-circle mb-3" t-attf-src="data:image/*;base64,{{teacher.image_1920}}"
+                                 alt="Teacher Image" width="150" height="150"/>
+                            <h2>
+                                <span t-field="teacher.instructor.name"/>
+                            </h2>
+                            <h5>
+                                <!--                        <span t-field="teacher.instructor.job_position"/>-->
+                            </h5>
+                        </div>
+                        <div class="profile-body" style="text-align:center">
+                            <h3>Years of teaching</h3>
+                            <p>
+                                <span t-field="teacher.experience"/>
+                                years of teaching
+                            </p>
+                            <h3>Languages</h3>
+                            <p>
+                                <span t-field="teacher.language"/>
+                            </p>
+                            <h3>Genres</h3>
+                            <p>
+                                <span t-field="teacher.tag_ids"/>
+                            </p>
+                            <h3>About</h3>
+                            <p t-field="teacher.about"/>
+                            <h3>What you Learn</h3>
+                            <p t-field="teacher.learning_bio"/>
+                        </div>
+                        <div class="lesson-packages" style="text-align:center">
+                            <h4>Lessons packages</h4>
+                            <table style="display:inline-flex;
+">
+                                <tbody>
+                                    <!-- Package 1 (No Discount) -->
+                                    <tr>
+                                        <td>1 lesson</td>
+                                        <td class="price">USD 34</td>
+                                        <td class="price">
+                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                               class="btn btn-primary">
+                                                Book Now
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <!-- Package 2 (With Discount) -->
+                                    <tr>
+                                        <td>4 lessons</td>
+<!--                                        <td class="discount">5% off</td>-->
+<!--                                        <td class="strikethrough">USD 136</td>-->
+                                        <td class="price">USD 129</td>
+                                        <td class="price">
+                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                               class="btn btn-primary">
+                                                Book Now
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    <!-- Package 3 (With Discount) -->
+                                    <tr>
+                                        <td>8 lessons</td>
+<!--                                        <td class="discount">10% off</td>-->
+<!--                                        <td class="strikethrough">USD 272</td>-->
+                                        <td class="price">USD 245</td>
+                                        <td class="price">
+                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                               class="btn btn-primary">
+                                                Book Now
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    <!-- Package 4 (With Discount) -->
+                                    <tr>
+                                        <td>12 lessons</td>
+<!--                                        <td class="discount">15% off</td>-->
+<!--                                        <td class="strikethrough">USD 408</td>-->
+                                        <td class="price">USD 347</td>
+                                        <td class="price">
+                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                               class="btn btn-primary">
+                                                Book Now
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+<!--                            <div>-->
+<!--                                <a href="#" onclick="window.location.href='/online-appointment'"-->
+<!--                                   class="btn btn-secondary">-->
+<!--                                    Book Lessons-->
+<!--                                </a>-->
+
+
+<!--                            </div>-->
+                        </div>
+                    </t>
+
+                </div>
+            </t>
+        </template>
+
+
+        <template id="voca_studio_module.available_days_list">
+            <style>
+                /* Style for the list */
+                .available-days-list {
+                list-style-type: none;
+                padding: 0;
+                }
+
+                .available-days-list li {
+                padding: 10px;
+                margin-bottom: 5px;
+                background-color: #f8f9fa; /* Light background for list items */
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                }
+
+                .available-days-list li:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                }
+            </style>
+
+            <div class="container">
+                <h3>Available Days</h3>
+                <ul class="available-days-list">
+                    <!-- Loop through available days -->
+
+                    <li>
+                        Sunday <!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Mnon <!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Tue<!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Wed <!-- Display the day name or date -->
+                    </li>
+                    <!--                    <t t-foreach="available_days" t-as="day">-->
+                    <!--                        <li>-->
+                    <!--                            <span t-esc="day"/> &lt;!&ndash; Display the day name or date &ndash;&gt;-->
+                    <!--                        </li>-->
+                    <!--                    </t>-->
+                </ul>
+            </div>
+        </template>
+
+
+        <template id="voca_studio_module.available_days_list_with_times">
+            <style>
+                /* Style for the list */
+                .available-days-list {
+                list-style-type: none; /* Remove default bullet points */
+                padding: 0;
+                }
+
+                .available-days-list .day-item {
+                padding: 10px;
+                margin-bottom: 5px;
+                background-color: #f8f9fa; /* Light background for list items */
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                cursor: pointer;
+                }
+
+                .available-days-list .day-item:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                }
+
+                /* Hide available times initially */
+                .available-times {
+                display: none;
+                margin-top: 10px;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 10px;
+                border-radius: 5px;
+                }
+
+                /* Show available times when the div is clicked */
+                .available-times.show {
+                display: block;
+                }
+
+                /* Style for selected time */
+                .available-times ul li.selected {
+                background-color: #007bff; /* Blue background for selected time */
+                color: white; /* White text for selected time */
+                cursor: pointer;
+                }
+
+                .available-times ul li:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                cursor: pointer;
+                }
+
+                /* Disabled day item */
+                .day-item.disabled {
+                pointer-events: none;
+                opacity: 0.6; /* Make disabled days look faded */
+                }
+
+                /* Disabled time slot */
+                .available-times ul li.disabled {
+                pointer-events: none;
+                opacity: 0.6; /* Make disabled time slots look faded */
+                }
+            </style>
+
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <h3>Available Days and Times</h3>
+                    <ul class="available-days-list">
+
+                        <!-- JavaScript function to handle clicks -->
+                        <script>
+                            function toggleTimes(event) {
+                            const selectedDay = event.currentTarget;
+                            const timesDiv = selectedDay.querySelector('.available-times');
+                            timesDiv.classList.toggle('show'); // Toggle available times
+                            }
+
+                            function selectTime(event) {
+                            const selectedTime = event.currentTarget;
+                            const timeSlots = selectedTime.parentElement.querySelectorAll('li');
+
+                            // Deselect all other time slots within the same day
+                            timeSlots.forEach(time => {
+                            time.classList.remove('selected');
+                            time.classList.add('disabled'); // Disable all other time slots
+                            });
+
+                            // Toggle 'selected' class on the clicked time slot and enable it
+                            selectedTime.classList.add('selected');
+                            selectedTime.classList.remove('disabled');
+
+                            // Disable other days when a time is selected
+                            const allDays = document.querySelectorAll('.day-item');
+                            allDays.forEach(day => {
+                            if (!day.contains(selectedTime)) {
+                            day.classList.add('disabled');
+                            }
+                            });
+                            }
+
+                            // Optional: To allow unselecting the time slot
+                            function toggleSelectTime(event) {
+                            const selectedTime = event.currentTarget;
+
+                            // If time is already selected, allow unselecting it
+                            if (selectedTime.classList.contains('selected')) {
+                            selectedTime.classList.remove('selected');
+
+                            // Re-enable all time slots for the current day
+                            const timeSlots = selectedTime.parentElement.querySelectorAll('li');
+                            timeSlots.forEach(time => {
+                            time.classList.remove('disabled');
+                            });
+
+                            // Re-enable all day items
+                            const allDays = document.querySelectorAll('.day-item');
+                            allDays.forEach(day => {
+                            day.classList.remove('disabled');
+                            });
+                            } else {
+                            selectTime(event); // Select the time if it's not already selected
+                            }
+                            }
+                        </script>
+
+                        <!-- Day 1 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Sun <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">3:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">4:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">5:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Day 2 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Monday <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">6:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">7:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">8:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Day 3 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Tuesday <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">10:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">11:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">12:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </ul>
+                </div>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

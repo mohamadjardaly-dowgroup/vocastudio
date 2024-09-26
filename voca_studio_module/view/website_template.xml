@@ -4,161 +4,159 @@
         <template id="homepage" inherit_id="website.homepage">
             <xpath expr="//t[1]/t[1]" position="inside">
                 <t t-set="teachers" t-value="teacher_id"/>
-                <t t-call="voca_studio_module.slider_with_teacher"/>
-
+<!--                <t t-call="voca_studio_module.slider_with_teacher"/>-->
             </xpath>
-
-
         </template>
 
-        <template id="slider_with_teacher" name="Popup Template">
-            <style>
-                .teacher-slider-wrapper {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-                overflow: hidden;
-                position: relative;
-                }
+<!--        <template id="slider_with_teacher" name="Popup Template">-->
+<!--            <style>-->
+<!--                .teacher-slider-wrapper {-->
+<!--                display: flex;-->
+<!--                align-items: center;-->
+<!--                justify-content: space-between;-->
+<!--                width: 100%;-->
+<!--                overflow: hidden;-->
+<!--                position: relative;-->
+<!--                }-->
 
-                .teacher-slider {
-                display: flex;
-                transition: transform 0.5s ease-in-out;
-                width: 100%;
-                }
+<!--                .teacher-slider {-->
+<!--                display: flex;-->
+<!--                transition: transform 0.5s ease-in-out;-->
+<!--                width: 100%;-->
+<!--                }-->
 
-                .teacher-slider .slide {
-                min-width: 25%; /* Adjust this percentage based on how many slides you want visible at once */
-                box-sizing: border-box;
-                padding: 10px;
-                }
+<!--                .teacher-slider .slide {-->
+<!--                min-width: 25%; /* Adjust this percentage based on how many slides you want visible at once */-->
+<!--                box-sizing: border-box;-->
+<!--                padding: 10px;-->
+<!--                }-->
 
-                .teacher-slider img {
-                width: 100%;
-                height: auto;
-                }
+<!--                .teacher-slider img {-->
+<!--                width: 100%;-->
+<!--                height: auto;-->
+<!--                }-->
 
-                .teacher-slider .details {
-                text-align: left;
-                padding: 10px;
-                background-color: #fff;
-                }
+<!--                .teacher-slider .details {-->
+<!--                text-align: left;-->
+<!--                padding: 10px;-->
+<!--                background-color: #fff;-->
+<!--                }-->
 
-                .teacher-slider-wrapper .prev,
-                .teacher-slider-wrapper .next {
-                cursor: pointer;
-                font-size: 18px;
-                padding: 10px;
-                background-color: #fff;
-                border-radius: 50%;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 1000;
-                }
+<!--                .teacher-slider-wrapper .prev,-->
+<!--                .teacher-slider-wrapper .next {-->
+<!--                cursor: pointer;-->
+<!--                font-size: 18px;-->
+<!--                padding: 10px;-->
+<!--                background-color: #fff;-->
+<!--                border-radius: 50%;-->
+<!--                position: absolute;-->
+<!--                top: 50%;-->
+<!--                transform: translateY(-50%);-->
+<!--                z-index: 1000;-->
+<!--                }-->
 
-                .teacher-slider-wrapper .prev {
-                left: 10px;
-                }
+<!--                .teacher-slider-wrapper .prev {-->
+<!--                left: 10px;-->
+<!--                }-->
 
-                .teacher-slider-wrapper .next {
-                right: 10px;
-                }
-            </style>
-<!--              <div>
-                    <h6>
-                                    Our Teacher
+<!--                .teacher-slider-wrapper .next {-->
+<!--                right: 10px;-->
+<!--                }-->
+<!--            </style>-->
+<!--             <div>-->
+<!--                    <h6>-->
+<!--                                    Our Teacher-->
 
-                    </h6>
-                </div> -->
-            <div class="teacher-slider-wrapper">
+<!--                    </h6>-->
+<!--                </div>-->
+<!--            <div class="teacher-slider-wrapper">-->
 
-                <!-- Slider Buttons -->
-                <a class="prev" href="#" onclick="prevSlide()">&#10094;</a>
-                <div class="container">
-                    <div class="teacher-slider">
+<!--                &lt;!&ndash; Slider Buttons &ndash;&gt;-->
+<!--                <a class="prev" href="#" onclick="prevSlide()">&#10094;</a>-->
+<!--                <div class="container">-->
+<!--                    <div class="teacher-slider">-->
 
-                        <!-- Slide 1 -->
-                        <t t-foreach="teachers" t-as="teacher">
-                            <div class="slide">
-                                <img
-                                        t-attf-src="data:image/*;base64,{{teacher.image_1920}}"
-                                        class="img img-fluid o_we_custom_image rounded-circle"
-                                        style="width: 2cm; height: auto;"
-                                        t-att-alt="teacher.name"/>
-                                <div class="details">
-                                    <t t-foreach="teacher.tag_ids" t-as="tag">
-                                            <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges"
-                                            >
-                                                <span class="badge o_wslides_channel_tag o_tag_color_3" t-field="tag.name"/>
+<!--                        &lt;!&ndash; Slide 1 &ndash;&gt;-->
+<!--                        <t t-foreach="teachers" t-as="teacher">-->
+<!--                            <div class="slide">-->
+<!--                                <img-->
+<!--                                        t-attf-src="data:image/*;base64,{{teacher.image_1920}}"-->
+<!--                                        class="img img-fluid o_we_custom_image rounded-circle"-->
+<!--                                        style="width: 2cm; height: auto;"-->
+<!--                                        t-att-alt="teacher.name"/>-->
+<!--                                <div class="details">-->
+<!--                                    <t t-foreach="teacher.tag_ids" t-as="tag">-->
+<!--                                            <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges"-->
+<!--                                            >-->
+<!--                                                <span class="badge o_wslides_channel_tag o_tag_color_3" t-field="tag.name"/>-->
 
-                                            </div>
-
-
-
-                                    </t>
-                                    <p>
-                                        <strong>Instructor:</strong>
-                                        <span t-field="teacher.instructor.name"/>
-
-                                    </p>
-                                    <p>
-                                        <strong>Experience:</strong>
-                                        <span t-field="teacher.experience"/>
-
-                                    </p>
-                                    <p>
-                                        <strong>Category:</strong>
-                                        <span t-field="teacher.categories.name"/>
-                                    </p>
-                                    <p>
-                                        <strong>Languages:</strong>
-                                        <span t-field="teacher.language"/>
-                                    </p>
-                                </div>
-                                <p>
-                                    <a href="http://view details" class="btn btn-outline-custom rounded-circle" data-bs-original-title="" title="" style="border-width: 1px; border-style: solid; border-color: rgb(233, 236, 239);">View Details</a>
-                                </p>
-                            </div>
-                        </t>
+<!--                                            </div>-->
 
 
-                    </div>
 
-                </div>
+<!--                                    </t>-->
+<!--                                    <p>-->
+<!--                                        <strong>Instructor:</strong>-->
+<!--                                        <span t-field="teacher.instructor.name"/>-->
 
-                <a class="next" href="#" onclick="nextSlide()">&#10095;</a>
-            </div>
-            <script type="text/javascript">
-                let slideIndex = 0;
-                const slides = document.querySelectorAll('.teacher-slider .slide');
-                console.info("slideeeeees",slides);
+<!--                                    </p>-->
+<!--                                    <p>-->
+<!--                                        <strong>Experience:</strong>-->
+<!--                                        <span t-field="teacher.experience"/>-->
 
-                function showSlide(index) {
-                console.info("index",index);
-                const totalSlides = slides.length;
-                const sliderWidth = document.querySelector('.teacher-slider').offsetWidth;
-                if (index >= totalSlides) { slideIndex = 0; }
-                if (index &lt; 0) { slideIndex = totalSlides - 1; }
-                document.querySelector('.teacher-slider').style.transform =
-                `translateX(-${(sliderWidth * slideIndex)/2}px)`;
-                }
+<!--                                    </p>-->
+<!--                                    <p>-->
+<!--                                        <strong>Category:</strong>-->
+<!--                                        <span t-field="teacher.categories.name"/>-->
+<!--                                    </p>-->
+<!--                                    <p>-->
+<!--                                        <strong>Languages:</strong>-->
+<!--                                        <span t-field="teacher.language"/>-->
+<!--                                    </p>-->
+<!--                                </div>-->
+<!--                                <p>-->
 
-                function nextSlide() {
-                slideIndex++;
-                showSlide(slideIndex);
-                }
+<!--                                    <a href="/teacher_profile" class="btn btn-outline-custom rounded-circle" data-bs-original-title="" title="" style="border-width: 1px; border-style: solid; border-color: rgb(233, 236, 239);">See full profile</a>-->
+<!--                                </p>-->
+<!--                            </div>-->
+<!--                        </t>-->
 
-                function prevSlide() {
-                slideIndex--;
-                showSlide(slideIndex);
-                }
 
-                document.addEventListener('DOMContentLoaded', function() {
-                showSlide(slideIndex);
-                });
-            </script>
-        </template>
+<!--                    </div>-->
+
+<!--                </div>-->
+
+<!--                <a class="next" href="#" onclick="nextSlide()">&#10095;</a>-->
+<!--            </div>-->
+<!--            <script type="text/javascript">-->
+<!--                let slideIndex = 0;-->
+<!--                const slides = document.querySelectorAll('.teacher-slider .slide');-->
+<!--                console.info("slideeeeees",slides);-->
+
+<!--                function showSlide(index) {-->
+<!--                console.info("index",index);-->
+<!--                const totalSlides = slides.length;-->
+<!--                const sliderWidth = document.querySelector('.teacher-slider').offsetWidth;-->
+<!--                if (index >= totalSlides) { slideIndex = 0; }-->
+<!--                if (index &lt; 0) { slideIndex = totalSlides - 1; }-->
+<!--                document.querySelector('.teacher-slider').style.transform =-->
+<!--                `translateX(-${(sliderWidth * slideIndex)/2}px)`;-->
+<!--                }-->
+
+<!--                function nextSlide() {-->
+<!--                slideIndex++;-->
+<!--                showSlide(slideIndex);-->
+<!--                }-->
+
+<!--                function prevSlide() {-->
+<!--                slideIndex&#45;&#45;;-->
+<!--                showSlide(slideIndex);-->
+<!--                }-->
+
+<!--                document.addEventListener('DOMContentLoaded', function() {-->
+<!--                showSlide(slideIndex);-->
+<!--                });-->
+<!--            </script>-->
+<!--        </template>-->
     </data>
 </odoo>

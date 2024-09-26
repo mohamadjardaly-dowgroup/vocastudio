@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salon booking website menu-->
+    <record id="website_menu_voca" model="website.menu">
+        <field name="name">Our Teachers</field>
+        <field name="url">/teacher_profile</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+
+
+
+     <record id="website_join_as_teacher" model="website.menu">
+        <field name="name">Join As Teacher</field>
+        <field name="url">/web/signup</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//div[3]" position="after">
+            <script type="text/javascript" id="old_browser_fix_auto_scroll">
+                function isCentered(el) {
+                console.info('issssssssssssss');
+                    var selectElement = $('select.select_box_test');
+                    if (selectElement.length > 0) {
+                        // Initialize select2 on the select element
+                        selectElement.select2();
+
+                        // Optional: focus the select2 search input after initialization
+                        selectElement.select2('focus');
+                    } else {
+                        console.error('Select element not found.');
+                    }
+
+
+                }
+
+
+            </script>
+
+            <div t-attf-class="mb-3 #{error.get('category_ids') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="category_ids">Categories</label>
+                <select name="category_ids" t-attf-class="form-select #{error.get('category_ids') and 'is-invalid' or ''}">
+                    <option value="">category...</option>
+                    <t t-foreach="categories" t-as="cat">
+                        <option t-att-value="cat.id">
+                            <t t-esc="cat.name"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <div t-attf-class="mb-3 #{error.get('tags') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="tag_ids">Tags</label>
+                    <select name="tag_ids" class="form-control select_box_test"  onclick="isCentered()" widget="many2many_tags">
+                    <option value="">tag...</option>
+                    <t t-foreach="tags" t-as="tag">
+                        <option t-att-value="tag.id">
+                            <t t-esc="tag.name"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+
+<!--               <input type="file" class="form-control" id="image_1920" name="image_1920" required="1" accept="image/*"/>-->
+<!--            <img class="mb-3 s2u_portal_avatar_img"-->
+<!--                     t-att-src="website.image_url(user_id.partner_id, 'image_128')"-->
+<!--                 style="object-fit: cover; border-radius: 50%; width: 128px; height: 128px;">-->
+
+<!--            </img>-->
+
+
+
+
+        </xpath>
+    </template>
+</odoo>
