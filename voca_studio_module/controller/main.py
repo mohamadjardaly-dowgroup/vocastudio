@@ -2,9 +2,6 @@
 
 import pytz
 import datetime
-
-from odoo.addons.s2u_online_appointment.helpers import functions
-
 from odoo import http, modules, tools
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.http import request
