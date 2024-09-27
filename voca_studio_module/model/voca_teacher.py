@@ -6,7 +6,7 @@ class Teacher(models.Model):
     _name = 'voca.teacher'
     # _description = 'Portal'
 
-    name = fields.Char(string='Name',related='instructor.name' )
+    name = fields.Char(string='Name' )
 
     image_1920 = fields.Image(string="Image",store=True, readonly=False)  # image.mixin override
 
@@ -33,14 +33,14 @@ class Teacher(models.Model):
 #     string='Tags'
 # )
 
-    categories = fields.Many2many('voca.teacher.categories',string='Category',related='instructor.category_ids' )
+    categories = fields.Many2many('voca.teacher.categories',string='Category' )
 
     language = fields.Selection([
             ('en', 'English'),
             ('ar', 'Arabic'),
         ], string="Language")
 
-    about = fields.Char(string='About',related='instructor.about')
+    about = fields.Char(string='About')
     learning_bio = fields.Char(string='Learn bio')
     slot_ids = fields.One2many('voca.teacher.slots', 'slot_id', string='Direct subordinates')
 
