@@ -10,28 +10,11 @@ class Teacher(models.Model):
 
     image_1920 = fields.Image(string="Image",store=True, readonly=False)  # image.mixin override
 
-    tag_ids = fields.Many2many('voca.teacher.tags', string='Tags)
-
-#     tag_ids = fields.Many2many(
-#     'voca.teacher.tags', 
-#     'voca_teacher_tags_rel',  
-#     'teacher_id', 
-#     'tag_id',  
-#     string='Tags'
-# )
-
+    # tag_ids = fields.Many2many('voca.teacher.tags', string='Tags)
     instructor = fields.Many2one('res.partner',string='Instructor')
 
     experience = fields.Char(string='Experience' )
 
-
-#     categories = fields.Many2many(
-#    'voca.teacher.categories', 
-#     'voca_teacher_categories_rel',  # Explicit relation table name
-#     'teacher_id',  # Column for the model you're working on
-#     'cat_id',      # Column for the 'voca.teacher.tags' model
-#     string='Tags'
-# )
 
     categories = fields.Many2many('voca.teacher.categories',string='Category' )
 
