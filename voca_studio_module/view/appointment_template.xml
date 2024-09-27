@@ -393,14 +393,21 @@
                                             </p>
                                             <div class="center">
                                                 <!-- Tags -->
-                                                <div style="display:flex">
+
+
+                                                 <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
+                                                            <span class="badge o_wslides_channel_tag o_tag_color_3"
+                                                                 />
+                                                     Jazz
+                                                        </div>
+<!--                                                 <div style="display:flex">
                                                     <t t-foreach="teacher.tag_ids" t-as="tag">
                                                         <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
                                                             <span class="badge o_wslides_channel_tag o_tag_color_3"
                                                                   t-field="tag.name"/>
                                                         </div>
                                                     </t>
-                                                </div>
+                                                </div> -->
                                                 <!-- Short Bio -->
                                                 <p> <span t-field="teacher.about"/>
                                                 </p>
