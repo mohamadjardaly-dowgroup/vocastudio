@@ -500,7 +500,8 @@
                             </p>
                             <h3>Genres</h3>
                             <p>
-                                <span t-field="teacher.tag_ids"/>
+<!--                                 <span t-field="teacher.tag_ids"/> -->
+                                Jazz
                             </p>
                             <h3>About</h3>
                             <p t-field="teacher.about"/>
