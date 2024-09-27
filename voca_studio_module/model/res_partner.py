@@ -15,7 +15,7 @@ class ResPartner(models.Model):
     _description = "alumni model"
     # from avatar.mixin
 
-    is_teacher = fields.Boolean(string=_('Is Teacher'), default=False)
+    # is_teacher = fields.Boolean(string=_('Is Teacher'), default=False)
     first_name = fields.Char(string=_('First Name'), translate=True, tracking=True)
     nickname = fields.Char(string=_('Nickname'), translate=True, tracking=True)
     gender = fields.Selection(
