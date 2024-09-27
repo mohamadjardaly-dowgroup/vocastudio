@@ -16,7 +16,7 @@ class Teacher(models.Model):
 
     experience = fields.Char(string='Experience',related='instructor.experience' )
 
-    categories = fields.Many2many('voca.teacher.categories',string='Category',related='instructor.category_ids' )
+    categories = fields.Many2many('voca.teacher.categories',string='Category' )
 
     language = fields.Selection([
             ('en', 'English'),
