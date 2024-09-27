@@ -22,7 +22,7 @@ class Teacher(models.Model):
 
     instructor = fields.Many2one('res.partner',string='Instructor')
 
-    experience = fields.Char(string='Experience',related='instructor.experience'  )
+    experience = fields.Char(string='Experience' )
 
 
 #     categories = fields.Many2many(
