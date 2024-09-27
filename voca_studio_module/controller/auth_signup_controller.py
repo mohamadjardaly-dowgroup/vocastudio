@@ -1,3 +1,4 @@
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo import http, tools, _
