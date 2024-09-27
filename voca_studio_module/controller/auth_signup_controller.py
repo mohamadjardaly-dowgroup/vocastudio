@@ -60,7 +60,7 @@ class VocaAuthSignupHome(AuthSignupHome):
 
         values["phone"] = f"{values.get('phone')}"
         values["name"] = f"{values.get('nickname')}"
-        values["is_teacher"] = True
+        # values["is_teacher"] = True
         # values["student_email"] = student_email
         # values["status"] = 'member'
         values['gender_1'] = values.get("gender")
