@@ -10,7 +10,7 @@ class Teacher(models.Model):
 
     image_1920 = fields.Image(string="Image",store=True, readonly=False)  # image.mixin override
 
-    tag_ids = fields.Many2many('voca.teacher.tags', string='Tags',related='instructor.tag_ids' )
+    tag_ids = fields.Many2many('voca.teacher.tags', string='Tags' )
 
     instructor = fields.Many2one('res.partner',string='Instructor')
 
