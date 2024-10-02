@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
-access_voca_teacher,access.voca.teacher,model_voca_teacher,,1,1,1,1
-access_voca_teacher_tags,access.voca.teacher.tags,model_voca_teacher_tags,,1,1,1,1
-access_voca_teacher_categories,access.voca.teacher.categories,model_voca_teacher_categories,,1,1,1,1
-access_voca_teacher_booking_lines,access.voca.teacher.booking.lines,model_voca_teacher_booking_lines,,1,1,1,1
-access_teacher_time_slots,access.teacher.time.slots,model_teacher_time_slots,,1,1,1,1
