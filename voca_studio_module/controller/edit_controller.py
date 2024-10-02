@@ -15,7 +15,7 @@ from odoo.tools.safe_eval import json
 
 from odoo import http, fields
 
-from server.odoo.tools.safe_eval import pytz
+from odoo.tools.safe_eval import pytz
 
 
 class VocaEditController(CustomerPortal):
