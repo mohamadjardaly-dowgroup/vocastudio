@@ -1,6 +1,8 @@
 import datetime
 import logging
 from odoo import api, fields, models, tools, _
+
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.http_routing.models.ir_http import slug
@@ -11,11 +13,9 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'website.searchable.mixin', ]
-
-    _description = "alumni model"
     # from avatar.mixin
 
-    is_teacher = fields.Boolean(string=_('Is Teacher'), default=False)
+    is_teacher = fields.Boolean(string=_('Is Teacher'), default=True)
     first_name = fields.Char(string=_('First Name'), translate=True, tracking=True)
     nickname = fields.Char(string=_('Nickname'), translate=True, tracking=True)
     gender = fields.Selection(
@@ -35,7 +35,12 @@ class ResPartner(models.Model):
 
     tag_ids = fields.Many2many('voca.teacher.tags', string='Tags')
     category_ids = fields.Many2many('voca.teacher.categories',string='Category')
+    attachment_ids = fields.Many2many('ir.attachment')
 
+    image_base64 = fields.Image(string="Image", readonly=False)
+
+
+    teacher_id = fields.Many2one('voca.teacher', string='Teacher')
 
 
     @api.depends('birthday')
@@ -54,16 +59,29 @@ class ResPartner(models.Model):
     @api.model_create_multi
     def create(self, values):
         print("on createeeeeeeeeeeee")
-        partner = super(ResPartner, self).create(values)
-        for value in values :
-            print("Ssssssssssssss",value)
-            if value['role'] == 'teacher':
-                self.env['voca.teacher'].sudo().create({
-
+        partners = super(ResPartner, self).create(values)
+        for value, partner in zip(values, partners):
+            if value.get('role') == 'teacher':
+                # Create the voca.teacher record
+                x = self.env['voca.teacher'].sudo().create({
                     'instructor': partner.id,
-                    'experience': partner.experience,
-
+                    'experience': value.get('experience', ''),  # Get experience from value if exists
+                    'state': 'draft',
                 })
-        return partner
+
+                partner.sudo().write({
+                    'teacher_id': x.id
+                })
+                rec_id = self.env['ir.model'].sudo().search([('model', '=', 'voca.teacher')], limit=1)
+                self.env['mail.activity'].sudo().create({
+                    'activity_type_id': 4,
+                    'date_deadline': date.today(),
+                    'summary': 'Request to approve',
+                    'user_id': 2,
+                    'res_model_id': rec_id.id,
+                    'res_id': x.id
+                })
+
+        return partners
 
 

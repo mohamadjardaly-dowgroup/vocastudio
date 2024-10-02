@@ -1,235 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-<!--        <template id="s2u_online_appointment.make_appointment" name="Online Appointment">-->
-<!--            <t t-call="website.layout">-->
-<!--                <style type="text/css">-->
-<!--                    .color_green a{background:green !important;}-->
-<!--                </style>-->
-<!--                <div class="container mb64" id="s2u_online_appointment">-->
-<!--                    <div class="row">-->
-<!--                        <div class="col-sm-12">-->
-<!--                            <form t-att-action="form_action" method="post" class="form-horizontal mt32"-->
-<!--                                  enctype="multipart/form-data">-->
-<!--                                <input type="hidden" name="form_criteria" id="form_criteria"-->
-<!--                                       t-att-value="form_criteria"/>-->
-<!--                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col-lg-12">-->
-<!--                                        <div t-if="error_message" class="alert alert-danger" role="alert">-->
-<!--                                            <t t-foreach="error_message" t-as="err">-->
-<!--                                                <t t-esc="err"/>-->
-<!--                                                <br/>-->
-<!--                                            </t>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <t t-if="mode == 'registered'">-->
-<!--                                        <div class="form-group col-xl-6">-->
-<!--                                            <label class="control-label" for="name">Your Name</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" class="form-control" readonly="True" name="name"-->
-<!--                                                       t-att-value="name"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="form-group col-xl-6">-->
-<!--                                            <label class="control-label" for="name">Your Email</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" class="form-control" name="email" readonly="True"-->
-<!--                                                       t-att-value="email"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="form-group col-xl-6">-->
-<!--                                            <label class="control-label" for="name">Your Phone</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" class="form-control" name="phone" readonly="True"-->
-<!--                                                       t-att-value="phone"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </t>-->
-<!--                                    <t t-else="">-->
-<!--                                        <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">-->
-<!--                                            <label class="control-label" for="name">Your Name</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" name="name"-->
-<!--                                                       t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"-->
-<!--                                                       t-att-value="name" required="True"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">-->
-<!--                                            <label class="control-label" for="email">Your Email</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" name="email"-->
-<!--                                                       t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}"-->
-<!--                                                       t-att-value="email" required="True"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-xl-6">-->
-<!--                                            <label class="control-label" for="phone">Your Phone</label>-->
-<!--                                            <div>-->
-<!--                                                <input type="text" name="phone"-->
-<!--                                                       t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}"-->
-<!--                                                       t-att-value="phone" required="True"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </t>-->
-<!--                                    <div class="form-group col-xl-6"></div>-->
-<!--                                    <div class="form-group col-xl-6">-->
-<!--                                        <label class="control-label" for="appointment_option">Option</label>-->
-<!--                                        <div>-->
-<!--                                            <select id="appointment_option_id" required="True"-->
-<!--                                                    name="appointment_option_id" class="form-control">-->
-<!--                                                <option value="">Select</option>-->
-<!--                                                <t t-foreach="appointment_options" t-as="ao">-->
-<!--                                                    <option t-att-value="ao.id"-->
-<!--                                                            t-att-selected="ao.id == appointment_option_id">-->
-<!--                                                        <t t-esc="ao.name"/>-->
-<!--                                                    </option>-->
-<!--                                                </t>-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group col-xl-6">-->
-<!--                                        <label class="control-label" for="appointee_id">With</label>-->
-<!--                                        <div>-->
-<!--                                            <select id="appointee_id" required="True" name="appointee_id"-->
-<!--                                                    class="form-control">-->
-<!--                                                <option value="">Select</option>-->
-<!--                                                <t t-foreach="appointees" t-as="o">-->
-<!--                                                    <option t-att-value="o.id" t-att-selected="o.id == appointee_id">-->
-<!--                                                        <t t-esc="o.name"/>-->
-<!--                                                    </option>-->
-<!--                                                </t>-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div t-attf-class="form-group #{error and 'appointment_date' in error and 'has-error' or ''} col-xl-6">-->
-<!--                                        <label class="control-label" for="appointment_date">Appointment Date</label>-->
-<!--                                        <div>-->
-<!--                                            <div class='input-group date'>-->
-<!--                                                <input type="date" name="appointment_date" id="appointment_date"-->
-<!--                                                       class="form-control datepicker" required="True"-->
-<!--                                                       placeholder="dd/mm/yyyy" t-att-value="appointment_date"-->
-
-<!--                                                />-->
-<!--                                                &lt;!&ndash;                                               <input id ="appointment_date" name="appointment_date"  class="form-control datepicker" required="True" placeholder="dd/mm/yyyy" t-att-value="appointment_date"/>&ndash;&gt;-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group col-xl-6">-->
-<!--                                        <label class="control-label" for="timeslot_id">Timeslot</label>-->
-<!--                                        <div>-->
-<!--                                            <select id="timeslot_id" required="True" name="timeslot_id"-->
-<!--                                                    class="form-control">-->
-<!--                                                <option value="">Select</option>-->
-<!--                                                <t t-foreach="timeslots" t-as="t">-->
-<!--                                                    <option t-att-value="t['id']"-->
-<!--                                                            t-att-selected="t['id'] == timeslot_id">-->
-<!--                                                        <t t-esc="t['timeslot']"/>-->
-<!--                                                    </option>-->
-<!--                                                </t>-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    &lt;!&ndash;                                    <div class="form-group col-lg-12">&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                        <label class="control-label" for="remarks">Remarks</label>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                        <div>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                            <textarea class="form-control" cols="60" name="remarks" rows="6">&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                                <t t-esc="remarks"/>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                            </textarea>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                        </div>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                    </div>&ndash;&gt;-->
-
-<!--                                    <div class="form-group col-lg-12">-->
-<!--                                        <div>-->
-<!--                                            <button class="btn btn-success">Submit</button>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </t>-->
-<!--        </template>-->
-
-<!--        <template id="s2u_online_appointment.only_registered_users" name="Only registered users">-->
-<!--            <t t-call="website.layout">-->
-<!--                <div id="wrap">-->
-<!--                    <div class="oe_structure">-->
-<!--                        <div class="container">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-12">-->
-<!--                                    <div class="alert alert-danger">-->
-<!--                                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>-->
-<!--                                        <h2>Sorry, no access!</h2>-->
-<!--                                        <p>To schedule an appointment please,-->
-<!--                                            <t t-if="request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'">-->
-<!--                                                <a t-attf-href="/web/signup?redirect={{ quote_plus(request.httprequest.path) }}">-->
-<!--                                                    Sign Up-->
-<!--                                                </a>-->
-<!--                                                or-->
-<!--                                            </t>-->
-<!--                                            <a t-attf-href="/web/login?redirect={{ quote_plus(request.httprequest.path) }}">-->
-<!--                                                Sign In-->
-<!--                                            </a>-->
-<!--                                            to access this page.-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </t>-->
-<!--        </template>-->
-
-<!--        <template id="s2u_online_appointment.thanks" name="Appointment Scheduled">-->
-<!--            <t t-call="website.layout">-->
-<!--                <div id="wrap">-->
-<!--                    <div class="oe_structure"/>-->
-<!--                    <div class="container">-->
-<!--                        <div t-if="error_message" class="row">-->
-<!--                            <div class="col-lg-12">-->
-<!--                                <div class="alert alert-danger" role="alert">-->
-<!--                                    <t t-foreach="error_message" t-as="err">-->
-<!--                                        <t t-esc="err"/>-->
-<!--                                        <br/>-->
-<!--                                    </t>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div t-else="" class="row">-->
-<!--                            <div class="col-12">-->
-<!--                                <div class="alert alert-success">-->
-<!--                                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>-->
-<!--                                    <h2>Appointment scheduled!</h2>-->
-<!--                                    <t t-if="appointment">-->
-<!--                                        <p>Your Appointment-->
-<!--                                            <b>-->
-<!--                                                <span t-field="appointment.name"/>-->
-<!--                                            </b>-->
-<!--                                            has been scheduled for-->
-<!--                                            <b>-->
-<!--                                                <span t-field="appointment.start"/>-->
-<!--                                            </b>-->
-<!--                                            .-->
-<!--                                        </p>-->
-<!--                                    </t>-->
-<!--                                    <t t-else="">-->
-<!--                                        <p>Your Appointment has been scheduled.</p>-->
-<!--                                    </t>-->
-<!--                                    <p>Thank You!</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="oe_structure"/>-->
-<!--                </div>-->
-<!--            </t>-->
-<!--        </template>-->
-
-
         <template id="voca_studio_module.teacher_profile_card">
             <style>
                 .grid-container {
@@ -334,7 +105,7 @@
                 </script>
 
                 <div class="container">
-                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+                    <!--                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>-->
 
                     <!-- Back Button -->
                     <div>
@@ -370,6 +141,103 @@
                     </div>
 
 
+                </div>
+
+            </t>
+        </template>
+        <template id="voca_studio_module.teacher_profile_card_with_category">
+            <style>
+                .grid-container {
+                display: grid;
+                justify-content: center;
+                align-content: center;
+                grid-template-columns: auto auto auto;
+                gap: 1.5rem;
+                }
+                .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                }
+
+                .card {
+                border-radius: 25px;
+                border: 1px solid #e0e0e0;
+                padding: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                display: flex;
+                align-items: center;
+
+                /* Align the content to the center */
+                }
+
+                .card-body {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+
+                .card-left {
+                flex: 1;
+                text-align: left;
+                }
+
+                .card-right {
+                flex: 2;
+                text-align: left;
+                margin-left: 15px;
+                }
+
+                .card-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .btn-primary {
+                background-color: #00c4cc;
+                border-color: #00c4cc;
+                }
+
+                .btn-link {
+                color: #00c4cc;
+                }
+
+                .rounded-circle {
+                border-radius: 50%;
+                }
+
+                .row {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                }
+
+                .col-md-6 {
+                max-width: 50%;
+                padding: 10px;
+                box-sizing: border-box;
+                }
+
+                .back-button {
+                margin-top: 20px;
+                background-color: #f5f5f5;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                }
+
+                .back-button:hover {
+                background-color: #ddd;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+
+                <div class="container">
+
                     <div class="grid-container">
                         <!-- Start Profile Cards -->
                         <t t-foreach="teachers" t-as="teacher" t-key="teacher.id">
@@ -393,23 +261,17 @@
                                             </p>
                                             <div class="center">
                                                 <!-- Tags -->
-
-
-                                                 <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
-                                                            <span class="badge o_wslides_channel_tag o_tag_color_3"
-                                                                 />
-                                                     Jazz
-                                                        </div>
-<!--                                                 <div style="display:flex">
+                                                <div style="display:flex">
                                                     <t t-foreach="teacher.tag_ids" t-as="tag">
                                                         <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
                                                             <span class="badge o_wslides_channel_tag o_tag_color_3"
                                                                   t-field="tag.name"/>
                                                         </div>
                                                     </t>
-                                                </div> -->
+                                                </div>
                                                 <!-- Short Bio -->
-                                                <p> <span t-field="teacher.about"/>
+                                                <p>
+                                                    <span t-field="teacher.about"/>
                                                 </p>
 
 
@@ -439,8 +301,6 @@
 
             </t>
         </template>
-
-
         <template id="voca_studio_module.teacher_profile_template" name="Teacher Full Profile">
             <style>
                 .lesson-packages {
@@ -473,7 +333,6 @@
                 }
             </style>
             <t t-call="portal.portal_layout">
-
                 <div class="container">
                     <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
                     <t t-foreach="teacher" t-as="teacher">
@@ -500,12 +359,11 @@
                             </p>
                             <h3>Genres</h3>
                             <p>
-<!--                                 <span t-field="teacher.tag_ids"/> -->
-                                Jazz
+                                <span t-field="teacher.tag_ids"/>
                             </p>
                             <h3>About</h3>
                             <p t-field="teacher.about"/>
-                            <h3>What you Learn</h3>
+                            <h3>What you will Learn</h3>
                             <p t-field="teacher.learning_bio"/>
                         </div>
                         <div class="lesson-packages" style="text-align:center">
@@ -527,8 +385,8 @@
                                     <!-- Package 2 (With Discount) -->
                                     <tr>
                                         <td>4 lessons</td>
-<!--                                        <td class="discount">5% off</td>-->
-<!--                                        <td class="strikethrough">USD 136</td>-->
+                                        <!--                                        <td class="discount">5% off</td>-->
+                                        <!--                                        <td class="strikethrough">USD 136</td>-->
                                         <td class="price">USD 129</td>
                                         <td class="price">
                                             <a href="#" onclick="window.location.href='/online-booking'"
@@ -541,8 +399,8 @@
                                     <!-- Package 3 (With Discount) -->
                                     <tr>
                                         <td>8 lessons</td>
-<!--                                        <td class="discount">10% off</td>-->
-<!--                                        <td class="strikethrough">USD 272</td>-->
+                                        <!--                                        <td class="discount">10% off</td>-->
+                                        <!--                                        <td class="strikethrough">USD 272</td>-->
                                         <td class="price">USD 245</td>
                                         <td class="price">
                                             <a href="#" onclick="window.location.href='/online-booking'"
@@ -555,8 +413,8 @@
                                     <!-- Package 4 (With Discount) -->
                                     <tr>
                                         <td>12 lessons</td>
-<!--                                        <td class="discount">15% off</td>-->
-<!--                                        <td class="strikethrough">USD 408</td>-->
+                                        <!--                                        <td class="discount">15% off</td>-->
+                                        <!--                                        <td class="strikethrough">USD 408</td>-->
                                         <td class="price">USD 347</td>
                                         <td class="price">
                                             <a href="#" onclick="window.location.href='/online-booking'"
@@ -570,22 +428,20 @@
                                 </tbody>
 
                             </table>
-<!--                            <div>-->
-<!--                                <a href="#" onclick="window.location.href='/online-appointment'"-->
-<!--                                   class="btn btn-secondary">-->
-<!--                                    Book Lessons-->
-<!--                                </a>-->
+                            <!--                            <div>-->
+                            <!--                                <a href="#" onclick="window.location.href='/online-appointment'"-->
+                            <!--                                   class="btn btn-secondary">-->
+                            <!--                                    Book Lessons-->
+                            <!--                                </a>-->
 
 
-<!--                            </div>-->
+                            <!--                            </div>-->
                         </div>
                     </t>
 
                 </div>
             </t>
         </template>
-
-
         <template id="voca_studio_module.available_days_list">
             <style>
                 /* Style for the list */
@@ -607,7 +463,6 @@
                 background-color: #e9ecef; /* Slightly darker on hover */
                 }
             </style>
-
             <div class="container">
                 <h3>Available Days</h3>
                 <ul class="available-days-list">
@@ -633,8 +488,6 @@
                 </ul>
             </div>
         </template>
-
-
         <template id="voca_studio_module.available_days_list_with_times">
             <style>
                 /* Style for the list */
@@ -696,7 +549,6 @@
                 opacity: 0.6; /* Make disabled time slots look faded */
                 }
             </style>
-
             <t t-call="portal.portal_layout">
                 <div class="container">
                     <h3>Available Days and Times</h3>
@@ -798,7 +650,79 @@
                 </div>
             </t>
         </template>
+        <template id="voca_studio_module.add_available_date">
+            <t t-call="portal.portal_layout">
+                <t t-set="additional_title">Contact Details</t>
+                <div class="book_show" style="margin-block:auto;">
+                    <form class="form-control" action="/teacher/add_date" method="post">
+                        <div style="text-align: center;">
+                            <h3>Add Time</h3>
+                        </div>
+                        <input type="hidden" name="date_time_dict"/>
 
+                        <div id="date_slots_container">
+                            <!-- Initial Date and Time Slot Section -->
+                            <div class="date-slot-group" style="margin-bottom: 10px;">
+                                <table>
+                                    <tr>
+                                        <th>Date:</th>
+                                        <td>
+                                            <input id="choose_date"
+                                                   name="show_date[]"
+                                                   class="form-control"
+                                                   type="datetime-local"
+                                                   required="1"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- Remove button for additional date-slot groups -->
+                                <button type="button" class="btn btn-danger remove-date-slot" style="display: none;">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Button to Add More Dates and Slots -->
+                        <div style="text-align: center; margin-top: 10px;">
+                            <button type="button" class="btn btn-secondary" id="add_date_slot">+ Add More</button>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary" style="width:-webkit-fill-available;">
+                                Add time
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </t>
 
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                // Get the Add button and container for date slots
+                const addButton = document.getElementById('add_date_slot');
+                const dateSlotsContainer = document.getElementById('date_slots_container');
+
+                // Function to clone and add new date-slot fields
+                addButton.addEventListener('click', function() {
+                // Clone the first date-slot-group
+                const newDateSlot = document.querySelector('.date-slot-group').cloneNode(true);
+
+                // Clear the input field for the new cloned date-slot group
+                const dateInput = newDateSlot.querySelector('input[type="datetime-local"]');
+                dateInput.value = ''; // Clear date
+
+                // Show the remove button for cloned slots
+                const removeButton = newDateSlot.querySelector('.remove-date-slot');
+                removeButton.style.display = 'block';
+
+                // Add event listener to the remove button
+                removeButton.addEventListener('click', function() {
+                newDateSlot.remove(); // Remove the cloned date-slot-group
+                });
+
+                // Append the cloned date-slot-group to the container
+                dateSlotsContainer.appendChild(newDateSlot);
+                });
+                });
+            </script>
+        </template>
     </data>
 </odoo>
