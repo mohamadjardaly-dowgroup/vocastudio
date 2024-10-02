@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+
+        <template id="homepage" inherit_id="website.homepage">
+            <xpath expr="//t[1]/t[1]" position="inside">
+                <t t-set="teachers" t-value="teacher_id"/>
+                <!--                <t t-call="voca_studio_module.slider_with_teacher"/>-->
+            </xpath>
+        </template>
+
+
+        <template id="voca_studio_module.teacher_login_restriction" name="Teacher Login Restriction">
+            <t t-call="portal.portal_layout">
+                <div class="container mt16">
+                    <div class="alert alert-danger">
+                        <h3>Access Denied</h3>
+                        <p>You are not allowed to log in because your request is pending.</p>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>
