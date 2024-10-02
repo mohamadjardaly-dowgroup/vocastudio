@@ -6,7 +6,7 @@ class TeacherTags(models.Model):
     _name = 'voca.teacher.booking.lines'
     # _description = 'Portal'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Name', translate=True)
 
     booking_id = fields.Many2one('voca.teacher', string='Teacher')
 
