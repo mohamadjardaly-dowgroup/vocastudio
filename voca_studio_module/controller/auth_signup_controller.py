@@ -6,7 +6,7 @@ import werkzeug
 from datetime import datetime
 from odoo.addons.auth_signup.models.res_partner import SignupError
 import logging
-from server.odoo.tools.safe_eval import json
+from odoo.tools.safe_eval import json
 from werkzeug.urls import url_encode
 
 _logger = logging.getLogger(__name__)
