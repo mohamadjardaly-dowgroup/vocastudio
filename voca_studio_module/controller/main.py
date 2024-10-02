@@ -7,21 +7,21 @@ _logger = logging.getLogger(__name__)
 
 class TeacherController(http.Controller):
 
-   @http.route(['/'], type='http', auth="public",
+    @http.route(['/'], type='http', auth="public",
                 methods=['POST', 'GET'], website=True, csrf=False)
-   def get_teacher_details_homepage(self, **kw):
-      
-      try:
-         teacher = request.env['voca.teacher'].sudo().search([])
-         categ = request.env['voca.teacher.categories'].sudo().search([])
-         print("all teacher home :", teacher, kw)
-         values = {
-             'teachers': teacher,
-             'categories': categ,
-         }
-         return request.render("website.homepage", values)
-      except Exception as e:
-         return e
+    def get_teacher_details_homepage(self, **kw):
+       try:
+          teacher = request.env['voca.teacher'].sudo().search([])
+          categ = request.env['voca.teacher.categories'].sudo().search([])
+          print("all teacher home :", teacher, kw)
+          values = {
+                'teachers': teacher,
+                'categories': categ,
+            }
+          return request.render("website.homepage", values)
+       except Exception as e:
+          
+          return e
 
 
     @http.route(['/teacher_profile',
