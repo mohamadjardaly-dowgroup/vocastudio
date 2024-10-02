@@ -6,21 +6,21 @@
                 function toggleFields(selectElement) {
                 const genderField = document.getElementById('gender_field');
                 const phoneField = document.getElementById('phone_field');
-                const experField = document.getElementById('experience_field');
-                const aboutField = document.getElementById('about_field');
+                const uploadField = document.getElementById('upload_field');
+<!--                const aboutField = document.getElementById('about_field');-->
                 console.info('gggg',genderField);
 
                 // Show or hide fields based on the selected value
                 if (selectElement.value === 'teacher') {
                 genderField.style.display = 'block';
                 phoneField.style.display = 'block';
-                experField.style.display = 'block';
-                aboutField.style.display = 'block';
+                uploadField.style.display = 'block';
+<!--                aboutField.style.display = 'block';-->
                 } else if (selectElement.value === 'student') {
                 genderField.style.display = 'none';
                 phoneField.style.display = 'none';
-                experField.style.display = 'none';
-                aboutField.style.display = 'none';
+                uploadField.style.display = 'none';
+<!--                aboutField.style.display = 'none';-->
                 }
                 }
 
@@ -85,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-3">
+            <div class="row mb-3" id="upload_field" style="display:block;">
                 <div class="col-12">
                     <label class="control-label" for="birthday">Upload your CV</label>
                     <input type="file" id="attachment_ids" name="filename"/>

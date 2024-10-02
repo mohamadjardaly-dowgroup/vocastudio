@@ -33,7 +33,7 @@
         'web.assets_frontend': [
             'voca_studio_module/static/src/js/bookShow.js',
             'voca_studio_module/static/src/js/selectSeat.js',
-            'voca_studio_module/static/src/css/show_booking_management.css',
+            # 'voca_studio_module/static/src/css/show_booking_management.css',
         ],
     },
 

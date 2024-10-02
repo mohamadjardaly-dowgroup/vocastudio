@@ -8,5 +8,8 @@ class TeacherCategories(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
 
+    image_1920 = fields.Image(string="Image", readonly=False)  # image.mixin override
+
+
 
 

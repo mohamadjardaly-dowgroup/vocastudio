@@ -122,6 +122,8 @@
 
                                                    t-att-value="c.id"/>
                                             <div class="back-button">
+
+
                                                 <a
                                                         onclick="setCategoryId(this)"
                                                         t-attf-href="/teacher_profile/cat/#{c.id}?{{ keep_query() }}"
