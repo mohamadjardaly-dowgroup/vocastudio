@@ -1,12 +1,21 @@
 <odoo>
     <data>
 
-        <template id="homepage" inherit_id="website.homepage">
+<!--                 <template id="voca_studio_module.homepage" inherit_id="website.homepage">
             <xpath expr="//t[1]/t[1]" position="inside">
-                <t t-set="teachers" t-value="teacher_id"/>
+                <t t-foreach="categories" t-as="c">
+                    cat
+                    <t t-esc="c"/>
+                </t>
+                <t t-foreach="teachers" t-as="t">
+                    techer
+                    <t t-esc="t"/>
+
+                </t>
                 <!--                <t t-call="voca_studio_module.slider_with_teacher"/>-->
             </xpath>
-        </template>
+        </template> -->
+
 
 
         <template id="voca_studio_module.teacher_login_restriction" name="Teacher Login Restriction">
