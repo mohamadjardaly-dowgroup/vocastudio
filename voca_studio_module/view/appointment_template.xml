@@ -105,9 +105,6 @@
                 </script>
 
                 <div class="container">
-                    <!--                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>-->
-
-                    <!-- Back Button -->
                     <div>
                         <div class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
                             <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto w-100">
@@ -237,11 +234,8 @@
                 }
             </style>
             <t t-call="portal.portal_layout">
-
                 <div class="container">
-
                     <div class="grid-container">
-                        <!-- Start Profile Cards -->
                         <t t-foreach="teachers" t-as="teacher" t-key="teacher.id">
                             <div>
                                 <div class="card" style="height:335px;border-radius: 25px;">
@@ -378,7 +372,7 @@
                                         <td>1 lesson</td>
                                         <td class="price">USD 34</td>
                                         <td class="price">
-                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
                                                class="btn btn-primary">
                                                 Book Now
                                             </a>
@@ -391,7 +385,7 @@
                                         <!--                                        <td class="strikethrough">USD 136</td>-->
                                         <td class="price">USD 129</td>
                                         <td class="price">
-                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
                                                class="btn btn-primary">
                                                 Book Now
                                             </a>
@@ -405,7 +399,7 @@
                                         <!--                                        <td class="strikethrough">USD 272</td>-->
                                         <td class="price">USD 245</td>
                                         <td class="price">
-                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
                                                class="btn btn-primary">
                                                 Book Now
                                             </a>
@@ -419,7 +413,7 @@
                                         <!--                                        <td class="strikethrough">USD 408</td>-->
                                         <td class="price">USD 347</td>
                                         <td class="price">
-                                            <a href="#" onclick="window.location.href='/online-booking'"
+                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
                                                class="btn btn-primary">
                                                 Book Now
                                             </a>
@@ -649,6 +643,33 @@
                         </div>
 
                     </ul>
+
+<!--                    <div class="booking-schedule">-->
+<!--                        <h2>Available Booking Times for-->
+<!--                            <t t-esc="teacher.name"/>-->
+<!--                        </h2>-->
+<!--                        <div t-if="bookings_by_day">-->
+<!--                            <ul>-->
+<!--                                <t t-foreach="bookings_by_day.items()" t-as="day_time">-->
+<!--                                    <li>-->
+<!--                                        <strong>Day:-->
+<!--                                            <t t-esc="day_time[0]"/>-->
+<!--                                        </strong>-->
+<!--                                        <ul>-->
+<!--                                            <t t-foreach="day_time[1]" t-as="time">-->
+<!--                                                <li>Time:-->
+<!--                                                    <t t-esc="time"/>-->
+<!--                                                </li>-->
+<!--                                            </t>-->
+<!--                                        </ul>-->
+<!--                                    </li>-->
+<!--                                </t>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                        <div t-else="">-->
+<!--                            <p>No available booking times.</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </t>
         </template>

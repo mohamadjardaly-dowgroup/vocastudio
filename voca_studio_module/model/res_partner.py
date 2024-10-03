@@ -28,7 +28,7 @@ class ResPartner(models.Model):
     age = fields.Integer(string=_("age"), compute='_compute_age')
     role = fields.Selection(
         selection=[('teacher', _('Teacher')),
-                   ('student', _('Student'))])
+                   ('stu', _('Student'))])
 
     experience = fields.Char(string=_('Experience'), translate=True, tracking=True)
     about = fields.Char(string=_('About'), translate=True, tracking=True)

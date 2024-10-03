@@ -12,12 +12,10 @@
 
                 // Show or hide fields based on the selected value
                 if (selectElement.value === 'teacher') {
-                genderField.style.display = 'block';
                 phoneField.style.display = 'block';
                 uploadField.style.display = 'block';
 <!--                aboutField.style.display = 'block';-->
-                } else if (selectElement.value === 'student') {
-                genderField.style.display = 'none';
+                } else if (selectElement.value === 'stu') {
                 phoneField.style.display = 'none';
                 uploadField.style.display = 'none';
 <!--                aboutField.style.display = 'none';-->
@@ -37,24 +35,24 @@
 
             </div>
 
-            <div class="row mb-3">
-                <!-- Add selection field for Teacher or Student -->
-                <div class="col-12">
-                    <label for="role">Role</label>
-                    <select required="required" class="form-control p-1" id="role" name="role"
-                            onchange="toggleFields(this)">
-                        <option value="" disabled="disabled">Select role ..</option>
-                        <option value="teacher">Teacher</option>
-                        <option value="student">Student</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3" id="phone_field" style="display:block;">
+<!--            <div class="row mb-3">-->
+<!--                &lt;!&ndash; Add selection field for Teacher or Student &ndash;&gt;-->
+<!--                <div class="col-12">-->
+<!--                    <label for="role">Role</label>-->
+<!--                    <t t-esc="role"/>-->
+<!--                    <select  class="form-control p-1" id="role" name="role"-->
+<!--                            onchange="toggleFields(this)">-->
+<!--                        <option value="" disabled="disabled">Select role ..</option>-->
+<!--                        <option value="teacher">Teacher</option>-->
+<!--                        <option value="student">Student</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div  class="row mb-3" id="phone_field" style="display:block;">
                 <label>Phone</label>
                 <div class="input-group mb-3 field-phone">
 
                     <input class="form-control" type="tel"
-                           required="This field is required"
                            name="phone"
                            placeholder="e.g.988 888 888"
                            t-att-value="phone"/>
@@ -63,7 +61,7 @@
             <div class="row mb-3" id="gender_field" style="display:block;">
                 <div class="col-12">
                     <label for="gender">Gender</label>
-                    <select required="required" class="form-control p-1" name="gender">
+                    <select  class="form-control p-1" name="gender">
 
                         <option t-att-selected="not default_value" disabled="disabled" value="">Select gender ..
                         </option>
@@ -85,7 +83,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-3" id="upload_field" style="display:block;">
+            <div t-if="role == 'teacher'" class="row mb-3" id="upload_field" style="display:block;">
                 <div class="col-12">
                     <label class="control-label" for="birthday">Upload your CV</label>
                     <input type="file" id="attachment_ids" name="filename"/>

@@ -12,7 +12,14 @@
 
      <record id="website_join_as_teacher" model="website.menu">
         <field name="name">Join As Teacher</field>
-        <field name="url">/web/signup</field>
+        <field name="url">/web/signup/teacher</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+
+     <record id="website_join_as_stu" model="website.menu">
+        <field name="name">Join As Student</field>
+        <field name="url">/web/signup/stu</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" type="int">80</field>
     </record>

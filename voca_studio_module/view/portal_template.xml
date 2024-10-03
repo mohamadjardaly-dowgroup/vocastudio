@@ -84,7 +84,8 @@
     <template id="payment.pay_meth_link" inherit_id="portal.side_content">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="after">
             <div>
-                <a role="button" href="/my/date" class="btn btn-link p-0 mt-3">
+                <t t-set="partner_sudo" t-value="request.env.user.partner_id.role"/>
+                <a t-if="partner_sudo == 'teacher'" role="button" href="/my/date" class="btn btn-link p-0 mt-3">
                     <i class="fa fa-clock-o"/>
                     Add Available Date
                 </a>
@@ -98,7 +99,7 @@
     <template id="portal_my_home" name="Portal My Home: products entries" inherit_id="portal.portal_my_home"
               priority="40">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            hellooo
+            .
 
         </xpath>
     </template>

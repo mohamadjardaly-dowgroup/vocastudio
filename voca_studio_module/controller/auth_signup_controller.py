@@ -67,9 +67,9 @@ class VocaAuthSignupHome(AuthSignupHome):
 
         return values
 
-    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False)
-    def web_auth_signup(self, *args, **kw):
-        print("vaaaaaaaaalueees ", request.httprequest.files)
+    @http.route('/web/signup/<string:role>', type='http', auth='public', website=True, sitemap=False)
+    def web_auth_signup(self,role, *args, **kw):
+        print("vaaaaaaaaalueees ", request.httprequest.files,role)
         qcontext = self.get_auth_signup_qcontext()
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
