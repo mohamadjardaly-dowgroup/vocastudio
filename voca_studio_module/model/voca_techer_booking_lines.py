@@ -2,9 +2,11 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class TeacherTags(models.Model):
+class TeacherBooking(models.Model):
     _name = 'voca.teacher.booking.lines'
     # _description = 'Portal'
+    _rec_name = 'availablity_date'
+
 
     name = fields.Char('Name', translate=True)
 

@@ -38,12 +38,14 @@ class Teacher(models.Model):
         default='draft', tracking=True)
 
     booking_ids= fields.One2many('voca.teacher.booking.lines', 'booking_id', string='Booking')
+    packaging_ids= fields.One2many('voca.teacher.packaging.lines', 'package_id', string='Packaging')
 
     available_time_slots_ids = fields.Many2many('teacher.time.slots',
                                                 string='Time Slots',
                                                 help='Time slots of the movie')
 
-    attachment_ids = fields.Many2many('ir.attachment' , related='instructor.attachment_ids',readonly=False)
+    attachment_ids = fields.Many2many('ir.attachment' ,string="Upload Cv", related='instructor.attachment_ids',readonly=False)
+    attachment_video_ids = fields.Many2many('ir.attachment' ,string="Video" ,readonly=False)
 
 
     def action_approved(self):

@@ -433,10 +433,36 @@
 
                             <!--                            </div>-->
                         </div>
+
+<!--                        <t t-foreach="videos" t-as="video">-->
+<!--                            <div class="col-md-4">-->
+<!--                                <div class="video-container" onclick="playVideo(this)">-->
+<!--                                    <video width="320" height="240" style="display: none;">-->
+<!--                                        <source t-att-src="'/web/content/' + str(video.id) + '?download=true'"-->
+
+
+<!--                                                type="video/mp4"/>-->
+<!--                                        Your browser does not support the video tag.-->
+<!--                                    </video>-->
+<!--                                    <p class="text-center">Click to play the video</p>-->
+
+<!--                                </div>-->
+<!--                                &lt;!&ndash;                                <p t-field="video.name"/>&ndash;&gt;-->
+<!--                            </div>-->
+<!--                        </t>-->
                     </t>
 
                 </div>
             </t>
+
+            <script type="text/javascript">
+                function playVideo(videoContainer) {
+                var video = videoContainer.querySelector('video');
+                video.style.display = 'block';
+                videoContainer.querySelector('p').style.display = 'none';
+                video.play();
+                }
+            </script>
         </template>
         <template id="voca_studio_module.available_days_list">
             <style>
@@ -644,32 +670,32 @@
 
                     </ul>
 
-<!--                    <div class="booking-schedule">-->
-<!--                        <h2>Available Booking Times for-->
-<!--                            <t t-esc="teacher.name"/>-->
-<!--                        </h2>-->
-<!--                        <div t-if="bookings_by_day">-->
-<!--                            <ul>-->
-<!--                                <t t-foreach="bookings_by_day.items()" t-as="day_time">-->
-<!--                                    <li>-->
-<!--                                        <strong>Day:-->
-<!--                                            <t t-esc="day_time[0]"/>-->
-<!--                                        </strong>-->
-<!--                                        <ul>-->
-<!--                                            <t t-foreach="day_time[1]" t-as="time">-->
-<!--                                                <li>Time:-->
-<!--                                                    <t t-esc="time"/>-->
-<!--                                                </li>-->
-<!--                                            </t>-->
-<!--                                        </ul>-->
-<!--                                    </li>-->
-<!--                                </t>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                        <div t-else="">-->
-<!--                            <p>No available booking times.</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <div class="booking-schedule">
+                        <h2>Available Booking Times for
+                            <t t-esc="teacher.name"/>
+                        </h2>
+                        <div t-if="bookings_by_day">
+                            <ul>
+                                <t t-foreach="bookings_by_day.items()" t-as="day_time">
+                                    <li>
+                                        <strong>Day:
+                                            <t t-esc="day_time[0]"/>
+                                        </strong>
+                                        <ul>
+                                            <t t-foreach="day_time[1]" t-as="time">
+                                                <li>Time:
+                                                    <t t-esc="time"/>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                        <div t-else="">
+                            <p>No available booking times.</p>
+                        </div>
+                    </div>
                 </div>
             </t>
         </template>

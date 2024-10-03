@@ -60,8 +60,13 @@ class TeacherController(http.Controller):
         if not teacher.exists():
             return request.not_found()
 
+        videos = teacher.attachment_video_ids
+
+
         return request.render('voca_studio_module.teacher_profile_template', {
             'teacher': teacher,
+            'videos': videos,
+
         })
 
     @http.route(['/online-booking/<int:teacher_id>'], auth='public', website=True, csrf=True)
