@@ -23,6 +23,7 @@
         'view/portal_template.xml',
         'view/res_partner_views.xml',
         'view/time_slots_views.xml',
+        'view/sale_order_views.xml',
 
     ],
     'assets': {

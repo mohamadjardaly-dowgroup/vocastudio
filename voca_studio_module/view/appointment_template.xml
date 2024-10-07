@@ -434,22 +434,18 @@
                             <!--                            </div>-->
                         </div>
 
-<!--                        <t t-foreach="videos" t-as="video">-->
-<!--                            <div class="col-md-4">-->
-<!--                                <div class="video-container" onclick="playVideo(this)">-->
-<!--                                    <video width="320" height="240" style="display: none;">-->
-<!--                                        <source t-att-src="'/web/content/' + str(video.id) + '?download=true'"-->
-
-
-<!--                                                type="video/mp4"/>-->
-<!--                                        Your browser does not support the video tag.-->
-<!--                                    </video>-->
-<!--                                    <p class="text-center">Click to play the video</p>-->
-
-<!--                                </div>-->
-<!--                                &lt;!&ndash;                                <p t-field="video.name"/>&ndash;&gt;-->
-<!--                            </div>-->
-<!--                        </t>-->
+                        <t t-foreach="videos" t-as="video">
+                            <div class="col-md-4">
+                                <div class="video-container">
+                                    <video width="320" height="240" style="display: none;">
+                                        <source t-att-src="'/web/content/' + str(video.id) + '?download=true'"
+                                                type="video/mp4"/>
+                                    </video>
+                                    <p class="text-center">Click to play the video</p>
+                                </div>
+                                <!--                                <p t-field="video.name"/>-->
+                            </div>
+                        </t>
                     </t>
 
                 </div>

@@ -41,6 +41,7 @@
                                 <field name="booking_ids">
                                     <tree editable="bottom">
                                         <field name="availablity_date"/>
+                                        <field name="booking_order_id"/>
                                         <button name="action_approved" string="Approve" type="object"
                                                 class="btn text-uppercase" invisible="status == 'approved'"
                                         />
@@ -58,7 +59,7 @@
                                 <field name="packaging_ids">
                                     <tree editable="bottom">
                                         <field name="name"/>
-                                        <field name="available_time_slots_ids" widget="many2many_tags" />
+                                        <field name="quantity"  />
 
 
                                     </tree>

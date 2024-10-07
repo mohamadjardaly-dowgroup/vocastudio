@@ -47,6 +47,8 @@ class Teacher(models.Model):
     attachment_ids = fields.Many2many('ir.attachment' ,string="Upload Cv", related='instructor.attachment_ids',readonly=False)
     attachment_video_ids = fields.Many2many('ir.attachment' ,string="Video" ,readonly=False)
 
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+
 
     def action_approved(self):
         for rec in self:
@@ -55,6 +57,20 @@ class Teacher(models.Model):
     def action_refused(self):
         for rec in self:
             rec.state = 'refused'
+
+    @api.model
+    def create(self, vals):
+        package = super(Teacher, self).create(vals)
+        # Automatically create a product linked to this package
+        print("vaaaals ", vals, package.name)
+        product_vals = {
+            'name':  f"{package.name} - Lessons" ,
+            'type': 'service',
+            # 'list_price': package.price,
+        }
+        product = self.env['product.product'].create(product_vals)
+        package.product_id = product.id
+        return package
 
 
 

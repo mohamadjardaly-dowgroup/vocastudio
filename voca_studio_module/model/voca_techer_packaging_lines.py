@@ -14,4 +14,12 @@ class TeacherPackaging(models.Model):
                                                 string='Time Slots',
                                                )
 
+    quantity = fields.Float('Qty')
+
+    order_line_ids = fields.One2many('sale.order', 'package_id', string='Sale Lines')
+
+
+
+
+
 
