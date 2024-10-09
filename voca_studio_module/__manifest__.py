@@ -8,7 +8,7 @@
     "license": "LGPL-3",
     "author": "",
     "website": "",
-    "depends": ["base", 'website', 'website_slides', 'mail'],
+    "depends": ["base", 'website', 'website_slides', 'mail','website_sale','sale','product','web'],
     "data": [
         'security/ir.model.access.csv',
         'data/teacher_website_menu.xml',
@@ -30,10 +30,16 @@
         'web.assets_backend': [
             'voca_studio_module/static/src/js/time_widget.js',
             'voca_studio_module/static/src/xml/**/*.xml',
+            # 'voca_studio_module/static/src/js/website_sale_utils.js',
+
         ],
         'web.assets_frontend': [
+            # 'voca_studio_module/static/src/js/**/*.js',
+            #
             'voca_studio_module/static/src/js/bookShow.js',
             'voca_studio_module/static/src/js/selectSeat.js',
+            'voca_studio_module/static/src/js/website_sale_utils.js',
+
             # 'voca_studio_module/static/src/css/show_booking_management.css',
         ],
     },

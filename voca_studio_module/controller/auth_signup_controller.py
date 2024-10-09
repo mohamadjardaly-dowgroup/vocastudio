@@ -64,7 +64,6 @@ class VocaAuthSignupHome(AuthSignupHome):
         values['role'] = values.get("role")
         values['experience'] = values.get("experience")
         values['about'] = values.get("about")
-
         return values
 
     @http.route('/web/signup/<string:role>', type='http', auth='public', website=True, sitemap=False)

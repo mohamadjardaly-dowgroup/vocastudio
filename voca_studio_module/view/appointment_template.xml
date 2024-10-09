@@ -367,59 +367,64 @@
                             <table style="display:inline-flex;
 ">
                                 <tbody>
+                                    <t t-foreach="teacher.packaging_ids" t-as="package">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="package.name"/>
+                                            </td>
+                                            <td class="price"> <t t-esc="package.price"/></td>
+                                            <td class="price">
+                                                <a t-attf-href="/online-booking/package/#{teacher.id}/#{package.id}?{{ keep_query() }}"
+                                                   class="btn btn-primary">
+                                                    Book Now
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
                                     <!-- Package 1 (No Discount) -->
-                                    <tr>
-                                        <td>1 lesson</td>
-                                        <td class="price">USD 34</td>
-                                        <td class="price">
-                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
-                                               class="btn btn-primary">
-                                                Book Now
-                                            </a>
-                                        </td>
-                                    </tr>
+
                                     <!-- Package 2 (With Discount) -->
-                                    <tr>
-                                        <td>4 lessons</td>
-                                        <!--                                        <td class="discount">5% off</td>-->
-                                        <!--                                        <td class="strikethrough">USD 136</td>-->
-                                        <td class="price">USD 129</td>
-                                        <td class="price">
-                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
-                                               class="btn btn-primary">
-                                                Book Now
-                                            </a>
-                                        </td>
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>4 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">5% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 136</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 129</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
 
-                                    </tr>
-                                    <!-- Package 3 (With Discount) -->
-                                    <tr>
-                                        <td>8 lessons</td>
-                                        <!--                                        <td class="discount">10% off</td>-->
-                                        <!--                                        <td class="strikethrough">USD 272</td>-->
-                                        <td class="price">USD 245</td>
-                                        <td class="price">
-                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
-                                               class="btn btn-primary">
-                                                Book Now
-                                            </a>
-                                        </td>
+                                    <!--                                    </tr>-->
+                                    <!--                                    &lt;!&ndash; Package 3 (With Discount) &ndash;&gt;-->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>8 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">10% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 272</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 245</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
 
-                                    </tr>
-                                    <!-- Package 4 (With Discount) -->
-                                    <tr>
-                                        <td>12 lessons</td>
-                                        <!--                                        <td class="discount">15% off</td>-->
-                                        <!--                                        <td class="strikethrough">USD 408</td>-->
-                                        <td class="price">USD 347</td>
-                                        <td class="price">
-                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"
-                                               class="btn btn-primary">
-                                                Book Now
-                                            </a>
-                                        </td>
+                                    <!--                                    </tr>-->
+                                    <!--                                    &lt;!&ndash; Package 4 (With Discount) &ndash;&gt;-->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>12 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">15% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 408</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 347</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
 
-                                    </tr>
+                                    <!--                                    </tr>-->
 
                                 </tbody>
 
@@ -769,5 +774,8 @@
                 });
             </script>
         </template>
+
+
+
     </data>
 </odoo>
