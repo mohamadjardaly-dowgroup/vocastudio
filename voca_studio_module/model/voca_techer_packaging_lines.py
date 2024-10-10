@@ -16,6 +16,7 @@ class TeacherPackaging(models.Model):
 
     quantity = fields.Float('Qty')
     price = fields.Float('Price')
+    package_time = fields.Char(string='Time')
 
     order_line_ids = fields.One2many('sale.order', 'package_id', string='Sale Lines')
     product_id = fields.Many2one('product.product', string='Product',related="package_id.product_id", readonly=True)

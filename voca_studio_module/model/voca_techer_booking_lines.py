@@ -19,6 +19,7 @@ class TeacherBooking(models.Model):
         [
             ('draft', 'Draft'),
             ('approved', 'Approved'),
+            ('booked', 'Booked'),
             ('refused', 'Refused'),
         ], string='Status', index=True, readonly=True, copy=False,
         default='draft', tracking=True)

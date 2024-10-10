@@ -135,7 +135,7 @@ class TeacherController(http.Controller):
 
         bookings_by_day = {}
 
-        for book in teacher.booking_ids:
+        for book in teacher.booking_ids.filtered(lambda x: x.status == 'approved'):
             avail_date = book.availablity_date
 
             if isinstance(avail_date, str):

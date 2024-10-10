@@ -17,7 +17,6 @@
         'view/voca_teacher_categories_view.xml',
         'view/website_template.xml',
         'view/slide_channel_views.xml',
-        'view/website_slides_templates_course.xml',
         'view/appointment_template.xml',
         'view/auth_signup_template.xml',
         'view/portal_template.xml',
