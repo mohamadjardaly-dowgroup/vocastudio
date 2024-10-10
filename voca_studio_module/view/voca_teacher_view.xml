@@ -61,7 +61,7 @@
                                         <field name="name"/>
                                         <field name="price" class="oe_inline"/>
                                         <field name="quantity"/>
-                                        <field name="package_time" widget="float_time"/>
+                                        <field name="package_time"/>
                                         <field name="product_id"/>
 
 
