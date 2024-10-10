@@ -5,13 +5,13 @@ from odoo.http import request
 import json
 
 
-class BookingsCart(WebsiteSale):
+# class BookingsCart(WebsiteSale):
 
-    @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
-    def cart(self, access_token=None, revive='', **post):
-        print("rrrrrr")
-        cart = super(BookingsCart, self).cart()
-        return request.redirect('/shop/checkout?express=1')
+#     @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
+#     def cart(self, access_token=None, revive='', **post):
+#         print("rrrrrr")
+#         cart = super(BookingsCart, self).cart()
+#         return request.redirect('/shop/checkout?express=1')
 
 
 class BookingController(http.Controller):
