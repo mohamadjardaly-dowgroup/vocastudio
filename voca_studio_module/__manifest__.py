@@ -23,6 +23,8 @@
         'view/res_partner_views.xml',
         'view/time_slots_views.xml',
         'view/sale_order_views.xml',
+        'view/master_classes_views.xml',
+        'view/master_classes_categories_view.xml',
 
     ],
     'assets': {

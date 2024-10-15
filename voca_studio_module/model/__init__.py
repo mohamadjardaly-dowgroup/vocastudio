@@ -8,3 +8,4 @@ from . import time_slots
 from . import voca_techer_packaging_lines
 from . import sale_order
 from . import website
+from . import master_classes

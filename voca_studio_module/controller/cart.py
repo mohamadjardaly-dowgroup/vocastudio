@@ -6,7 +6,7 @@ import json
 
 
 # class BookingsCart(WebsiteSale):
-
+#
 #     @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
 #     def cart(self, access_token=None, revive='', **post):
 #         print("rrrrrr")

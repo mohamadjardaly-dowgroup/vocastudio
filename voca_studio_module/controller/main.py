@@ -64,7 +64,6 @@ class TeacherController(http.Controller):
 
         videos = teacher.attachment_video_ids
 
-
         return request.render('voca_studio_module.teacher_profile_template', {
             'teacher': teacher,
             'videos': videos,
@@ -72,21 +71,18 @@ class TeacherController(http.Controller):
         })
 
     @http.route(['/online-booking/<int:teacher_id>',
-                 '/online-booking/package/<int:teacher_id>/<int:package_id>'], auth='public', website=True, csrf=True,methods=['GET'])
-    def online_appointment(self, teacher_id=None,package_id=None, **kw):
-        print("Package ------",package_id,teacher_id,kw)
-
-
+                 '/online-booking/package/<int:teacher_id>/<int:package_id>'], auth='public', website=True, csrf=True,
+                methods=['GET'])
+    def online_appointment(self, teacher_id=None, package_id=None, **kw):
+        print("Package ------", package_id, teacher_id, kw)
 
         if request.env.user._is_public():
             return request.redirect('/web/login')
 
         teacher = request.env['voca.teacher'].sudo().browse(teacher_id)
 
-
         package_obj = teacher.packaging_ids.filtered(lambda x: x.id == package_id)
         if package_obj:
-
             request.session['package_id'] = {
                 'id': package_obj.id,
                 'price': package_obj.price,
@@ -111,7 +107,7 @@ class TeacherController(http.Controller):
                 bookings_by_day[day_with_date] = []
             bookings_by_day[day_with_date].append(time)
 
-        print("bookings_by_day",bookings_by_day)
+        print("bookings_by_day", bookings_by_day)
         teacher.product_id.website_url
         print("url ", teacher.product_id.website_url)
         # return request.render('voca_studio_module.available_days_list_with_times', {
@@ -119,7 +115,6 @@ class TeacherController(http.Controller):
         #     'bookings_by_day': bookings_by_day,
         # })
         # product.website_url = "/shop/%s" % slug(product)
-
 
         return request.redirect(teacher.product_id.website_url)
 
@@ -130,8 +125,8 @@ class TeacherController(http.Controller):
     @http.route('/get_booking_by_day', type='http', auth='public')
     def get_booking_by_day(self, teacher_id):
         print("teacher ", teacher_id)
-        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(teacher_id))],limit=1)
-        teacher = request.env['voca.teacher'].sudo().search([('product_id', '=',product.id)])
+        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(teacher_id))], limit=1)
+        teacher = request.env['voca.teacher'].sudo().search([('product_id', '=', product.id)])
 
         bookings_by_day = {}
 
@@ -152,5 +147,36 @@ class TeacherController(http.Controller):
         return json.dumps(bookings_by_day)
 
 
+class MasterClassController(http.Controller):
+
+    @http.route(['/master_class/cat/'], type='http', auth="public",
+                methods=['POST', 'GET'], website=True, csrf=False)
+    def get_class_details(self, category_id=None, **kw):
+        try:
+            # teacher = request.env['master.classes'].sudo().search([])
+            categ = request.env['master.classes.categories'].sudo().search([])
+            # print("all teacher :", teacher, kw)
+            print("nnnnnnnnnn")
+            # teachers = request.env['voca.teacher'].sudo().search([('categories', '=', int(category_id))])
+            return request.render('voca_studio_module.teacher_profile_card_with_category', {
+                'categories': categ,  # Optionally pass the category for UI
+            })
+        except Exception as e:
+            return e
 
 
+    @http.route(['/master_class/cat/<int:category_id>'], type='http', auth="public",
+            methods=['GET'], website=True, csrf=False)
+    def get_class_cat_details(self, category_id=None, **kw):
+        try:
+            # teacher = request.env['master.classes'].sudo().search([])
+            categ = request.env['master.classes.categories'].sudo().search([])
+            # print("all teacher :", teacher, kw)
+            master = request.env['master.classes'].sudo().search([('categories', '=', int(category_id))])
+            print("master",master)
+
+            return request.render('voca_studio_module.teacher_profile_card_with_category', {
+                'master': master,  # Optionally pass the category for UI
+            })
+        except Exception as e:
+            return e
