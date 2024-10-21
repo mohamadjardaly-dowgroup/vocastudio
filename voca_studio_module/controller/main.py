@@ -158,25 +158,150 @@ class MasterClassController(http.Controller):
             # print("all teacher :", teacher, kw)
             print("nnnnnnnnnn")
             # teachers = request.env['voca.teacher'].sudo().search([('categories', '=', int(category_id))])
-            return request.render('voca_studio_module.teacher_profile_card_with_category', {
+            return request.render('voca_studio_module.master_class_cat', {
                 'categories': categ,  # Optionally pass the category for UI
             })
         except Exception as e:
             return e
 
-
     @http.route(['/master_class/cat/<int:category_id>'], type='http', auth="public",
-            methods=['GET'], website=True, csrf=False)
+                methods=['GET'], website=True, csrf=False)
     def get_class_cat_details(self, category_id=None, **kw):
         try:
             # teacher = request.env['master.classes'].sudo().search([])
             categ = request.env['master.classes.categories'].sudo().search([])
             # print("all teacher :", teacher, kw)
             master = request.env['master.classes'].sudo().search([('categories', '=', int(category_id))])
-            print("master",master)
+            print("master", master)
 
-            return request.render('voca_studio_module.teacher_profile_card_with_category', {
+            return request.render('voca_studio_module.master_class_card_with_category', {
                 'master': master,  # Optionally pass the category for UI
             })
         except Exception as e:
             return e
+
+    @http.route(['/master_profile/<int:master_id>'
+                 ], type='http', auth="public",
+                methods=['POST', 'GET'], website=True, csrf=False)
+    def get_full_profile(self, master_id=None, **kw):
+        print("mmmmmmm", master_id, **kw)
+
+        master = request.env['master.classes'].sudo().browse(master_id)
+        if not master.exists():
+            return request.not_found()
+
+        return request.render('voca_studio_module.master_profile_template', {
+            'masters': master,
+
+        })
+
+    @http.route([
+        '/booking/master/<int:master_id>',
+
+    ], auth='public', website=True, csrf=True,
+        methods=['GET'])
+    def online_appointment(self, product_id=None, **kw):
+        print("first ------", product_id, kw.get('master_id'))
+
+        # product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(product_id))], limit=1)
+        master_rec = request.env['master.classes'].sudo().browse(kw.get('master_id'))
+
+        print("pppppp ------", master_rec, kw)
+
+        if request.env.user._is_public():
+            return request.redirect('/web/login')
+        if product_id:
+
+            # Fetch all master classes
+
+            # Collect all individual dates between datetime_from and datetime_to for each class
+            all_dates = []
+            for master in master_rec:
+                if master.datetime_from and master.datetime_to:
+                    start_date = master.datetime_from
+                    end_date = master.datetime_to
+                    # Generate dates between the start and end
+                    current_date = start_date
+                    while current_date <= end_date:
+                        all_dates.append({
+                            'master_id': master.id,
+                            'name': master.name,
+                            'date': current_date.strftime('%Y-%m-%d %H:%M:%S')
+                        })
+                        current_date += timedelta(days=1)
+
+                print("all_dates", all_dates)
+        master_rec.product_id.website_url
+        return request.redirect(master_rec.product_id.website_url)
+
+    @http.route([
+        '/online-booking/master'
+
+    ], auth='public', website=True, csrf=True,
+        methods=['GET'])
+    def online_appointment_ajax(self, product_id=None, **kw):
+        print("first ajax ------", product_id, kw.get('master_id'))
+
+        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(product_id))], limit=1)
+        master_rec = request.env['master.classes'].sudo().search([('product_id', '=', product.id)])
+
+        print("newww ajax ------", master_rec, kw)
+
+        if request.env.user._is_public():
+            return request.redirect('/web/login')
+        if product_id:
+
+            # Fetch all master classes
+
+            # Collect all individual dates between datetime_from and datetime_to for each class
+            all_dates = []
+            for master in master_rec:
+                if master.datetime_from and master.datetime_to:
+                    start_date = master.datetime_from
+                    end_date = master.datetime_to
+                    # Generate dates between the start and end
+                    current_date = start_date
+
+                    existing_dates = master.dates_ids.mapped('date')
+                    existing_dates_str = [d.strftime('%Y-%m-%d') for d in existing_dates]
+                    while current_date <= end_date:
+                        current_date_str = current_date.strftime('%Y-%m-%d')
+
+                        if current_date_str  not in existing_dates_str:
+                            print("exist and current ", current_date,existing_dates)
+                            # Only add new dates if they do not already exist
+                            master.sudo().write({
+                                'dates_ids': [(0, 0, {'date': current_date})]
+                            })
+
+                        else:
+
+                            print(f"Duplicate date detected: {current_date}")
+
+                        all_dates.append({
+                            'master_id': master.id,
+                            'name': master.name,
+                            'date': current_date.strftime('%Y-%m-%d %H:%M:%S')
+                        })
+                        current_date += timedelta(days=1)
+
+        print("all_dates", all_dates)
+        master_rec.product_id.website_url
+        return request.make_response(
+            json.dumps(all_dates),
+            headers=[('Content-Type', 'application/json')]
+        )
+
+    @http.route('/check_master_product', auth='public', website=True, csrf=True, methods=['GET'])
+    def check_master_product(self, product_id=None, **kw):
+        print("gggggggggggggggg",product_id)
+        if not product_id:
+            return request.make_response("Invalid product ID", headers=[('Content-Type', 'application/json')])
+
+        # Check if the product is marked as master
+        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(product_id))], limit=1)
+
+        is_master = product.is_master if product else False
+
+        return request.make_response(json.dumps({'is_master': is_master}),
+                                     headers=[('Content-Type', 'application/json')])

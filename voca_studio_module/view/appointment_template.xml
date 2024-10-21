@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <template id="voca_studio_module.teacher_profile_card">
             <style>
                 .grid-container {
@@ -278,10 +279,10 @@
                                                 <a t-attf-href="/teacher_profile/#{teacher.id}?{{ keep_query() }}">See
                                                     Full Profile
                                                 </a>
-<!--                                                <button class="back-button"-->
-<!--                                                        onclick="window.location.href='/online-appointment'">Book-->
-<!--                                                    lessons-->
-<!--                                                </button>-->
+                                                <!--                                                <button class="back-button"-->
+                                                <!--                                                        onclick="window.location.href='/online-appointment'">Book-->
+                                                <!--                                                    lessons-->
+                                                <!--                                                </button>-->
 
 
                                             </div>
@@ -372,8 +373,12 @@
                                             <td>
                                                 <t t-esc="package.name"/>
                                             </td>
-                                            <td class="price"> <t t-esc="package.price"/></td>
-                                            <td class="price"> <t t-esc="package.package_time"/></td>
+                                            <td class="price">
+                                                <t t-esc="package.price"/>
+                                            </td>
+                                            <td class="price">
+                                                <t t-esc="package.package_time"/>
+                                            </td>
                                             <td class="price">
                                                 <a t-attf-href="/online-booking/package/#{teacher.id}/#{package.id}?{{ keep_query() }}"
                                                    class="btn btn-primary">
@@ -775,7 +780,266 @@
                 });
             </script>
         </template>
+        <template id="voca_studio_module.master_class_cat">
+            <t t-call="portal.portal_layout">
+                <script>
+                    var selectedCategoryId = null;
+                    function setCategoryId(element) {
+                    selectedCategoryId = element.value;
+                    console.log("Selected Category ID: ", selectedCategoryId);
 
+                    }
+                </script>
+
+                <div class="container">
+
+                    <div>
+                        <div class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
+                            <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto w-100">
+                                <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible justify-content-evenly">
+                                    <t t-foreach="categories" t-as="c">
+                                        <li style="margin-right: 15px;">
+                                            <input type="radio"
+                                                   t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                                   class="btn-check pe-none parent-category" t-att-id="c.id"
+                                                   t-att-value="c.id"/>
+                                            <div class="back-button text-center d-flex flex-column align-items-center">
+                                                <a onclick="setCategoryId(this)"
+                                                   t-attf-href="/master_class/cat/#{c.id}?{{ keep_query() }}"
+                                                   t-att-id="c.id">
+                                                    <img t-att-src="'/web/image/master.classes.categories/%d/image_1920' % c.id"
+                                                         alt="Category Image"
+                                                         style="width:100px; height: 100px; border-radius: 50%;"
+                                                         class="img-fluid mb-2"/>
+                                                </a>
+                                                <a onclick="setCategoryId(this)"
+                                                   t-attf-href="/master_class/cat/#{c.id}?{{ keep_query() }}"
+                                                   t-att-id="c.id">
+                                                    <span class="text-center" t-field="c.name"
+                                                          style="margin-top: 10px;"/>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </t>
+        </template>
+        <template id="voca_studio_module.master_class_card_with_category">
+            <link rel="stylesheet" href="/voca_studio_module/static/src/css/portal_form.css"/>
+
+
+            <t t-call="portal.portal_layout">
+                <div class="container" style="padding-bottom:10px">
+                    <div class="grid-container">
+                        <t t-foreach="master" t-as="master" t-key="master.id">
+                            <div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-right text-center">
+                                            <img class="rounded-circle"
+                                                 t-attf-src="data:image/*;base64,{{master.image_1920}}"
+                                                 alt="Master Image" width="100" height="100"/>
+
+                                            <h4 class="card-title">
+                                                <span t-field="master.instructor.name"/>
+                                            </h4>
+
+                                            <div class="center text-center">
+                                                <!-- Tags -->
+
+                                                <!-- Short Bio -->
+
+                                                <span class="text-center" t-field="master.time"/>
+                                                <span class="text-center" t-field="master.total_hours"/>
+                                                <span class="text-center" t-field="master.lectures"/>
+
+
+                                                Full Profile Button
+                                                <a class="text-center"
+                                                   t-attf-href="/master_profile/#{master.id}?{{ keep_query() }}">See
+                                                    Full Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+
+            </t>
+        </template>
+
+
+        <template id="voca_studio_module.master_profile_template" name="Master Full Profile">
+            <style>
+                .lesson-packages {
+                font-family: Arial, sans-serif;
+                }
+
+                .lesson-packages .package-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .lesson-packages .discount {
+                color: red;
+                font-weight: bold;
+                }
+
+                .lesson-packages .strikethrough {
+                text-decoration: line-through;
+                color: #888;
+                margin-left: 5px;
+                }
+
+                .lesson-packages .price {
+                font-weight: bold;
+                color: #000;
+                }
+
+                .lesson-packages td {
+                padding: 8px 16px;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+                    <t t-foreach="masters" t-as="master">
+                        <div class="profile-header text-center">
+
+                            <img class="rounded-circle mb-3" t-attf-src="data:image/*;base64,{{master.image_1920}}"
+                                 alt="Teacher Image" width="150" height="150"/>
+                            <h2>
+                                <span t-field="master.instructor.name"/>
+                            </h2>
+                            <h5>
+                                <!--                        <span t-field="master.instructor.job_position"/>-->
+                            </h5>
+                        </div>
+                        <div class="profile-body" style="text-align:center">
+                            <h3>Time</h3>
+                            <p>
+                                <span t-field="master.time"/>
+
+                            </p>
+                            <h3>Total Hours </h3>
+                            <p>
+                                <span t-field="master.total_hours"/>
+                            </p>
+                            <h3>Lectures</h3>
+                            <p>
+                                <span t-field="master.lectures"/>
+                            </p>
+
+                              <h3>Description</h3>
+                            <p>
+                                <span t-field="master.description"/>
+                            </p>
+
+                             <a t-attf-href="/booking/master/#{master.id}?{{ keep_query() }}"
+                                                   class="btn btn-primary">
+                                                    Book Now
+                                                </a>
+
+                        </div>
+<!--                        <div class="lesson-packages" style="text-align:center">-->
+<!--                            <h4>Lessons packages</h4>-->
+<!--                            <table style="display:inline-flex;-->
+<!--">-->
+<!--                                <tbody>-->
+<!--                                    <t t-foreach="teacher.packaging_ids" t-as="package">-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <t t-esc="package.name"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <t t-esc="package.price"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <t t-esc="package.package_time"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <a t-attf-href="/online-booking/package/#{teacher.id}/#{package.id}?{{ keep_query() }}"-->
+<!--                                                   class="btn btn-primary">-->
+<!--                                                    Book Now-->
+<!--                                                </a>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                    &lt;!&ndash; Package 1 (No Discount) &ndash;&gt;-->
+
+<!--                                    &lt;!&ndash; Package 2 (With Discount) &ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>4 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">5% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 136</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 129</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    &lt;!&ndash; Package 3 (With Discount) &ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>8 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">10% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 272</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 245</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    &lt;!&ndash; Package 4 (With Discount) &ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>12 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">15% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 408</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 347</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+
+<!--                                </tbody>-->
+
+<!--                            </table>-->
+<!--                            &lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <a href="#" onclick="window.location.href='/online-appointment'"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   class="btn btn-secondary">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                    Book Lessons&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                </a>&ndash;&gt;-->
+
+
+<!--                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                        </div>-->
+
+                    </t>
+
+                </div>
+            </t>
+
+        </template>
 
 
     </data>
