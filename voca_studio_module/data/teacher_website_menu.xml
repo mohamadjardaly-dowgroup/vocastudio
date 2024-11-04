@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salon booking website menu-->
+    <record id="website_menu_voca" model="website.menu">
+        <field name="name">Our Teachers</field>
+        <field name="url">/teacher_profile</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+
+
+
+     <record id="website_join_as_teacher" model="website.menu">
+        <field name="name">Join As Teacher</field>
+        <field name="url">/web/signup/teacher</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+
+     <record id="website_join_as_stu" model="website.menu">
+        <field name="name">Join As Student</field>
+        <field name="url">/web/signup/stu</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+     <record id="website_master_class" model="website.menu">
+        <field name="name">MasterClasses</field>
+        <field name="url">/master_class/cat/</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">80</field>
+    </record>
+</odoo>

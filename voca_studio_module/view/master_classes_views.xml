@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--  Time Slots Form View  -->
+    <record id="master_classes_view_form" model="ir.ui.view">
+        <field name="name">master.classes.view.form</field>
+        <field name="model">master.classes</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" required="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="image_1920" class="oe_avatar" widget="image" options="{'size': [100,100]}"/>
+                        <field name="date"/>
+                        <field name="time"/>
+                        <field name="instructor"/>
+                        <field name="total_hours"/>
+                        <field name="lectures"/>
+                        <field name="description"/>
+                        <field name="datetime_from"/>
+                        <field name="datetime_to"/>
+<!--                            <field name="dates_ids"/>-->
+                        <field name="categories" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--  Time Slots Tree View  -->
+    <record id="master_classes_view_tree" model="ir.ui.view">
+        <field name="name">master.classes.view.tree</field>
+        <field name="model">master.classes</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--  Action Time Slots  -->
+    <record id="master_classes_action" model="ir.actions.act_window">
+        <field name="name">MasterClasses</field>
+        <field name="res_model">master.classes</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="master_classes" name="MasterClasses" parent="menu_teacher" action="master_classes_action"/>
+    <menuitem id="master_classes1" name="MasterClasses" parent="master_classes" action="master_classes_action"/>
+
+    <!--  MenuItem for time slots  -->
+    <!--    <menuitem id="master_classes" name="Time Slots"-->
+    <!--              parent="menu_teacher_list" action="master_classes_action"/>-->
+</odoo>
