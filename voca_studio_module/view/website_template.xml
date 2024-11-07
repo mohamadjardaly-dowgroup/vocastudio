@@ -202,7 +202,7 @@
                 let calendarEl = document.getElementById('calendar');
                 let calendar;
                 if (response.is_master) {
-                            console.info('product isss master ------');
+                            console.info('product isssss master ------');
 
                     let quantityInput = document.getElementById('quantity');
                     if (quantityInput) {
