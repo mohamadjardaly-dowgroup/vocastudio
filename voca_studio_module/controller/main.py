@@ -242,7 +242,7 @@ class MasterClassController(http.Controller):
     def online_appointment_ajax(self, product_id=None, **kw):
         print("first ajax ------", product_id, kw.get('master_id'))
 
-        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(product_id))], limit=1)
+        product = request.env['product.template'].sudo().search([('id', '=', int(product_id))], limit=1)
         master_rec = request.env['master.classes'].sudo().search([('product_id', '=', product.id)])
 
         print("newww ajax ------", master_rec, kw)
