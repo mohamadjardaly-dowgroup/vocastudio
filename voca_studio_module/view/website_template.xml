@@ -26,14 +26,16 @@
 
 
             <xpath expr="//input[@name='add_qty']" position="attributes">
-                <attribute name="t-att-value">
+                                    <attribute name="t-att-value" remove="add_qty or 1" add="request.session.get('package_id').get('quantity')"/>
+
+<!--                 <attribute name="t-att-value">
                     <t t-if="request.session.get('package_id')">
                         <t t-esc="request.session.get('package_id').get('quantity')"/>
                     </t>
                     <t t-else="">
                         3
                     </t>
-                </attribute>
+                </attribute> -->
             </xpath>
 
             <xpath expr="//input[@name='add_qty']" position="attributes">
