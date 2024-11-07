@@ -36,6 +36,8 @@ class Website(models.Model):
                     ])
                 ])
                 print("bobobobo", booking_dates, booking_lines, first_order_line,request.session.get('price'))
+                _logger.info('bobobobobo-----------',booking_dates, booking_lines, first_order_line)
+
                 if first_order_line:
                     if booking_lines:
                         first_order_line.write({
