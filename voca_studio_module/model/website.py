@@ -4,6 +4,9 @@
 from odoo import _, _lt, SUPERUSER_ID, api, fields, models, tools
 from odoo.http import request
 from datetime import datetime,timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class Website(models.Model):
