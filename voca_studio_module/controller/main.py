@@ -275,7 +275,7 @@ class MasterClassController(http.Controller):
             return request.make_response("Invalid product ID", headers=[('Content-Type', 'application/json')])
 
         # Check if the product is marked as master
-        product = request.env['product.product'].sudo().search([('product_tmpl_id', '=', int(product_id))], limit=1)
+        product = request.env['product.template'].sudo().search([('id', '=', int(product_id))], limit=1)
 
         is_master = product.is_master if product else False
 
