@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -34,6 +34,24 @@ class MasterClass(models.Model):
 
     dates_ids = fields.One2many('master.class.date', 'master_id', string='Dates')
 
+    @api.onchange('datetime_from', 'datetime_to')
+    def _onchange_datetime_range(self):
+        if self.datetime_from and self.datetime_to and self.datetime_from < self.datetime_to:
+            # Clear existing dates
+            self.dates_ids = [(5, 0, 0)]
+
+            # Generate dates between datetime_from and datetime_to
+            start_date = fields.Date.from_string(self.datetime_from)
+            end_date = fields.Date.from_string(self.datetime_to)
+            date_list = []
+
+            current_date = start_date
+            while current_date <= end_date:
+                date_list.append((0, 0, {'date': current_date}))
+                current_date += timedelta(days=1)
+
+            # Assign dates to dates_ids field
+            self.dates_ids = date_list
 
 
     @api.model
@@ -76,4 +94,12 @@ class MasterClassDate(models.Model):
     _description = 'Master Class Date'
 
     master_id = fields.Many2one('master.classes', string='Master Class', required=True, ondelete='cascade')
-    date = fields.Datetime(string='Date', required=True)
+    date = fields.Date(string='Date', required=True)
+    booking_order_id = fields.Many2one('sale.order.line', string='Booking')
+
+    status = fields.Selection(
+        [
+            ('draft', 'Draft'),
+            ('booked', 'Booked'),
+        ], string='Status', index=True, readonly=True, copy=False,
+        default='draft', tracking=True)

@@ -25,11 +25,24 @@ class Website(models.Model):
                         for date in booking_dates
                     ])
                 ])
-                print("bobobobo", booking_lines,first_order_line)
+                booking_master_lines = self.env['master.class.date'].search([
+                    ('date', 'in', [
+                        (datetime.strptime(date.split(' (')[0], date_format) - timedelta(hours=3)).replace(tzinfo=None)
+                        for date in booking_dates
+                    ])
+                ])
+                print("bobobobo", booking_dates, booking_master_lines, booking_lines, first_order_line,request.session.get('price'))
                 if first_order_line:
-                    first_order_line.write({
-                        'price_unit':request.session.get('package_id').get('price'),
-                        'booking_ids': [(6, 0, booking_lines.ids)]})
+                    if booking_master_lines:
+                        booking_master_lines.write({'status': 'booked'})
+                        first_order_line.write({
+                            'price_unit': request.session.get('package_id').get('price'),
+                            'booking_master_ids': [(6, 0, booking_master_lines.ids)]})
+                    else:
+
+                        first_order_line.write({
+                            'price_unit':request.session.get('package_id').get('price'),
+                            'booking_ids': [(6, 0, booking_lines.ids)]})
 
 
         return sale_order

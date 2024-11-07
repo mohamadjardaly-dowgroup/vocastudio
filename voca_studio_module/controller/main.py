@@ -216,7 +216,7 @@ class MasterClassController(http.Controller):
 
             # Collect all individual dates between datetime_from and datetime_to for each class
             all_dates = []
-            for master in master_rec:
+            for master in master_rec.dates_ids.filtered(lambda x: x.status == 'draft'):
                 if master.datetime_from and master.datetime_to:
                     start_date = master.datetime_from
                     end_date = master.datetime_to
@@ -249,41 +249,17 @@ class MasterClassController(http.Controller):
 
         if request.env.user._is_public():
             return request.redirect('/web/login')
+        all_dates = []
         if product_id:
-
-            # Fetch all master classes
-
-            # Collect all individual dates between datetime_from and datetime_to for each class
-            all_dates = []
             for master in master_rec:
-                if master.datetime_from and master.datetime_to:
-                    start_date = master.datetime_from
-                    end_date = master.datetime_to
-                    # Generate dates between the start and end
-                    current_date = start_date
-
-                    existing_dates = master.dates_ids.mapped('date')
-                    existing_dates_str = [d.strftime('%Y-%m-%d') for d in existing_dates]
-                    while current_date <= end_date:
-                        current_date_str = current_date.strftime('%Y-%m-%d')
-
-                        if current_date_str  not in existing_dates_str:
-                            print("exist and current ", current_date,existing_dates)
-                            # Only add new dates if they do not already exist
-                            master.sudo().write({
-                                'dates_ids': [(0, 0, {'date': current_date})]
-                            })
-
-                        else:
-
-                            print(f"Duplicate date detected: {current_date}")
-
-                        all_dates.append({
-                            'master_id': master.id,
-                            'name': master.name,
-                            'date': current_date.strftime('%Y-%m-%d %H:%M:%S')
-                        })
-                        current_date += timedelta(days=1)
+                # Filter dates with status 'draft' and map them directly
+                draft_dates = master.dates_ids.filtered(lambda x: x.status == 'draft')
+                for date_record in draft_dates:
+                    all_dates.append({
+                        'master_id': master.id,
+                        'name': master.name,
+                        'date': date_record.date.strftime('%Y-%m-%d %H:%M:%S')
+                    })
 
         print("all_dates", all_dates)
         master_rec.product_id.website_url

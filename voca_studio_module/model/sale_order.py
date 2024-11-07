@@ -17,4 +17,5 @@ class SaleOrderLine(models.Model):
 
 
     booking_ids= fields.One2many('voca.teacher.booking.lines', 'booking_order_id', string='Booking')
+    booking_master_ids= fields.One2many('master.class.date', 'booking_order_id', string='Booking master')
 
