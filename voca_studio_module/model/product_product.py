@@ -7,4 +7,9 @@ class Product(models.Model):
 
     is_master = fields.Boolean(string='Is Master')
 
+class Product(models.Model):
+    _inherit = 'product.template'
+
+    is_master = fields.Boolean(string='Is Master')
+
 
