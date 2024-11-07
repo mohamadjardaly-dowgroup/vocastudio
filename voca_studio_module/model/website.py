@@ -16,7 +16,7 @@ class Website(models.Model):
         sale_order = super().sale_get_order(force_create, update_pricelist)
         first_order_line = sale_order.order_line[:1]  # This fetches only the first order line
 
-        if request and request.session :
+        if request and request.session and request.session.get('package_id'):
 
             sale_order.write({'package_id': request.session.get('package_id').get('id')})
             selected_bookings = request.session.get('selected_bookings')
