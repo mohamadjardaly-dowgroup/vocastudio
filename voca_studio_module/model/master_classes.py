@@ -62,6 +62,7 @@ class MasterClass(models.Model):
         product_vals = {
             'name': f"{master.name} - Master",
             'type': 'service',
+            'is_master': True,
             # 'list_price': package.price,
         }
         product = self.env['product.product'].create(product_vals)
