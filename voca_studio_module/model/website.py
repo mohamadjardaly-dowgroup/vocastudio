@@ -13,7 +13,9 @@ class Website(models.Model):
         sale_order = super().sale_get_order(force_create, update_pricelist)
         first_order_line = sale_order.order_line[:1]  # This fetches only the first order line
 
-        if request and request.session:
+        if request and request.session :
+            _logger.info('hooooo', request.session)
+
             sale_order.write({'package_id': request.session.get('package_id').get('id')})
             selected_bookings = request.session.get('selected_bookings')
             if selected_bookings:
@@ -31,18 +33,18 @@ class Website(models.Model):
                         for date in booking_dates
                     ])
                 ])
-                print("bobobobo", booking_dates, booking_master_lines, booking_lines, first_order_line,request.session.get('price'))
+                print("bobobobo", booking_dates, booking_lines, first_order_line,request.session.get('price'))
                 if first_order_line:
-                    if booking_master_lines  and not request.session.get('package_id'):
+                    if booking_lines:
+                        first_order_line.write({
+                            'price_unit': request.session.get('package_id').get('price'),
+                            'booking_ids': [(6, 0, booking_lines.ids)]})
+                    else:
+
                         booking_master_lines.write({'status': 'booked'})
                         first_order_line.write({
                             'price_unit': request.session.get('package_id').get('price'),
                             'booking_master_ids': [(6, 0, booking_master_lines.ids)]})
-                    else:
-
-                        first_order_line.write({
-                            'price_unit':request.session.get('package_id').get('price'),
-                            'booking_ids': [(6, 0, booking_lines.ids)]})
 
 
         return sale_order
