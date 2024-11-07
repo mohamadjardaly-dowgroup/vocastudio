@@ -300,6 +300,7 @@
                         eventClick: function(info) {
                             let clickedEvent = info.event;
                             let quantity = parseInt(document.getElementById('quantity').value, 10);
+                     console.info('qqqqqqqqq:', quantity);
 
                             if (selectedBookings[clickedEvent.start]) {
                                 delete selectedBookings[clickedEvent.start];
