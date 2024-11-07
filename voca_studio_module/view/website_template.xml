@@ -154,7 +154,7 @@
                 <t t-set="teacher"
                    t-value="request.env['voca.teacher'].sudo().search([('product_id', '=', product.product_variant_id.id)])"/>
                 <t t-set="master"
-                   t-value="request.env['master.classes'].sudo().search([('product_id', '=', product.product_variant_id.id)])"/>
+                   t-value="request.env['master.classes'].sudo().search([('product_id', '=', product.id)])"/>
                 <input type="hidden" t-att-value="product.id" id="product"></input>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet"/>
@@ -202,6 +202,8 @@
                 let calendarEl = document.getElementById('calendar');
                 let calendar;
                 if (response.is_master) {
+                            console.info('product isss master ------');
+
                     let quantityInput = document.getElementById('quantity');
                     if (quantityInput) {
                         quantityInput.value = 1; // Set default value for master products
