@@ -26,7 +26,7 @@
 
 
             <xpath expr="//input[@name='add_qty']" position="attributes">
-                                    <attribute name="t-att-value" remove="add_qty or 1" add="request.session.get('package_id').get('quantity')"/>
+                                    <attribute name="t-att-value" remove="add_qty or 1" add="request.session.get('package_id').get('quantity') if 'package_id' request.session.keys() else 1"/>
 
 <!--                 <attribute name="t-att-value">
                     <t t-if="request.session.get('package_id')">
