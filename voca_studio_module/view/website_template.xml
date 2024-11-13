@@ -26,16 +26,10 @@
 
 
             <xpath expr="//input[@name='add_qty']" position="attributes">
-                                    <attribute name="t-att-value" remove="add_qty or 1" add="request.session.get('package_id').get('quantity')"/>
 
-<!--                 <attribute name="t-att-value">
-                    <t t-if="request.session.get('package_id')">
-                        <t t-esc="request.session.get('package_id').get('quantity')"/>
-                    </t>
-                    <t t-else="">
-                        3
-                    </t>
-                </attribute> -->
+                <attribute name="t-att-value" remove="add_qty or 1"
+                           add="request.session.get('package_id').get('quantity') if 'package_id' in request.session else 1 "/>
+
             </xpath>
 
             <xpath expr="//input[@name='add_qty']" position="attributes">
@@ -62,15 +56,21 @@
             </xpath>
             <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
                 <div class="mt-3 mb-3 w-100">
-<!--                         <t t-out="product.is_master"/> -->
-                    <h3 t-if="product.is_master">
+                        <t t-out="product.product_variant_id.is_master"/>
+                    <h3 t-if="product.product_variant_id.is_master">
                         <strong t-field="product.currency_id"/>
                         <span class="text-secondary" t-field="product.list_price"/>
+                         <div id="bookingLimitMessage" style="display: none; color: red; margin-top: 10px;">
+    You can only select the allowed number of bookings.
+</div>
                     </h3>
 
                     <h3 t-else="">
                         <strong t-field="product.currency_id"/>
                         <span class="text-secondary" t-out="request.session.get('package_id').get('price')"/>
+                        <div id="bookingLimitMessage" style="display: none; color: red; margin-top: 10px;">
+    You can only select the allowed number of bookings.
+</div>
                     </h3>
 
                 </div>
@@ -156,7 +156,7 @@
                 <t t-set="teacher"
                    t-value="request.env['voca.teacher'].sudo().search([('product_id', '=', product.product_variant_id.id)])"/>
                 <t t-set="master"
-                   t-value="request.env['master.classes'].sudo().search([('product_id', '=', product.id)])"/>
+                   t-value="request.env['master.classes'].sudo().search([('product_id', '=', product.product_variant_id.id)])"/>
                 <input type="hidden" t-att-value="product.id" id="product"></input>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet"/>
@@ -204,8 +204,6 @@
                 let calendarEl = document.getElementById('calendar');
                 let calendar;
                 if (response.is_master) {
-                            console.info('product isssss master ------');
-
                     let quantityInput = document.getElementById('quantity');
                     if (quantityInput) {
                         quantityInput.value = 1; // Set default value for master products
@@ -227,6 +225,8 @@
                         eventClick: function(info) {
                             let clickedEvent = info.event;
                             let quantity = parseInt(document.getElementById('quantity').value, 10);
+                            let bookingLimitMessage = document.getElementById('bookingLimitMessage');
+
 
                             if (selectedBookings[clickedEvent.start]) {
                                 delete selectedBookings[clickedEvent.start];
@@ -236,7 +236,19 @@
                                     selectedBookings[clickedEvent.start] = 1;
                                     clickedEvent.setProp('classNames', ['selected-booking']);
                                 } else {
-                                    alert(`You can only select ${quantity} bookings.`);
+                                    calendar.getEvents().forEach(event => {
+                                        if (selectedBookings[event.start]) {
+                                            event.setProp('classNames', []); // Remove selected class
+                                                        bookingLimitMessage.style.display = 'none';
+
+                                        }
+                                    });
+                                    // Clear the selectedBookings object
+                                    selectedBookings = {};
+                                    selectedBookings[clickedEvent.start] = 1;
+                                    clickedEvent.setProp('classNames', ['selected-booking']);
+                                    bookingLimitMessage.style.display = 'block';
+<!--                                    alert(`You can only select ${quantity} bookings.`);-->
                                 }
                             }
 
@@ -302,17 +314,31 @@
                         eventClick: function(info) {
                             let clickedEvent = info.event;
                             let quantity = parseInt(document.getElementById('quantity').value, 10);
-                     console.info('qqqqqqqqq:', quantity);
+                            let bookingLimitMessage = document.getElementById('bookingLimitMessage');
+
 
                             if (selectedBookings[clickedEvent.start]) {
                                 delete selectedBookings[clickedEvent.start];
                                 clickedEvent.setProp('classNames', []);
+                                bookingLimitMessage.style.display = 'none'; // Hide message when deselecting
+
                             } else {
                                 if (Object.keys(selectedBookings).length &lt; quantity) {
                                     selectedBookings[clickedEvent.start] = 1;
                                     clickedEvent.setProp('classNames', ['selected-booking']);
+                                    bookingLimitMessage.style.display = 'none'; // Hide message when deselecting
+
                                 } else {
-                                    alert(`You can only select ${quantity} bookings.`);
+                                   calendar.getEvents().forEach(event => {
+                                        if (selectedBookings[event.start]) {
+                                            event.setProp('classNames', []); // Remove selected class
+                                        }
+                                    });
+                                    // Clear the selectedBookings object
+                                    selectedBookings = {};
+                                    selectedBookings[clickedEvent.start] = 1;
+                                    clickedEvent.setProp('classNames', ['selected-booking']);
+                                    bookingLimitMessage.style.display = 'block';
                                 }
                             }
 
