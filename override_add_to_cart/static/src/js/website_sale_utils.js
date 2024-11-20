@@ -15,7 +15,7 @@ patch(cartHandlerMixin, {
             params.express = true;
         } else if (this.stayOnPageOption) {
             this._addToCartInPage(params);
-            return wUtils.sendRequest('/shop/checkout', {"express": "1"});
+            return wUtils.sendRequest('/shop/cart',params);
         }
         return wUtils.sendRequest('/shop/cart/update', params);
     },
