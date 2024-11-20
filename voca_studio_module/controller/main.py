@@ -44,9 +44,28 @@ class TeacherController(http.Controller):
                     'categories': categ,  # Optionally pass the category for UI
                 })
             else:
+                
+                teacher_data = []
+                category_data=[]
+                for t in teacher:
+                    teacher_data.append({
+                        'id': t.id,
+                        'name': t.name,
+                        'experience': t.experience,
+                        'categories':  [{'id': cat.id, 'name': cat.name} for cat in t.categories],
+                        'language': t.language,
+                        'about': t.about or '',
+                        'image_url': f"/web/image/voca.teacher/{t.id}/image_1920",
+                    })
+                for category in categ:
+                    category_data.append({
+                        'id': category.id,
+                        'name': category.name,
+                        'image_url': f"/web/image/voca.teacher.categories/{category.id}/image_1920",
+                    })
                 values = {
-                    'teachers': teacher,
-                    'categories': categ,
+                    'teachers': teacher_data,
+                    'categories': category_data,
                 }
                 return request.render("voca_studio_module.teacher_profile_card", values)
         except Exception as e:
