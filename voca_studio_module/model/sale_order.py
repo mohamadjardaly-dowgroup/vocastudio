@@ -40,4 +40,34 @@ class SaleOrderLine(models.Model):
 
     booking_ids= fields.One2many('voca.teacher.booking.lines', 'booking_order_id', string='Booking')
     booking_master_ids= fields.One2many('master.class.date', 'booking_order_id', string='Booking master')
+    
+    #samiha##########################################################   
+    package_id = fields.Many2one('voca.teacher.packaging.lines', string='Package')
+    
+    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id')
+    def _compute_price_unit(self):
+        for line in self:
+            # Check if a package is associated with the order line
+            if line.package_id:
+                print("I am inside if line.package_id", line.package_id)
+                # Use the price from the package
+                line.price_unit = line.package_id.price
+                continue
+
+            # Default behavior for other cases
+            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+                continue
+            if not line.product_uom or not line.product_id:
+                line.price_unit = 0.0
+            else:
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(
+                        lambda tax: tax.company_id == line.env.company
+                    ),
+                    fiscal_position=line.order_id.fiscal_position_id,
+                )
 
