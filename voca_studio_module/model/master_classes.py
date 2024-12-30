@@ -21,7 +21,7 @@ class MasterClass(models.Model):
 
     lectures = fields.Integer(string="Lectures")
 
-    categories = fields.Many2many('master.classes.categories', string='Category')
+    categories = fields.Many2many('master.classes.categories', string='Category',required=True)
     description = fields.Text('Description')
 
 
