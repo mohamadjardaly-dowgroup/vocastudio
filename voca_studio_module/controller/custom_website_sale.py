@@ -190,6 +190,10 @@ class CustomSaleOrder(http.Controller):
         package = request.env['voca.teacher.packaging.lines'].browse(int(package_id))
         print("package: ", package)
 
+        # Format the description for the sale order line
+        formatted_dates = '\n'.join([date.strftime('%Y-%m-%d %H:%M:%S') for date in matching_dates])
+        description = f"{product.name}\nSelected Dates: {formatted_dates}\n"
+
         # Add a sale order line with the product and the found booking lines
         # Search for an existing order line with the same product in the current sale order
         order_line = request.env['sale.order.line'].search([
@@ -201,6 +205,7 @@ class CustomSaleOrder(http.Controller):
             # Update the existing order line
             order_line.write({
                 'product_uom_qty': order_line.product_uom_qty + package.quantity-1, 
+                'name': description,
                 'price_unit': package.price,  # Update price from the package
                 'booking_ids': [(6, 0, booking_lines.ids)],  # Update booking lines
             })
@@ -210,7 +215,7 @@ class CustomSaleOrder(http.Controller):
             order_line = request.env['sale.order.line'].create({
                 'order_id': sale_order.id,
                 'product_id': product.id,
-                'name': product.name,  # Set the name field
+                 'name': description,  # Set the name field
                 'product_uom_qty': package.quantity-1,  # Default quantity
                 'product_uom': product.uom_id.id,  # Unit of Measure
                 'price_unit': package.price,  # Unit price from the package
