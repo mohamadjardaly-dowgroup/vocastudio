@@ -33,13 +33,17 @@ class TeacherBooking(models.Model):
         for rec in self:
             rec.status = 'refused'
 
-    @api.constrains('availablity_date')
-    def _check_unique_availablity_date(self):
+    #samiha check for the same teacher not globally 
+    @api.constrains('availablity_date', 'booking_id')
+    def _check_unique_availability_date(self):
         for rec in self:
             existing_booking = self.search([
                 ('availablity_date', '=', rec.availablity_date),
-                ('id', '!=', rec.id)  # Exclude the current record
+                ('booking_id', '=', rec.booking_id.id),
+                ('id', '!=', rec.id)  #if not the system will find this current record and cosider it as a duplicate
             ])
             if existing_booking:
                 raise ValidationError(
-                    _('The availability date must be unique. A booking already exists for this date: %s') % rec.availablity_date)
+                    _('The availability date must be unique for the same teacher. '
+                    'Teacher %s already has a booking for this date: %s') % (rec.booking_id.name, rec.availablity_date)
+                )
