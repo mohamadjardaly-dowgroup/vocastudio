@@ -204,7 +204,7 @@ class CustomSaleOrder(http.Controller):
         if order_line:
             # Update the existing order line
             order_line.write({
-                'product_uom_qty': order_line.product_uom_qty + package.quantity-1, 
+                'product_uom_qty': order_line.product_uom_qty + 1, 
                 'name': description,
                 'price_unit': package.price,  # Update price from the package
                 'booking_ids': [(6, 0, booking_lines.ids)],  # Update booking lines
@@ -215,10 +215,10 @@ class CustomSaleOrder(http.Controller):
             order_line = request.env['sale.order.line'].create({
                 'order_id': sale_order.id,
                 'product_id': product.id,
-                 'name': description,  # Set the name field
-                'product_uom_qty': package.quantity-1,  # Default quantity
+                'package_id':package.id,
+                'name': description,  # Set the name field
+                'product_uom_qty':0,  # Default quantity
                 'product_uom': product.uom_id.id,  # Unit of Measure
-                'price_unit': package.price,  # Unit price from the package
                 'tax_id': [(6, 0, product.taxes_id.ids)],  # Taxes
                 'booking_ids': [(6, 0, booking_lines.ids)],  # Booking lines
             })
