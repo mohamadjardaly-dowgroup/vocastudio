@@ -62,6 +62,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         values['gender_1'] = values.get("gender")
         values['birthday'] = values.get("birthday")
         values['role'] = values.get("role")
+        raise UserError(values.get('role'))
         values['experience'] = values.get("experience")
         values['about'] = values.get("about")
         return values
