@@ -67,7 +67,7 @@
 
                     <h3 t-else="">
                         <strong t-field="product.currency_id"/>
-                        <span class="text-secondary" t-out="request.session.get('package_id').get('price')"/>
+                        <span class="text-secondary" t-out="package.get('price')"/>
                         <div id="bookingLimitMessage" style="display: none; color: red; margin-top: 10px;">
     You can only select the allowed number of bookings.
 </div>
