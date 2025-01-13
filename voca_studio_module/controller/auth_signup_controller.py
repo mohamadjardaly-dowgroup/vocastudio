@@ -63,7 +63,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         values['birthday'] = values.get("birthday")
         values['role'] = values.get("role")
         # Handle
-        if values.get('role') == 'student':
+        if 'role' in values and values.get('role') == 'student':
             values.update({'role': 'stu'})
         values['experience'] = values.get("experience")
         values['about'] = values.get("about")
