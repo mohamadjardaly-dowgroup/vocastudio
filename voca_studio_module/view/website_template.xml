@@ -28,7 +28,7 @@
             <xpath expr="//input[@name='add_qty']" position="attributes">
 
                 <attribute name="t-att-value" remove="add_qty or 1"
-                           add="package.get('quantity') if package else 1 "/>
+                           add="package.quantity if package else 1 "/>
 
             </xpath>
 
@@ -67,7 +67,7 @@
 
                     <h3 t-else="">
                         <strong t-field="product.currency_id"/>
-                        <span class="text-secondary" t-out="package.get('price')"/>
+                        <span class="text-secondary" t-out="package.price"/>
                         <div id="bookingLimitMessage" style="display: none; color: red; margin-top: 10px;">
     You can only select the allowed number of bookings.
 </div>
