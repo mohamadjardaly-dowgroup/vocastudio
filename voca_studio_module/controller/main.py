@@ -33,12 +33,12 @@ class TeacherController(http.Controller):
                 methods=['POST', 'GET'], website=True, csrf=False)
     def get_teacher_details(self, category_id=None, **kw):
         try:
-            teacher = request.env['voca.teacher'].sudo().search([])
+            teacher = request.env['voca.teacher'].sudo().search([('state', '=', 'approved')])
             categ = request.env['voca.teacher.categories'].sudo().search([])
             print("all teacher :", teacher, kw)
             if category_id:
                 print("nnnnnnnnnn")
-                teachers = request.env['voca.teacher'].sudo().search([('categories', '=', int(category_id))])
+                teachers = request.env['voca.teacher'].sudo().search([('categories', '=', int(category_id)), ('state', '=', 'approved')])
                 return request.render('voca_studio_module.teacher_profile_card_with_category', {
                     'teachers': teachers,
                     'categories': categ,  # Optionally pass the category for UI
