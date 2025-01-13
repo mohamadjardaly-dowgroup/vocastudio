@@ -3,7 +3,7 @@ import json
 
 import pytz
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-
+from odoo.addons.website.controllers.main import QueryURL
 from odoo import http
 from odoo.http import request
 
@@ -11,7 +11,7 @@ from odoo.http import request
 
 class CustomWebsiteSale(WebsiteSale):
     @http.route(['/shop/<model("product.template"):product>'] ,type='http', auth="public", website=True)
-    def product(self, product, **kwargs):
+    def product(self, product, category='', search='', **kwargs):
         # print("Package Inside the NEwwwwwww Controller CustomWebsite  >>>>>>>>>>>>>>>>", package)
         # product = package.product_id
         
@@ -63,7 +63,14 @@ class CustomWebsiteSale(WebsiteSale):
 
                 teacher_time_slots = request.env['voca.teacher.booking.lines'].search([])
                 print("Time slots in the system: ", len(teacher_time_slots))
-
+                keep = QueryURL(
+                    '/shop',
+                    **self._product_get_query_url_kwargs(
+                        category=category and category.id,
+                        search=search,
+                        **kwargs,
+                    ),
+                )                
                 # Render the template with the package data
                 return request.render('website_sale.product', {
                     'product': product_template,
@@ -74,6 +81,8 @@ class CustomWebsiteSale(WebsiteSale):
                     'product_price':package.price,
                     'combination_info': combination_info,
                     'category_id': category_id, 
+                    'keep': keep
+
                 })
         else:
             return request.not_found() 
