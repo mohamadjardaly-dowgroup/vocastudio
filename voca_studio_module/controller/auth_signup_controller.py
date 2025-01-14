@@ -65,8 +65,11 @@ class VocaAuthSignupHome(AuthSignupHome):
                 birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
                 today = datetime.today().date()
                 age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-                if age < 18:
-                    raise UserError(_("You must be at least 18 years old to register."))
+                # Role-based age validation
+                if values.get('role') == 'teacher' and age < 18:
+                    raise UserError(_("You must be at least 18 years old to register as a teacher."))
+                elif values.get('role') == 'student' and age > 18:
+                    _logger.warning("Student age is above 18, but this is allowed.")
             except ValueError:
                 raise UserError(_("The birthday format is invalid. Please use YYYY-MM-DD."))
 
