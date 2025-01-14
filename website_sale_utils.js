@@ -24,26 +24,26 @@
 //
 /** @odoo-module **/
 //import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
-import { WebsiteSale } from '@website_sale/js/website_sale';
-import { patch } from "@web/core/utils/patch";
+// import publicWidget from '@web/legacy/js/public/public_widget';
+// import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
+// import { WebsiteSale } from '@website_sale/js/website_sale';
+// import { patch } from "@web/core/utils/patch";
 
-patch(cartHandlerMixin, {
+// patch(cartHandlerMixin, {
 
-    addToCart(params) {
-            const data =  super.addToCart(...arguments);
+//     addToCart(params) {
+//             const data =  super.addToCart(...arguments);
 
-    console.info('hello');
-        if (this.isBuyNow) {
-            params.express = true;
-        } else if (this.stayOnPageOption) {
-            this._addToCartInPage(params);
-            return wUtils.sendRequest('/shop/checkout', {"express": "1"});
-        }
-        return wUtils.sendRequest('/shop/cart/update', params);
-    },
-});
+//     console.info('hello');
+//         if (this.isBuyNow) {
+//             params.express = true;
+//         } else if (this.stayOnPageOption) {
+//             this._addToCartInPage(params);
+//             return wUtils.sendRequest('/shop/checkout', {"express": "1"});
+//         }
+//         return wUtils.sendRequest('/shop/cart/update', params);
+//     },
+// });
 
 
 
