@@ -10,30 +10,50 @@ class MasterClass(models.Model):
     name = fields.Char(string='Subject', default='New')
 
     image_1920 = fields.Image(string="Image")
-
-    date = fields.Date(string=_('Date'))
+    #samiha
+    date = fields.Date(string=_('Starting Date'))
 
     time = fields.Char(string='Time')
-
-    instructor = fields.Many2one('voca.teacher', string='Instructor')
+    #samiha
+    instructor = fields.Many2one('voca.teacher', string='Instructor',required=True)
 
     total_hours = fields.Float('Total Hours')
 
     lectures = fields.Integer(string="Lectures")
 
-    categories = fields.Many2many('master.classes.categories', string='Category',required=True)
+    categories = fields.Many2many('master.classes.categories', string='Category')
     description = fields.Text('Description')
 
 
     # New fields for booking date-time range
-    datetime_from = fields.Date(string='Booking Start Time')
-    datetime_to = fields.Date(string='Booking End Time')
+    datetime_from = fields.Datetime(string='Booking Start Time', required=True)
+    datetime_to = fields.Datetime(string='Booking End Time',required=True)
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
 
     dates_ids = fields.One2many('master.class.date', 'master_id', string='Dates')
+    
+    
+    #samiha####################################################
+    
+    max_students = fields.Integer(string="Maximum Students", required=True)  # Add this field
+    remaining_seats = fields.Integer(string="Remaining Seats", compute="_compute_remaining_seats", store=True)
+    
+    
 
+    @api.depends('max_students')
+    def _compute_remaining_seats(self):
+        """Compute remaining seats based on bookings"""
+        # for record in self:
+        #     total_booked = sum(record.dates_ids.booking_master_ids.mapped('product_uom_qty'))
+        #     record.remaining_seats = record.max_students - total_booked
+        for master in self:
+            master.remaining_seats = master.max_students
+            # total_booked = sum(master.dates_ids.mapped('booking_order_id.product_uom_qty'))
+            # master.remaining_seats = master.max_students - total_booked
+    ##############################################################
+            
     @api.onchange('datetime_from', 'datetime_to')
     def _onchange_datetime_range(self):
         if self.datetime_from and self.datetime_to and self.datetime_from < self.datetime_to:
@@ -57,19 +77,23 @@ class MasterClass(models.Model):
     @api.model
     def create(self, vals):
         master = super(MasterClass, self).create(vals)
-        # Automatically create a product linked to this package
-        print("vaaaals ", vals, master.name)
+        print('new maser class.................',master.name)
         product_vals = {
             'name': f"{master.name} - Master",
             'type': 'service',
             'is_master': True,
-            # 'list_price': package.price,
+            'master_class_id': master.id,  # Set the master_class_id field
         }
+        print("product_vals....................", product_vals)
         product = self.env['product.product'].create(product_vals)
         master.product_id = product.id
+        
+        master_class_category = self.env.ref('voca_studio_module.master_class_category')
+        master.categories = [(4, master_class_category.id)]
+        
         return master
 
-
+    
 
 
     @api.constrains('datetime_from', 'datetime_to')
@@ -84,10 +108,15 @@ class MasterClassCategories(models.Model):
     _name = 'master.classes.categories'
     # _description = 'Portal'
 
-    name = fields.Char('Title', required=True, translate=True)
+    name = fields.Char('Title', required=True, translate=True,compute='_compute_name')
 
     image_1920 = fields.Image(string="Image", readonly=False)  # image.mixin override
 
+    @api.depends('name')
+    def _compute_name(self):
+        for record in self:
+            record.name = 'cat'
+    
 
 
 class MasterClassDate(models.Model):
@@ -97,10 +126,23 @@ class MasterClassDate(models.Model):
     master_id = fields.Many2one('master.classes', string='Master Class', required=True, ondelete='cascade')
     date = fields.Date(string='Date', required=True)
     booking_order_id = fields.Many2one('sale.order.line', string='Booking')
-
+    
+    
     status = fields.Selection(
         [
             ('draft', 'Draft'),
             ('booked', 'Booked'),
+            
         ], string='Status', index=True, readonly=True, copy=False,
-        default='draft', tracking=True)
+        default='draft')
+    
+    #samiha####################################################
+    max_students = fields.Integer(related='master_id.max_students', string="Maximum Students", readonly=True)
+    remaining_seats = fields.Integer(string="Remaining Seats", compute="_compute_remaining_seats")
+
+    @api.depends('booking_order_id.product_uom_qty')
+    def _compute_remaining_seats(self):
+        for record in self:
+            total_booked = sum(record.booking_order_id.mapped('product_uom_qty'))
+            record.remaining_seats = record.max_students - total_booked
+    ############################################################
