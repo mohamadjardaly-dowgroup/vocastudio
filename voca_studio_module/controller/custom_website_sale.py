@@ -267,6 +267,7 @@ class CustomSaleOrder(http.Controller):
         ], limit=1)
 
         if order_line:
+            raise Warning(f"line: {order_line}\npacakge: {package}")
             # Update existing order line
             order_line.sudo().write({
                 'product_uom_qty': package.quantity,  # Use the package's quantity
