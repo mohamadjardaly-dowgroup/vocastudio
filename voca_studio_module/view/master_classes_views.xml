@@ -18,6 +18,9 @@
                         <field name="time"/>
                         <field name="instructor"/>
                         <field name="total_hours"/>
+                        <field name="max_students"/>
+                        <field name="remaining_seats"/>
+                        <!-- <field name="enrolled_students"/>  -->
                         <field name="lectures"/>
                         <field name="description"/>
                         <field name="datetime_from"/>
@@ -25,7 +28,7 @@
                         <!--                            <field name="dates_ids"/>-->
                         <field name="categories" widget="many2many_tags"/>
                     </group>
-                    <notebook>
+                    <!-- <notebook>
                         <page string="Booking" name="booking">
                             <field name="dates_ids">
                                 <tree editable="bottom">
@@ -38,7 +41,7 @@
                                 </tree>
                             </field>
                         </page>
-                    </notebook>
+                    </notebook> -->
 
                 </sheet>
             </form>
