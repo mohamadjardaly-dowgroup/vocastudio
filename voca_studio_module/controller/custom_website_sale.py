@@ -10,21 +10,28 @@ from odoo.http import request
 
 
 class CustomWebsiteSale(WebsiteSale):
-    @http.route(['/shop/<model("product.template"):product>'] ,type='http', auth="public", website=True)
-    def product(self, product, category='', search='', **kwargs):
+    @http.route(['/shop/<int:product_id>'] ,type='http', auth="public", website=True)
+    def product(self, product_id, category='', search='', **kwargs):
         # print("Package Inside the NEwwwwwww Controller CustomWebsite  >>>>>>>>>>>>>>>>", package)
         # product = package.product_id
+        print('Product_id .......... ',product_id)
+        product_template = request.env['product.template'].sudo().browse(product_id)
+        product=product_template
+        print('Product fetched...........',product_template)
+        if request.env.user._is_public():
+            return request.redirect('/web/login')
+
         
-        if product._name == 'product.product':
-            product_template = product.product_tmpl_id
-            # Now product_template is of type product.template
-            print(f"This is a product.product. Parent product.template: {product_template.name}")
-        elif product._name == 'product.template':
-            product_template = product
-            # product is already of type product.template
-            print(f"This is a product.template: {product_template.name}")
-        else:
-            print("Unknown product type")
+        # if product._name == 'product.product':
+        #     product_template = product.product_tmpl_id
+        #     # Now product_template is of type product.template
+        #     print(f"This is a product.product. Parent product.template: {product_template.name}")
+        # elif product._name == 'product.template':
+        #     product_template = product
+        #     # product is already of type product.template
+        #     print(f"This is a product.template: {product_template.name}")
+        # else:
+        #     print("Unknown product type")
         
         
         category_id = product_template.categ_id.id if product_template.categ_id else None
@@ -38,19 +45,54 @@ class CustomWebsiteSale(WebsiteSale):
         )
       
         package_id = kwargs.get('package_id')
-        # if product_template.product_variant_id.is_master and not package_id:
-        #     master = request.env['master.classes'].search([('product_id', '=', product_template.product_variant_id.id)], limit=1)
-        #     print( 'master.................................',master)
-        #     if not master:
-        #         return request.not_found()
-
-        #     # Render the master class page
-        #     return request.render('website_sale.product', {
-        #         'product': product_template,
-        #         'master': master,
-        #         'dates': master.dates_ids,
-        #         'category_id': category_id,
-        #     })
+        if product_template.product_variant_id.is_master and not package_id:
+            master = request.env['master.classes'].search([('product_id', '=', product_template.product_variant_id.id)], limit=1)
+            print( 'master.................................',master.id)
+            if not master:
+                return request.not_found()
+            
+            # dates = master.dates_ids.filtered(lambda d: d.status == 'draft')
+            start_date=master.datetime_from
+            end_date=master.datetime_to 
+            # events = [
+            #     {
+            #         'title': master.name,
+            #         'start':  start_date.strftime('%Y-%m-%d'),  # Start date
+            #         'end': end_date.strftime('%Y-%m-%d'),  # End date (exclusive)
+            #         }  # Unique identifier for the event
+            #     # } for date in master.dates_ids if date.datetime_from and date.datetime_to
+            # ]
+            # Render the master class page
+            
+            if master.remaining_seats <= 0:
+                booking_status = "All seats booked"
+                can_book = False
+            else:
+                booking_status = f"{master.remaining_seats} seats available"
+                can_book = True
+            print("master.remaining_seats inside controller .....................",master.remaining_seats)
+            keep = QueryURL(
+                    '/shop',
+                    **self._product_get_query_url_kwargs(
+                        category=category and category.id,
+                        search=search,
+                        **kwargs,
+                    ),
+                )
+            return request.render('website_sale.product', {
+                'product': product_template,
+                'master': master,
+                'quantity':master.max_students,
+                'booking_status':booking_status,
+                'can_book':can_book,
+                'remainingSeats': master.remaining_seats,
+                'maxSeats': master.max_students,
+                'starting_date':master.date,
+                'start_date': start_date.strftime('%Y-%m-%d'),
+                'end_date': end_date.strftime('%Y-%m-%d'),
+                'category_id': category_id,
+                'keep': keep
+            })
       
         print("DEBUG: package_id =", package_id)  # Check if package_id is captured
         if package_id:
@@ -150,7 +192,7 @@ class CustomSaleOrder(http.Controller):
             date_utc = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=None)
             print("date (UTC):......................... ", date_utc)
             parsed_dates.append(date_utc)
-
+        
         # Create or find the current sale order (cart)
         sale_order = request.website.sale_get_order()
         sale_order = request.env['sale.order'].search([('website_id', '=', request.website.id), ('state', '=', 'draft')], limit=1)
@@ -171,6 +213,9 @@ class CustomSaleOrder(http.Controller):
 
         if not teacher:
             return {'error': 'No teacher found for the selected product'}
+        
+        
+        
         
         # Get the availability dates of the teacher
         teacher_availablity = teacher.booking_ids.mapped('availablity_date')
@@ -198,11 +243,11 @@ class CustomSaleOrder(http.Controller):
         # Retrieve the package details
         package = request.env['voca.teacher.packaging.lines'].browse(int(package_id))
         print("package: ", package)
-
+        print("package.price: ", package.price)
         # Format the description for the sale order line
         formatted_dates = '\n'.join([date.strftime('%Y-%m-%d %H:%M:%S') for date in matching_dates])
-        description = f"{product.name}\nSelected Dates: {formatted_dates}\n"
-
+        description = f"{package.name}\nSelected Dates: {formatted_dates}\n"
+        
         # Add a sale order line with the product and the found booking lines
         # Search for an existing order line with the same product in the current sale order
         order_line = request.env['sale.order.line'].search([
@@ -211,31 +256,31 @@ class CustomSaleOrder(http.Controller):
         ], limit=1)
 
         if order_line:
-            # Update the existing order line
+            # Update existing order line
             order_line.write({
-                'product_uom_qty': order_line.product_uom_qty + 1, 
-                'name': description,
-                'price_unit': package.price,  # Update price from the package
-                'booking_ids': [(6, 0, booking_lines.ids)],  # Update booking lines
+                'product_uom_qty': package.quantity,  # Use the package's quantity
+                # 'price_unit': package.price,         # Use the package's price
+                'price_unit': package.price /package.quantity,    
+                'name': description,                # Update description
+                'package_id': package.id,           # Update package reference
+                'booking_ids': [(5, 0, 0)],         # Clear existing bookings
             })
-            print("Updated order line:", order_line)
         else:
-            # Create a new order line if none exists
-            order_line = request.env['sale.order.line'].create({
-                'order_id': sale_order.id,
+            # Create a new order line
+            sale_order.write({'order_line': [(0, 0, {
                 'product_id': product.id,
-                'package_id':package.id,
-                'name': description,  # Set the name field
-                'product_uom_qty':0,  # Default quantity
-                'product_uom': product.uom_id.id,  # Unit of Measure
-                'tax_id': [(6, 0, product.taxes_id.ids)],  # Taxes
-                'booking_ids': [(6, 0, booking_lines.ids)],  # Booking lines
-            })
+                'product_uom_qty': package.quantity,  # Set package's quantity
+                'price_unit': package.price /package.quantity,         # Set package's price
+                'name': description,
+                'package_id': package.id,
+                'product_uom': product.uom_id.id,
+                'tax_id': [(6, 0, product.taxes_id.ids)],
+            })]})
             print("Created new order line:", order_line)
-
-        
+            
         print('booking lines.............................',booking_lines)
         print('booking lines.ids.............................',booking_lines.ids)
         
         print("order_line:................... ", order_line)
         return request.redirect('/shop/cart')
+   
