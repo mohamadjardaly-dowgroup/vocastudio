@@ -1,15 +1,25 @@
 <odoo>
     <data>
         <template id="voca_studio_module.teacher_login_restriction" name="Teacher Login Restriction">
-            <t t-call="portal.portal_layout">
-                <div class="container mt16">
-                    <div class="alert alert-danger">
-                        <h3>Please Come Back later</h3>
-                        <p>You have to wait Miswa to give you approval.</p>
-                    </div>
+    <t t-call="portal.portal_layout">
+        <div class="container mt-5 text-center">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-primary" style="font-size: 2rem;">Thank You for Joining!</h3>
+                    <p class="card-text" style="font-size: 1.25rem;">
+                        Your application is currently under review, and we’ll be in touch shortly regarding the next steps.
+                    </p>
+                    <p class="card-text" style="font-size: 1.25rem;">
+                        We appreciate your interest and look forward to connecting with you soon!
+                    </p>
+                    <p style="font-size: 1.1rem;">
+                        If you have any questions in the meantime, feel free to <a href="/contactus" class="text-primary">contact us</a>.
+                    </p>
                 </div>
-            </t>
-        </template>
+            </div>
+        </div>
+    </t>
+</template>
 
 
         <template id="new" inherit_id="website_sale.product_quantity" name="Select Quantity">
