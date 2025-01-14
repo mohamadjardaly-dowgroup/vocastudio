@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 from datetime import date
 
@@ -50,7 +50,7 @@ class Teacher(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
 
-   def action_approved(self):
+    def action_approved(self):
     
         for rec in self:
             if rec.state not in ['draft', 'refused']:
