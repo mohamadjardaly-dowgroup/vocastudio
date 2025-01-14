@@ -107,6 +107,7 @@ class Teacher(models.Model):
         product_vals = {
             'name':  f"{package.name} - Lessons" ,
             'type': 'service',
+            'is_published':True,
             # 'list_price': package.price,
         }
         product = self.env['product.product'].create(product_vals)
