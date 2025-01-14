@@ -50,9 +50,26 @@ class Teacher(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
 
-    def action_approved(self):
+   def action_approved(self):
+    
         for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_("Only teachers in the Draft state can be approved."))
+
+            # Update the teacher's state to 'approved'
             rec.state = 'approved'
+
+            # Activate the related user and assign internal user rights
+            if rec.instructor:
+                related_users = rec.instructor.user_ids
+                internal_group = self.env.ref('base.group_user')  # Internal User group
+                portal_group = self.env.ref('base.group_portal')  # Portal group
+
+                for user in related_users:
+                    user.sudo().write({
+                        'active': True,  # Activate the user
+                        'groups_id': [(3, portal_group.id), (4, internal_group.id)],  # Remove Portal group, add Internal User group
+                    })
 
     def action_refused(self):
         for rec in self:
