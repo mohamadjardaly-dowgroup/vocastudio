@@ -268,7 +268,6 @@ class CustomSaleOrder(http.Controller):
         ], limit=1)
 
         if order_line:
-            raise UserError(f'here {package}')
             # Update existing order line
             order_line.sudo().write({
                 'product_uom_qty': package.quantity,  # Use the package's quantity
@@ -279,7 +278,6 @@ class CustomSaleOrder(http.Controller):
                 'booking_ids': [(5, 0, 0)],         # Clear existing bookings
             })
         else:
-            raise UserError(f'create {package}')
             # Create a new order line
             sale_order.sudo().write({'order_line': [(0, 0, {
                 'product_id': product.id,
