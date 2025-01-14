@@ -197,12 +197,22 @@ class CustomSaleOrder(http.Controller):
         sale_order = request.website.sale_get_order()
         sale_order = request.env['sale.order'].search([('website_id', '=', request.website.id), ('state', '=', 'draft')], limit=1)
         print("sale_order in my booking controller .............: ", sale_order)
+        
         if not sale_order:
+            partner_id = request.env.user.partner_id.id if request.env.user.partner_id else None
+            print("partner_id inside not sale_order...",partner_id)
+            if not partner_id:
+                return request.make_response(
+                    json.dumps({"error": "No customer (partner_id) associated with the current session."}),
+                    headers={'Content-Type': 'application/json'}
+                )
             # Create a new sale order if one doesn't exist
-            sale_order = request.env['sale.order'].create({
-                'partner_id': request.env.user.partner_id.id,  # Associate with current user (or session)
-                'website_id': request.website.id,
-            })
+            sale_order = request.env['sale.order'].sudo().create({
+                    'partner_id': partner_id,
+                    'website_id': request.website.id,
+                })
+            
+        print("request.env.user.partner_id.id...",request.env.user.partner_id.id)
         print("sale_order after creating a one if it doesn t exist .............: ", sale_order)
 
         # Retrieve the teacher associated with the product
@@ -213,8 +223,6 @@ class CustomSaleOrder(http.Controller):
 
         if not teacher:
             return {'error': 'No teacher found for the selected product'}
-        
-        
         
         
         # Get the availability dates of the teacher
@@ -246,7 +254,10 @@ class CustomSaleOrder(http.Controller):
         print("package.price: ", package.price)
         # Format the description for the sale order line
         formatted_dates = '\n'.join([date.strftime('%Y-%m-%d %H:%M:%S') for date in matching_dates])
+        print("package.name ...",package.name)
+        print("formatted_dates",formatted_dates)
         description = f"{package.name}\nSelected Dates: {formatted_dates}\n"
+        print(('product_id.............', product.id))
         
         # Add a sale order line with the product and the found booking lines
         # Search for an existing order line with the same product in the current sale order
@@ -257,7 +268,7 @@ class CustomSaleOrder(http.Controller):
 
         if order_line:
             # Update existing order line
-            order_line.write({
+            order_line.sudo().write({
                 'product_uom_qty': package.quantity,  # Use the package's quantity
                 # 'price_unit': package.price,         # Use the package's price
                 'price_unit': package.price /package.quantity,    
@@ -267,7 +278,7 @@ class CustomSaleOrder(http.Controller):
             })
         else:
             # Create a new order line
-            sale_order.write({'order_line': [(0, 0, {
+            sale_order.sudo().write({'order_line': [(0, 0, {
                 'product_id': product.id,
                 'product_uom_qty': package.quantity,  # Set package's quantity
                 'price_unit': package.price /package.quantity,         # Set package's price
@@ -283,4 +294,5 @@ class CustomSaleOrder(http.Controller):
         
         print("order_line:................... ", order_line)
         return request.redirect('/shop/cart')
+  
    
