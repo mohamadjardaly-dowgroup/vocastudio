@@ -53,8 +53,8 @@ class Teacher(models.Model):
    def action_approved(self):
     
         for rec in self:
-            if rec.state != 'draft':
-                raise UserError(_("Only teachers in the Draft state can be approved."))
+            if rec.state not in ['draft', 'refused']:
+                raise UserError(_("Only teachers in the Draft or Refused state can be approved."))
 
             # Update the teacher's state to 'approved'
             rec.state = 'approved'
@@ -71,9 +71,33 @@ class Teacher(models.Model):
                         'groups_id': [(3, portal_group.id), (4, internal_group.id)],  # Remove Portal group, add Internal User group
                     })
 
+
     def action_refused(self):
+        
         for rec in self:
+            if rec.state not in ['draft', 'approved']:
+                raise UserError(_("Only teachers in the Draft or Approved state can be refused."))
+
+            # Update the teacher's state to 'refused'
             rec.state = 'refused'
+
+            # Remove internal user rights
+            if rec.instructor:
+                related_users = rec.instructor.user_ids
+                internal_group = self.env.ref('base.group_user')  # Internal User group
+                portal_group = self.env.ref('base.group_portal')  # Portal group (optional)
+
+                for user in related_users:
+                    # Remove Internal User group
+                    user.sudo().write({
+                        'groups_id': [(3, internal_group.id)],  # Remove Internal User group
+                    })
+
+                    # Optionally assign Portal group
+                    if portal_group not in user.groups_id:
+                        user.sudo().write({
+                            'groups_id': [(4, portal_group.id)],  # Add Portal group
+                        })
 
     @api.model
     def create(self, vals):
