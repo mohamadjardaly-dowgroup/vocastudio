@@ -35,15 +35,7 @@
             # 'voca_studio_module/static/src/js/website_sale_utils.js',
 
         ],
-        'web.assets_frontend': [
-            # 'voca_studio_module/static/src/js/**/*.js',
-            #
-            'voca_studio_module/static/src/js/bookShow.js',
-            'voca_studio_module/static/src/js/selectSeat.js',
-            # 'voca_studio_module/static/src/js/website_sale_utils.js',
-
-            # 'voca_studio_module/static/src/css/show_booking_management.css',
-        ],
+        
     },
 
 }
