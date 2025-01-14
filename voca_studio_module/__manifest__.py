@@ -12,6 +12,7 @@
     "data": [
         'security/ir.model.access.csv',
         'data/teacher_website_menu.xml',
+        'data/master_class_category.xml',
         'view/voca_teacher_view.xml',
         'view/voca_teacher_tags_view.xml',
         'view/voca_teacher_categories_view.xml',
@@ -24,7 +25,7 @@
         'view/time_slots_views.xml',
         'view/sale_order_views.xml',
         'view/master_classes_views.xml',
-        'view/master_classes_categories_view.xml',
+        # 'view/master_classes_categories_view.xml',
 
     ],
     'assets': {
