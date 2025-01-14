@@ -4,8 +4,8 @@
             <t t-call="portal.portal_layout">
                 <div class="container mt16">
                     <div class="alert alert-danger">
-                        <h3>Access Denied</h3>
-                        <p>You are not allowed to log in because your request is pending.</p>
+                        <h3>Please Come Back later</h3>
+                        <p>You have to wait Miswa to give you approval.</p>
                     </div>
                 </div>
             </t>
