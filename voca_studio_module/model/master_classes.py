@@ -82,6 +82,7 @@ class MasterClass(models.Model):
             'name': f"{master.name} - Master",
             'type': 'service',
             'is_master': True,
+            'is_published':True,
             'master_class_id': master.id,  # Set the master_class_id field
         }
         print("product_vals....................", product_vals)
