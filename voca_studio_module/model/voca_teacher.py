@@ -27,6 +27,8 @@ class Teacher(models.Model):
         ('ar', 'Arabic'),
     ], string="Language")
 
+    language_ids = fields.Many2many('res.lang',string="Languages")
+
     about = fields.Char(string='About', related='instructor.about',readonly=False)
     learning_bio = fields.Char(string='Learn bio')
     state = fields.Selection(
