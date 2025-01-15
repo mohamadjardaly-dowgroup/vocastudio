@@ -47,7 +47,7 @@ class CustomWebsiteSale(WebsiteSale):
       
         package_id = kwargs.get('package_id')
         if product_template.product_variant_id.is_master and not package_id:
-            master = request.env['master.classes'].search([('product_id', '=', product_template.product_variant_id.id)], limit=1)
+            master = request.env['master.classes'].sudo().search([('product_id', '=', product_template.product_variant_id.id)], limit=1)
             print( 'master.................................',master.id)
             if not master:
                 return request.not_found()
@@ -104,7 +104,7 @@ class CustomWebsiteSale(WebsiteSale):
                 print("availablr datessssssssssssssssssssssssssssssssss",available_dates)
                 
 
-                teacher_time_slots = request.env['voca.teacher.booking.lines'].search([])
+                teacher_time_slots = request.env['voca.teacher.booking.lines'].sudo().search([])
                 print("Time slots in the system: ", len(teacher_time_slots))
                 keep = QueryURL(
                     '/shop',
@@ -196,7 +196,15 @@ class CustomSaleOrder(http.Controller):
         
         # Create or find the current sale order (cart)
         sale_order = request.website.sale_get_order()
-        sale_order = request.env['sale.order'].search([('website_id', '=', request.website.id), ('state', '=', 'draft')], limit=1)
+        # sale_order = request.env['sale.order'].sudo().search([('website_id', '=', request.website.id), ('state', '=', 'draft')], limit=1)
+        
+        # Filter to ensure the sale order belongs to the current user
+        sale_order = request.env['sale.order'].sudo().search([
+            ('website_id', '=', request.website.id),  # Match the website
+            ('state', '=', 'draft'),                 # Ensure it's in draft state
+            ('partner_id', '=', request.env.user.partner_id.id)  # Ensure it belongs to the current user
+        ], limit=1)
+        
         print("sale_order in my booking controller .............: ", sale_order)
         
         if not sale_order:
@@ -209,17 +217,18 @@ class CustomSaleOrder(http.Controller):
                 )
             # Create a new sale order if one doesn't exist
             sale_order = request.env['sale.order'].sudo().create({
-                    'partner_id': partner_id,
-                    'website_id': request.website.id,
-                })
+                'partner_id': partner_id,  # Ensure partner_id is valid
+                'website_id': request.website.id,
+            })
+            print("sale_order after creating a one if it doesn t exist .............: ", sale_order)
             
         print("request.env.user.partner_id.id...",request.env.user.partner_id.id)
-        print("sale_order after creating a one if it doesn t exist .............: ", sale_order)
+        
 
         # Retrieve the teacher associated with the product
-        product = request.env['product.product'].browse(int(product_id))
+        product = request.env['product.product'].sudo().browse(int(product_id))
         print("product: ", product)
-        teacher = request.env['voca.teacher'].search([('product_id', '=', product.id)], limit=1)
+        teacher = request.env['voca.teacher'].sudo().search([('product_id', '=', product.id)], limit=1)
         print("teacher: ", teacher.id)
 
         if not teacher:
@@ -243,14 +252,14 @@ class CustomSaleOrder(http.Controller):
         print("matching_dates: ", matching_dates)
 
         # Search for existing booking lines based on the matching dates and the teacher
-        booking_lines = request.env['voca.teacher.booking.lines'].search([
+        booking_lines = request.env['voca.teacher.booking.lines'].sudo().search([
             ('availablity_date', 'in', matching_dates),
             ('booking_id', '=', teacher.id)
         ])
         print("booking_lines found: ", booking_lines)
 
         # Retrieve the package details
-        package = request.env['voca.teacher.packaging.lines'].browse(int(package_id))
+        package = request.env['voca.teacher.packaging.lines'].sudo().browse(int(package_id))
         print("package: ", package)
         print("package.price: ", package.price)
         # Format the description for the sale order line
@@ -262,7 +271,7 @@ class CustomSaleOrder(http.Controller):
         
         # Add a sale order line with the product and the found booking lines
         # Search for an existing order line with the same product in the current sale order
-        order_line = request.env['sale.order.line'].search([
+        order_line = request.env['sale.order.line'].sudo().search([
             ('order_id', '=', sale_order.id),
             ('product_id', '=', product.id)
         ], limit=1)
@@ -275,7 +284,7 @@ class CustomSaleOrder(http.Controller):
                 'price_unit': package.price /package.quantity,    
                 'name': description,                # Update description
                 'package_id': package.id,           # Update package reference
-                'booking_ids': [(5, 0, 0)],         # Clear existing bookings
+                'booking_ids': [(6, 0, booking_lines.ids)],          # Clear existing bookings
             })
         else:
             # Create a new order line
@@ -287,6 +296,7 @@ class CustomSaleOrder(http.Controller):
                 'package_id': package.id,
                 'product_uom': product.uom_id.id,
                 'tax_id': [(6, 0, product.taxes_id.ids)],
+                'booking_ids': [(6, 0, booking_lines.ids)], 
             })]})
             print("Created new order line:", order_line)
             
@@ -294,6 +304,10 @@ class CustomSaleOrder(http.Controller):
         print('booking lines.ids.............................',booking_lines.ids)
         
         print("order_line:................... ", order_line)
+        print("order_line.product_uom_qty:................... ", order_line.product_uom_qty)
+        print("order_line.price:................... ", order_line.price_unit)
+        print("order_line.booking_ids:................... ", order_line.booking_ids)
         return request.redirect('/shop/cart')
+
   
    
