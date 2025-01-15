@@ -28,7 +28,8 @@
                         </group>
                         <group>
                             <field name="categories" widget="many2many_tags"/>
-                            <field name="language"/>
+                            <field name="language_ids" widget="many2many_tags"/>
+<!--                             <field name="language"/> -->
                             <field name="about"/>
                             <field name="learning_bio"/>
                             <!--                            <field name="available_time_slots_ids" widget="many2many_tags"/>-->
