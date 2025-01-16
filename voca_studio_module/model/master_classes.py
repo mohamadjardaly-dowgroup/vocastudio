@@ -12,7 +12,9 @@ class MasterClass(models.Model):
     image_1920 = fields.Image(string="Image")
     #samiha
     date = fields.Date(string=_('Starting Date'))
-
+    seat_price=fields.Monetary(string='Seat Price',currency_field= "currency_id" ,required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    
     time = fields.Char(string='Time')
     #samiha
     instructor = fields.Many2one('voca.teacher', string='Instructor',required=True)
@@ -26,8 +28,8 @@ class MasterClass(models.Model):
 
 
     # New fields for booking date-time range
-    datetime_from = fields.Datetime(string='Booking Start Time', required=True)
-    datetime_to = fields.Datetime(string='Booking End Time',required=True)
+    datetime_from = fields.Datetime(string='Start Time', required=True)
+    datetime_to = fields.Datetime(string='End Time',required=True)
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
@@ -80,14 +82,25 @@ class MasterClass(models.Model):
         print('new maser class.................',master.name)
         product_vals = {
             'name': f"{master.name} - Master",
-            'type': 'service',
+            'type': 'product',
+            'allow_out_of_stock_order':False,
             'is_master': True,
             'is_published':True,
+            'list_price': master.seat_price,
             'master_class_id': master.id,  # Set the master_class_id field
         }
         print("product_vals....................", product_vals)
         product = self.env['product.product'].create(product_vals)
         master.product_id = product.id
+        #samiha
+
+        location_id = self.env.ref('stock.stock_location_stock').id
+        quant_data = {
+            'product_id': product.id,
+            'location_id': location_id,
+            'quantity': master.max_students,
+        }
+        self.env['stock.quant'].create(quant_data)
         
         master_class_category = self.env.ref('voca_studio_module.master_class_category')
         master.categories = [(4, master_class_category.id)]
