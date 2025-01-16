@@ -136,35 +136,36 @@ class CustomWebsiteSale(WebsiteSale):
         
     @http.route('/available_dates', type='http', auth='public')
     def available_dates(self, teacher_id):
-       
-            print("Teacher ID: ", teacher_id)
-            
-            teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
-            
-            bookings_by_day = {}
+        user_tz = pytz.timezone(request.env.user.tz or 'UTC')
+        raise UserError(str(user_tz))
+        print("Teacher ID: ", teacher_id)
+        
+        teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
+        
+        bookings_by_day = {}
 
-            for book in teacher.booking_ids.filtered(lambda x: x.status == 'approved'):
-                avail_date = book.availablity_date
+        for book in teacher.booking_ids.filtered(lambda x: x.status == 'approved'):
+            avail_date = book.availablity_date
 
-                if isinstance(avail_date, str):
-                    avail_date = datetime.strptime(avail_date, '%Y-%m-%d %H:%M:%S')
+            if isinstance(avail_date, str):
+                avail_date = datetime.strptime(avail_date, '%Y-%m-%d %H:%M:%S')
 
-                avail_date += timedelta(hours=2)  
-                day_with_date = avail_date.strftime('%A, %b %d/%Y')
-                time = avail_date.strftime('%I:%M %p')
+            avail_date += timedelta(hours=2)  
+            day_with_date = avail_date.strftime('%A, %b %d/%Y')
+            time = avail_date.strftime('%I:%M %p')
 
-                if day_with_date not in bookings_by_day:
-                    bookings_by_day[day_with_date] = []
-                bookings_by_day[day_with_date].append(time)
+            if day_with_date not in bookings_by_day:
+                bookings_by_day[day_with_date] = []
+            bookings_by_day[day_with_date].append(time)
 
-            print("Bookings by day: ", bookings_by_day)
+        print("Bookings by day: ", bookings_by_day)
 
-            # Return the data as JSON
-            return http.Response(
-                json.dumps(bookings_by_day),
-                content_type='application/json',
-                status=200
-            )
+        # Return the data as JSON
+        return http.Response(
+            json.dumps(bookings_by_day),
+            content_type='application/json',
+            status=200
+        )
             
         
 
