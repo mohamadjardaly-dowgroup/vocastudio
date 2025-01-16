@@ -136,10 +136,8 @@ class CustomWebsiteSale(WebsiteSale):
         
     @http.route('/available_dates', type='http', auth='public')
     def available_dates(self, teacher_id):
-        user_tz = pytz.timezone(request.env.user.tz or 'UTC')
-        raise UserError(str(user_tz))
         print("Teacher ID: ", teacher_id)
-        
+        print(f"Timezone: {pytz.timezone(request.env.user.tz or 'UTC')}")
         teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
         
         bookings_by_day = {}
