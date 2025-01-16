@@ -89,8 +89,8 @@ class CustomWebsiteSale(WebsiteSale):
                 'remainingSeats': master.remaining_seats,
                 'maxSeats': master.max_students,
                 'starting_date':master.date,
-                'start_date': start_date.strftime('%Y-%m-%d'),
-                'end_date': end_date.strftime('%Y-%m-%d'),
+                'start_date': start_date.strftime('%H:%M:%S'),
+                'end_date': end_date.strftime('%H:%M:%S')),
                 'category_id': category_id,
                 'keep': keep
             })
