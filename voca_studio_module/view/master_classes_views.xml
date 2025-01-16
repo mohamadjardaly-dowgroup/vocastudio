@@ -14,17 +14,21 @@
                     </div>
                     <group>
                         <field name="image_1920" class="oe_avatar" widget="image" options="{'size': [100,100]}"/>
-                        <field name="date"/>
-                        <field name="time"/>
                         <field name="instructor"/>
-                        <field name="total_hours"/>
+                        <field name="date"/>
+                        
+                        <field name="time"/>
+                        <field name="datetime_from"/>
+                        <field name="datetime_to"/>
+                        
+<!--                         <field name="total_hours"/> -->
                         <field name="max_students"/>
                         <field name="remaining_seats"/>
+                        <field name="seat_price"/>
                         <!-- <field name="enrolled_students"/>  -->
                         <field name="lectures"/>
                         <field name="description"/>
-                        <field name="datetime_from"/>
-                        <field name="datetime_to"/>
+                        
                         <!--                            <field name="dates_ids"/>-->
                         <field name="categories" widget="many2many_tags"/>
                     </group>
