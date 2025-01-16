@@ -90,7 +90,7 @@ class CustomWebsiteSale(WebsiteSale):
                 'maxSeats': master.max_students,
                 'starting_date':master.date,
                 'start_date': start_date.strftime('%H:%M:%S'),
-                'end_date': end_date.strftime('%H:%M:%S')),
+                'end_date': end_date.strftime('%H:%M:%S'),
                 'category_id': category_id,
                 'keep': keep
             })
