@@ -15,7 +15,7 @@ class MasterClass(models.Model):
     seat_price=fields.Monetary(string='Seat Price',currency_field= "currency_id" ,required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     
-    time = fields.Char(string='Time')
+    time = fields.Char(string='Time Per Lesson')
     #samiha
     instructor = fields.Many2one('voca.teacher', string='Instructor',required=True)
 
