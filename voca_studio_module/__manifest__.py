@@ -8,7 +8,7 @@
     "license": "LGPL-3",
     "author": "",
     "website": "",
-    "depends": ["base", 'website', 'website_slides', 'mail','website_sale','sale','product','web'],
+    "depends": ["base", 'website', 'website_slides', 'mail','website_sale','sale','product','web','stock'],
     "data": [
         'security/ir.model.access.csv',
         'data/teacher_website_menu.xml',
