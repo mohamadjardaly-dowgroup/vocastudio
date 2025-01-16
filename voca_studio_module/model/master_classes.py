@@ -82,6 +82,7 @@ class MasterClass(models.Model):
         print('new maser class.................',master.name)
         product_vals = {
             'name': f"{master.name} - Master",
+            'image_1920':master.image_1920,
             'type': 'product',
             'allow_out_of_stock_order':False,
             'is_master': True,
