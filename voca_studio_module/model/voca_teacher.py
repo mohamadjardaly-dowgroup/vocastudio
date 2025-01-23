@@ -19,6 +19,8 @@ class Teacher(models.Model):
     instructor = fields.Many2one('res.partner', string='Instructor')
 
     experience = fields.Char(string='Experience', related='instructor.experience',readonly=False)
+    instrument=fields.Char(string='Instrument')
+    lang=fields.Char(string='Languages')
 
     categories = fields.Many2many('voca.teacher.categories', string='Category', related='instructor.category_ids',readonly=False,required=True)
 
@@ -27,7 +29,7 @@ class Teacher(models.Model):
         ('ar', 'Arabic'),
     ], string="Language")
 
-    language_ids = fields.Many2many('res.lang',string="Languages")
+    language_ids = fields.Many2many('res.lang',string="Language")
 
     about = fields.Char(string='About', related='instructor.about',readonly=False)
     learning_bio = fields.Char(string='Learn bio')
