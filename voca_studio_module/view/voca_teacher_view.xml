@@ -24,10 +24,12 @@
                             <field name="tag_ids" widget="many2many_tags"/>
                             <field name="instructor"/>
                             <field name="experience"/>
+                            <field name="instrument"/>
 
                         </group>
                         <group>
                             <field name="categories" widget="many2many_tags"/>
+                            <field name="lang"/>
                             <field name="language_ids" widget="many2many_tags"/>
 <!--                             <field name="language"/> -->
                             <field name="about"/>
