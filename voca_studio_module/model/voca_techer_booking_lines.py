@@ -13,7 +13,7 @@ class TeacherBooking(models.Model):
     booking_id = fields.Many2one('voca.teacher', string='Teacher')
     booking_order_id = fields.Many2one('sale.order.line', string='Booking')
 
-    availablity_date = fields.Datetime('Date')
+    availablity_date = fields.Datetime('Date', required=True)
 
     status = fields.Selection(
         [
