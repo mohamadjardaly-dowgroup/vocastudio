@@ -137,25 +137,24 @@ class CustomWebsiteSale(WebsiteSale):
     @http.route('/available_dates', type='http', auth='public')
     def available_dates(self, teacher_id):
         print("Teacher ID: ", teacher_id)
-        
+
         # Retrieve the user's time zone or default to UTC
         user_tz_name = request.env.user.tz or 'UTC'
         user_tz = pytz.timezone(user_tz_name)
         print(f"User's Time Zone: {user_tz}")
 
-        # Get the teacher's booking records
         teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
         bookings_by_day = {}
 
-        for book in teacher.booking_ids.filtered(lambda x: x.status == 'approved'):
+        for book in teacher.booking_ids.filtered(lambda x: x.status in ['approved', 'booked']):
             avail_date = book.availablity_date
 
-            # Parse date if stored as a string
             if isinstance(avail_date, str):
                 avail_date = datetime.strptime(avail_date, '%Y-%m-%d %H:%M:%S')
 
             # Assume avail_date is in UTC and convert to user's time zone
             avail_date = pytz.UTC.localize(avail_date).astimezone(user_tz)
+            print("avail_date in hasan code : ", avail_date)
 
             # Format the date and time for the user's time zone
             day_with_date = avail_date.strftime('%A, %b %d/%Y')
@@ -163,7 +162,12 @@ class CustomWebsiteSale(WebsiteSale):
 
             if day_with_date not in bookings_by_day:
                 bookings_by_day[day_with_date] = []
-            bookings_by_day[day_with_date].append(time)
+
+            # Include status for each time slot
+            bookings_by_day[day_with_date].append({
+                'time': time,
+                'status': book.status  # Add the status (approved or booked)
+            })
 
         print("Bookings by day: ", bookings_by_day)
 
