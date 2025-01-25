@@ -181,58 +181,38 @@ class CustomWebsiteSale(WebsiteSale):
         
 
 class CustomSaleOrder(http.Controller):
-
     @http.route(['/custom/update_sale_order_line'], type='http', auth="public", website=True, csrf=False)
     def update_sale_order_line(self, **kwargs):
+        # Retrieve parameters from kwargs
         product_id = kwargs.get('product_id')
-        print("Product ID /custom/update_sale_order_line:................................................ ", product_id)
+        print("Product ID /custom/update_sale_order_line:................................................ ", product_id)  
         selected_dates = kwargs.get('selected_dates')
         print("Selected Dates /custom/update_sale_order_line:................................................ ", selected_dates)
         package_id = kwargs.get('package_id')
         print("Package ID /custom/update_sale_order_line:................................................ ", package_id)
+
         if not product_id or not selected_dates:
             return request.make_response(
                 json.dumps({"error": "Missing required parameters"}), 
                 headers={'Content-Type': 'application/json'}
             )
-
+            
         user_tz_name = request.env.user.tz or 'UTC'
+        print(f"User Time Zone Name: {user_tz_name}")
+        
         user_tz = pytz.timezone(user_tz_name)
         print(f"User Time Zone: {user_tz}")
-
+        
+        # Parse selected dates
         dates = json.loads(selected_dates)
-        parsed_dates = []
+        print("Dates in /custom/update_sale_order_line:................................................ ", dates)
+        parsed_dates = [
+            datetime.strptime(date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+            for date in dates
+        ]
+        print("Parsed Dates in my code : ", parsed_dates)
         
-        for date in dates:
-            date_user_tz = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-            date_user_tz = pytz.UTC.localize(date_user_tz).astimezone(user_tz)
-            parsed_dates.append(date_user_tz)
-        
-        sale_order = request.website.sale_get_order()
-        sale_order = request.env['sale.order'].sudo().search([
-            ('website_id', '=', request.website.id),
-            ('state', '=', 'draft'),
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ], limit=1)
-        
-        print("sale_order in my booking controller .............: ", sale_order)
-        
-        if not sale_order:
-            partner_id = request.env.user.partner_id.id if request.env.user.partner_id else None
-            print("partner_id inside not sale_order...", partner_id)
-            if not partner_id:
-                return request.make_response(
-                    json.dumps({"error": "No customer (partner_id) associated with the current session."}),
-                    headers={'Content-Type': 'application/json'}
-                )
-            sale_order = request.env['sale.order'].sudo().create({
-                'partner_id': partner_id,
-                'website_id': request.website.id,
-            })
-            print("sale_order after creating a one if it doesn t exist .............: ", sale_order)
-            
-        print("request.env.user.partner_id.id...", request.env.user.partner_id.id)
-        
+        # Retrieve the teacher associated with the product
         product = request.env['product.product'].sudo().browse(int(product_id))
         print("product: ", product)
         teacher = request.env['voca.teacher'].sudo().search([('product_id', '=', product.id)], limit=1)
@@ -241,29 +221,47 @@ class CustomSaleOrder(http.Controller):
         if not teacher:
             return {'error': 'No teacher found for the selected product'}
         
+        # Get teacher availability and map UTC to user timezone
         teacher_availablity = teacher.booking_ids.mapped('availablity_date')
         print("teacher_availablity: ", teacher_availablity)
-        teacher_availablity_user_tz = [date.astimezone(user_tz) for date in teacher_availablity]
-        teacher_availablity_str = set([date.astimezone(user_tz).strftime('%Y-%m-%d %H:%M:%S') for date in teacher_availablity_user_tz])
-        print("teacher_availablity_str: ", teacher_availablity_str)
-        matching_dates = [date for date in parsed_dates if date.strftime('%Y-%m-%d %H:%M:%S') in teacher_availablity_str]
-        print("matching_dates: ", matching_dates)
+        
+        availability_map = {}
+        for utc_date in teacher_availablity:
+            user_tz_date = utc_date.astimezone(user_tz).strftime('%Y-%m-%d %H:%M:%S')
+            availability_map[user_tz_date] = utc_date
+        
+        print("Availability Map (User TZ to UTC): ", availability_map)
 
+        # Match selected dates in user timezone to UTC
+        matching_utc_dates = [availability_map[date] for date in parsed_dates if date in availability_map]
+        print("Matching UTC Dates: ", matching_utc_dates)
+
+        # Use UTC dates to find matching booking lines
         booking_lines = request.env['voca.teacher.booking.lines'].sudo().search([
-            ('availablity_date', 'in', matching_dates),
+            ('availablity_date', 'in', matching_utc_dates),
             ('booking_id', '=', teacher.id)
         ])
         print("booking_lines found: ", booking_lines)
 
+        # Retrieve the package details
         package = request.env['voca.teacher.packaging.lines'].sudo().browse(int(package_id))
         print("package: ", package)
         print("package.price: ", package.price)
-        formatted_dates = '\n'.join([date.astimezone(user_tz).strftime('%Y-%m-%d %H:%M:%S') for date in matching_dates])
+        formatted_dates = '\n'.join(parsed_dates)
+
         print("package.name ...", package.name)
-        print("formatted_dates", formatted_dates)
         description = f"{package.name}\nSelected Dates: {formatted_dates}\n"
         print(('product_id.............', product.id))
         
+        # Create or update the sale order and its lines
+        sale_order = request.website.sale_get_order()
+        if not sale_order:
+            partner_id = request.env.user.partner_id.id
+            sale_order = request.env['sale.order'].sudo().create({
+                'partner_id': partner_id,
+                'website_id': request.website.id,
+            })
+
         order_line = request.env['sale.order.line'].sudo().search([
             ('order_id', '=', sale_order.id),
             ('product_id', '=', product.id)
@@ -286,17 +284,14 @@ class CustomSaleOrder(http.Controller):
                 'package_id': package.id,
                 'product_uom': product.uom_id.id,
                 'tax_id': [(6, 0, product.taxes_id.ids)],
-                'booking_ids': [(6, 0, booking_lines.ids)], 
+                'booking_ids': [(6, 0, booking_lines.ids)],
             })]})
             print("Created new order line:", order_line)
-            
-        print('booking lines.............................', booking_lines)
-        print('booking lines.ids.............................', booking_lines.ids)
         
-        print("order_line:................... ", order_line)
-        print("order_line.product_uom_qty:................... ", order_line.product_uom_qty)
-        print("order_line.price:................... ", order_line.price_unit)
-        print("order_line.booking_ids:................... ", order_line.booking_ids)
+        print("booking lines.............................", booking_lines)
+        print("booking lines.ids.............................", booking_lines.ids)
+
+        
         return request.redirect('/shop/cart')
 
   
