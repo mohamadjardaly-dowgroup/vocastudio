@@ -337,7 +337,7 @@ class StudentDashboard(http.Controller):
    
     
     @http.route('/my_dashboard/completed-lessons', type='http', auth="public", website=True)
-    def my_completed_lessons(self, page=1, limit=10, **kwargs):
+    def my_completed_lessons(self, page=1, limit=12, **kwargs):
         try:
             page = int(page)
         except ValueError:
