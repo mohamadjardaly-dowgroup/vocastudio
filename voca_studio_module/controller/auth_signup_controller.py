@@ -34,7 +34,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         """Extend context with additional fields for signup."""
         SIGN_UP_REQUEST_PARAMS_CUSTOM = [
             'first_name', 'nickname', 'phone', 'gender', 'birthday', 'role',
-            'experience', 'about', 'is_teacher', 'attachment_ids'
+            'experience', 'about', 'is_teacher', 'attachment_ids','instrument'
         ]
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
         qcontext.update({k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS_CUSTOM})
@@ -44,8 +44,10 @@ class VocaAuthSignupHome(AuthSignupHome):
         """Prepare and validate signup values."""
         values = {key: qcontext.get(key) for key in (
             'login', 'name', 'password', 'first_name', 'nickname', 'phone', 'gender', 
-            'birthday', 'role', 'experience', 'about', 'is_teacher'
+            'birthday', 'role', 'experience', 'about', 'is_teacher','instrument'
         )}
+        if values.get('role') == 'teacher' and not values.get('instrument'):
+            raise UserError(_("Instrument field is required for teachers. Please specify the instrument you teach."))
         # Validate email
         if not values.get('login'):
             raise UserError(_("The email field is required."))
