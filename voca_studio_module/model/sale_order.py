@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
                     print("I am inside if line.booking ids ////////")
                     for booking_id in line.booking_ids:
                         print('Updating Booking ID:', booking_id.id)
-                        booking_id.write({'status': 'booked'})
+                        booking_id.write({'status': 'booked','lesson_state': 'upcoming'})
                         print("the status of booking id is ...............",booking_id.status)
                         
                 elif line.booking_master_ids :
