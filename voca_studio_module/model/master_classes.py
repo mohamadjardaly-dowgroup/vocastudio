@@ -102,6 +102,8 @@ class MasterClass(models.Model):
             'quantity': master.max_students,
         }
         self.env['stock.quant'].create(quant_data)
+        # Explicitly set is_master on the product template
+        product.product_tmpl_id.write({'is_master': True})
         
         master_class_category = self.env.ref('voca_studio_module.master_class_category')
         master.categories = [(4, master_class_category.id)]
