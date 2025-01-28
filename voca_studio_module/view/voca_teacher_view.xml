@@ -46,6 +46,7 @@
                                 <field name="booking_ids">
                                     <tree editable="bottom">
                                         <field name="availablity_date"/>
+                                        <field name="lesson_state"/>
                                         <field name="booking_order_id"/>
                                         <button name="action_approved" string="Approve" type="object"
                                                 class="btn text-uppercase" invisible="status == 'approved'"
