@@ -25,6 +25,9 @@
         'view/time_slots_views.xml',
         'view/sale_order_views.xml',
         'view/master_classes_views.xml',
+        'view/my_upcoming_lessons_template.xml',
+        'view/my_completed_lessons_template.xml',
+        'view/student_dash.xml',
         # 'view/master_classes_categories_view.xml',
 
     ],
