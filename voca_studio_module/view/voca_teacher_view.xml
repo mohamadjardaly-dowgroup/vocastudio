@@ -20,6 +20,8 @@
                         </group>
                         <group>
                             <field name="name"/>
+                            <field name="google_meet" widget="url"/>
+                            <field name="zoom" widget="url"/>
                             <field name="state" invisible="1"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                             <field name="instructor"/>
