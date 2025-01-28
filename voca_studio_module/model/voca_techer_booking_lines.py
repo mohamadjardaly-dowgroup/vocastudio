@@ -9,6 +9,13 @@ class TeacherBooking(models.Model):
 
 
     name = fields.Char('Name', translate=True)
+    #######samiha
+    lesson_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('upcoming', 'Upcoming'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled')
+    ], string='Lesson State', default='draft', required=True)
 
     booking_id = fields.Many2one('voca.teacher', string='Teacher')
     booking_order_id = fields.Many2one('sale.order.line', string='Booking')
