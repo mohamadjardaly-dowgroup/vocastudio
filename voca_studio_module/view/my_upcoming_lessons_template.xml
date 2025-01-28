@@ -1,0 +1,59 @@
+<odoo>
+    <template id="upcoming_lessons_partial" name="Upcoming Lessons Partial">
+         <div>
+            <t t-if="upcoming_bookings">
+                <div class="row">
+                    <t t-foreach="upcoming_bookings" t-as="booking">
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <strong>Teacher:</strong> <t t-esc="booking.booking_id.name" />
+                                    </h5>
+                                    <p class="card-text">
+                                         <strong>Date:</strong> <t t-esc="booking.availablity_date.strftime('%d %B %Y')" /><br />
+                                        <strong>Time:</strong> <t t-esc="booking.availablity_date.strftime('%I:%M %p')" /><br />
+                                        <strong>Status:</strong> <t t-esc="booking.lesson_state" />
+                                    </p>
+                                    <a t-att-href="booking.booking_id.google_meet" class="btn btn-primary btn-block" target="_blank">
+                                        Start Lesson
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                 <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-lessons?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-lessons?page=%d' % p">
+                                    <t t-esc="p" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-lessons?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+            <t t-else="">
+                <h4>Here are your upcoming lessons</h4>
+                    <button class="btn btn-primary">
+                        <a href="/teacher_profile" style="color:white;">
+                            Add a Lesson
+                        </a>
+                    </button>
+            </t>
+        </div>
+    </template>
+</odoo>
