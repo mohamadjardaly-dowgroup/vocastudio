@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Student Dashboard  -->
+    <record id="website_menu_my_dashboard" model="website.menu">
+        <field name="name">My Dashboard</field>
+        <field name="url">/my_dashboard</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">10</field>
+    </record>
+    
     <!-- Salon booking website menu-->
     <record id="website_menu_voca" model="website.menu">
         <field name="name">Our Teachers</field>
