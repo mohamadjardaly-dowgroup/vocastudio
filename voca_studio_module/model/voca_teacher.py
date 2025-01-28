@@ -11,6 +11,8 @@ class Teacher(models.Model):
     # _description = 'Portal'
 
     name = fields.Char(string='Name', related='instructor.name')
+    google_meet=fields.Char(string='Google Meet',readonly=False)
+    zoom =fields.Char(string='Zoom', readonly=False)
 
     image_1920 = fields.Image(string="Image", readonly=False, related="instructor.image_1920")  # image.mixin override
 
