@@ -295,5 +295,79 @@ class CustomSaleOrder(http.Controller):
         
         return request.redirect('/shop/cart')
 
+class StudentDashboard(http.Controller):
+
+    @http.route('/my_dashboard', type='http', auth="public", website=True)
+    def my_dashboard(self, **kwargs):
+        # Render the main dashboard template
+        return request.render('voca_studio_module.my_dashboard_template')
+
+    @http.route('/my_dashboard/upcoming-lessons', type='http', auth="public", website=True)
+    def my_upcoming_lessons(self, page=1, limit=12, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        student = request.env.user.partner_id
+
+        # Fetch all order lines for the student
+        order_lines = request.env['sale.order.line'].sudo().search([
+            ('order_id.partner_id', '=', student.id)
+        ])
+
+        # Filter upcoming bookings
+        upcoming_bookings = request.env['voca.teacher.booking.lines'].sudo().search([
+            ('booking_order_id', 'in', order_lines.ids),
+            ('lesson_state', '=', 'upcoming')
+        ])
+
+        # Pagination logic
+        offset = (page - 1) * limit
+        total_upcoming = len(upcoming_bookings)
+        total_pages = ceil(total_upcoming / limit)
+        upcoming_bookings = upcoming_bookings[offset:offset + limit]
+
+        return request.render('voca_studio_module.upcoming_lessons_partial', {
+            'upcoming_bookings': upcoming_bookings,
+            'page': page,
+            'total_pages': total_pages,
+        })
+
+   
+    
+    @http.route('/my_dashboard/completed-lessons', type='http', auth="public", website=True)
+    def my_completed_lessons(self, page=1, limit=10, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        student = request.env.user.partner_id
+
+        # Fetch all order lines for the student
+        order_lines = request.env['sale.order.line'].sudo().search([
+            ('order_id.partner_id', '=', student.id)
+        ])
+
+        # Filter completed bookings
+        completed_bookings = request.env['voca.teacher.booking.lines'].sudo().search([
+            ('booking_order_id', 'in', order_lines.ids),
+            ('lesson_state', '=', 'completed')
+        ])
+
+        # Pagination logic
+        offset = (page - 1) * limit
+        total_completed = len(completed_bookings)
+        total_pages = ceil(total_completed / limit)
+        completed_bookings = completed_bookings[offset:offset + limit]
+
+        return request.render('voca_studio_module.completed_lessons_partial', {
+            'completed_bookings': completed_bookings,
+            'page': page,
+            'total_pages': total_pages,
+        })
+
+
   
    
