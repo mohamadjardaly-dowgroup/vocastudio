@@ -21,7 +21,7 @@ class Teacher(models.Model):
     instructor = fields.Many2one('res.partner', string='Instructor')
 
     experience = fields.Char(string='Experience', related='instructor.experience',readonly=False)
-    instrument=fields.Char(string='Instrument')
+    instrument=fields.Char(string='Instrument', related='instructor.instrument')
     lang=fields.Char(string='Languages')
 
     categories = fields.Many2many('voca.teacher.categories', string='Category', related='instructor.category_ids',readonly=False,required=True)
