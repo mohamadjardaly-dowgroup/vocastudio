@@ -16,7 +16,6 @@ class ResPartner(models.Model):
     # from avatar.mixin
 
     is_teacher = fields.Boolean(string=_('Is Teacher'), default=True)
-    instrument = fields.Char(string='Instrument', help="The instrument the teacher specializes in.")
     first_name = fields.Char(string=_('First Name'), translate=True, tracking=True)
     nickname = fields.Char(string=_('Nickname'), translate=True, tracking=True)
     gender = fields.Selection(
