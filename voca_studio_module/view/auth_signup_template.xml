@@ -16,14 +16,17 @@
                     const genderField = document.getElementById('gender_field');
                     const phoneField = document.getElementById('phone_field');
                     const uploadField = document.getElementById('upload_field');
+                    const instrumentField = document.getElementById('instrument_field');
 
                     // Show or hide fields based on the selected value
                     if (selectElement.value === 'teacher') {
                         phoneField.style.display = 'block';
                         uploadField.style.display = 'block';
+                        instrumentField.style.display = 'block';
                     } else if (selectElement.value === 'stu') {
                         phoneField.style.display = 'none';
                         uploadField.style.display = 'none';
+                        instrumentField.style.display = 'none';
                     }
                 }
 
@@ -101,11 +104,21 @@
                 </div>
             </div>
 
-            <div t-if="role == 'teacher'" class="row mb-3" id="upload_field" style="display:block;">
-                <div class="col-12">
-                    <label class="control-label" for="attachment_ids">Upload your CV</label>
-                    <input type="file" id="attachment_ids" name="filename" required="required" />
-                    <input type="hidden" id="file_base64_dict" name="file_base64_dict" />
+            <div t-if="role == 'teacher'" id="upload_field" style="display:block;">
+                 <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="instrument">Instrument</label>
+                        <input type="text" name="instrument" id="instrument"  required="required"
+                            class="form-control form-control-sm"
+                            placeholder="e.g., Guitar, Piano" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="control-label" for="attachment_ids">Upload your CV</label>
+                        <input type="file" id="attachment_ids" name="filename" required="required" />
+                        <input type="hidden" id="file_base64_dict" name="file_base64_dict" />
+                    </div>
                 </div>
             </div>
 
