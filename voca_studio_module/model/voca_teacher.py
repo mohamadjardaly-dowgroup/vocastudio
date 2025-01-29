@@ -13,6 +13,7 @@ class Teacher(models.Model):
     name = fields.Char(string='Name', related='instructor.name')
     google_meet=fields.Char(string='Google Meet',readonly=False)
     zoom =fields.Char(string='Zoom', readonly=False)
+    youtube_video=fields.Char(string='Video',readonly=False)
 
     image_1920 = fields.Image(string="Image", readonly=False, related="instructor.image_1920")  # image.mixin override
 
