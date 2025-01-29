@@ -27,6 +27,7 @@
         'view/master_classes_views.xml',
         'view/my_upcoming_lessons_template.xml',
         'view/my_completed_lessons_template.xml',
+        'view/upcoming_master_classes.xml',
         'view/student_dash.xml',
         'view/product.xml',
         # 'view/master_classes_categories_view.xml',
