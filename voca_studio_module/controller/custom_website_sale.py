@@ -334,10 +334,53 @@ class StudentDashboard(http.Controller):
             'total_pages': total_pages,
         })
 
-   
+    @http.route('/my_dashboard/upcoming-masters', type='http', auth="user", website=True)
+    def my_upcoming_masters(self, page=1, limit=12, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        student = request.env.user.partner_id
+
+        # Fetch all order lines for the student related to master classes
+        order_lines = request.env['sale.order.line'].sudo().search([
+            ('order_id.partner_id', '=', student.id),
+            ('order_id.state', '=', 'sale'),
+            ('product_id.is_master', '=', True),
+            ('product_id.master_class_id.lesson_state', '=', 'upcoming')
+        ])
+
+        # Aggregate purchases per master class
+        master_class_data = {}
+        for line in order_lines:
+            master_class = line.product_id.master_class_id
+            if master_class:
+                if master_class.id not in master_class_data:
+                    master_class_data[master_class.id] = {
+                        'master_class': master_class,
+                        'seats_booked': 0
+                    }
+                master_class_data[master_class.id]['seats_booked'] += line.product_uom_qty  # Sum booked seats
+
+        # Convert to a list for template rendering
+        aggregated_masters = list(master_class_data.values())
+
+        # Pagination logic
+        total_masters = len(aggregated_masters)
+        total_pages = ceil(total_masters / limit)
+        offset = (page - 1) * limit
+        paginated_masters = aggregated_masters[offset:offset + limit]
+
+        return request.render('voca_studio_module.upcoming_masters_partial', {
+            'upcoming_masters': paginated_masters,
+            'page': page,
+            'total_pages': total_pages,
+            'limit': limit,
+        })
     
-    @http.route('/my_dashboard/completed-lessons', type='http', auth="public", website=True)
-    def my_completed_lessons(self, page=1, limit=12, **kwargs):
+    @http.route('/my_dashboard/completed-lessons', type='http', auth="user", website=True)
+    def my_completed_lessons(self, page=1, limit=10, **kwargs):
         try:
             page = int(page)
         except ValueError:
@@ -347,26 +390,52 @@ class StudentDashboard(http.Controller):
 
         # Fetch all order lines for the student
         order_lines = request.env['sale.order.line'].sudo().search([
-            ('order_id.partner_id', '=', student.id)
+            ('order_id.partner_id', '=', student.id),
+            ('order_id.state', '=', 'sale')  # Ensure order is confirmed
         ])
 
-        # Filter completed bookings
+        # Fetch completed lesson bookings (normal lessons)
         completed_bookings = request.env['voca.teacher.booking.lines'].sudo().search([
             ('booking_order_id', 'in', order_lines.ids),
             ('lesson_state', '=', 'completed')
         ])
 
+         # Fetch completed master classes (Ensuring uniqueness with a set)
+        completed_master_classes = request.env['sale.order.line'].sudo().search([
+            ('order_id.partner_id', '=', student.id),
+            ('order_id.state', '=', 'sale'),  # Only confirmed orders
+            ('product_id.is_master', '=', True),
+            ('product_id.master_class_id.lesson_state', '=', 'completed')
+        ])
+
+        # Use a set to store unique master class IDs
+        unique_master_classes = set()
+        master_class_objects = []
+
+        for line in completed_master_classes:
+            master_class = line.product_id.master_class_id
+            if master_class and master_class.id not in unique_master_classes:
+                unique_master_classes.add(master_class.id)
+                master_class_objects.append(master_class)
+
+        # Combine normal lessons and master classes
+        all_completed = list(completed_bookings) + master_class_objects
+
         # Pagination logic
         offset = (page - 1) * limit
-        total_completed = len(completed_bookings)
+        total_completed = len(all_completed)
         total_pages = ceil(total_completed / limit)
-        completed_bookings = completed_bookings[offset:offset + limit]
+        paginated_completed = all_completed[offset:offset + limit]
 
         return request.render('voca_studio_module.completed_lessons_partial', {
-            'completed_bookings': completed_bookings,
+            'completed_bookings': paginated_completed,
             'page': page,
             'total_pages': total_pages,
         })
+
+   
+    
+    
 
 
   
