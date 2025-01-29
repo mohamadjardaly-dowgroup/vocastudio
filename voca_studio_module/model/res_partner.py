@@ -17,6 +17,7 @@ class ResPartner(models.Model):
 
     is_teacher = fields.Boolean(string=_('Is Teacher'), default=True)
     first_name = fields.Char(string=_('First Name'), translate=True, tracking=True)
+    instrument= fields.Char(string="Instrument")
     
     nickname = fields.Char(string=_('Nickname'), translate=True, tracking=True)
     gender = fields.Selection(
