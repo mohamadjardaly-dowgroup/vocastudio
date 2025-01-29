@@ -77,6 +77,7 @@ class VocaAuthSignupHome(AuthSignupHome):
 
         # Additional fields
         values['name'] = values.get('nickname')
+        values['instrument'] = values.get('instrument')
         if values.get('role') == 'student':
             values.update({'role': 'stu'})
 
