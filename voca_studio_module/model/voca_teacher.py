@@ -67,16 +67,16 @@ class Teacher(models.Model):
             rec.state = 'approved'
 
             # Activate the related user and assign internal user rights
-            if rec.instructor:
-                related_users = rec.instructor.user_ids
-                internal_group = self.env.ref('base.group_user')  # Internal User group
-                portal_group = self.env.ref('base.group_portal')  # Portal group
+            # if rec.instructor:
+            #     related_users = rec.instructor.user_ids
+            #     internal_group = self.env.ref('base.group_user')  # Internal User group
+            #     portal_group = self.env.ref('base.group_portal')  # Portal group
 
-                for user in related_users:
-                    user.sudo().write({
-                        'active': True,  # Activate the user
-                        'groups_id': [(3, portal_group.id), (4, internal_group.id)],  # Remove Portal group, add Internal User group
-                    })
+            #     for user in related_users:
+            #         user.sudo().write({
+            #             'active': True,  # Activate the user
+            #             'groups_id': [(3, portal_group.id), (4, internal_group.id)],  
+            #         })
 
 
     def action_refused(self):
@@ -89,22 +89,22 @@ class Teacher(models.Model):
             rec.state = 'refused'
 
             # Remove internal user rights
-            if rec.instructor:
-                related_users = rec.instructor.user_ids
-                internal_group = self.env.ref('base.group_user')  # Internal User group
-                portal_group = self.env.ref('base.group_portal')  # Portal group (optional)
+            # if rec.instructor:
+            #     related_users = rec.instructor.user_ids
+            #     internal_group = self.env.ref('base.group_user')  # Internal User group
+            #     portal_group = self.env.ref('base.group_portal')  # Portal group (optional)
 
-                for user in related_users:
-                    # Remove Internal User group
-                    user.sudo().write({
-                        'groups_id': [(3, internal_group.id)],  # Remove Internal User group
-                    })
+            #     for user in related_users:
+            #         
+            #         user.sudo().write({
+            #             'groups_id': [(3, internal_group.id)],  # Remove Internal User group
+            #         })
 
-                    # Optionally assign Portal group
-                    if portal_group not in user.groups_id:
-                        user.sudo().write({
-                            'groups_id': [(4, portal_group.id)],  # Add Portal group
-                        })
+                    
+            #         if portal_group not in user.groups_id:
+            #             user.sudo().write({
+            #                 'groups_id': [(4, portal_group.id)],  # Add Portal group
+            #             })
 
     @api.model
     def create(self, vals):
