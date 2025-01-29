@@ -11,7 +11,9 @@
                     <a class="nav-link active" id="upcoming-lessons-tab" data-bs-toggle="tab" href="#upcoming-lessons" role="tab" aria-controls="upcoming-lessons" aria-selected="true" onclick="loadUpcomingLessons()">
                         Upcoming Lessons
                     </a>
-                    
+                    <a class="nav-link" id="upcoming-masters-tab" data-bs-toggle="tab" href="#upcoming-masters" role="tab" aria-controls="upcoming-masters" aria-selected="false" onclick="loadUpcomingMasters()">
+                        Master Classes
+                    </a>
                     <a class="nav-link" id="completed-lessons-tab" data-bs-toggle="tab" href="#completed-lessons" role="tab" aria-controls="completed-lessons" aria-selected="false" onclick="loadCompletedLessons()">
                         Completed Lessons
                     </a>
@@ -51,7 +53,33 @@
                                 }
                             </script>
                     </div>
-                                        <!-- Completed Lessons Tab -->
+                    
+                     <!-- Upcoming Master Products Tab -->
+                    <div class="tab-pane fade" id="upcoming-masters" role="tabpanel" aria-labelledby="upcoming-masters-tab">
+                        <div id="upcoming-masters-content"></div>
+                        <script>
+                            function loadUpcomingMasters(page = 1) {
+                                fetch(`/my_dashboard/upcoming-masters?page=${page}`)
+                                    .then(response => response.text())
+                                    .then(html => {
+                                        document.getElementById('upcoming-masters-content').innerHTML = html;
+
+                                        const paginationLinks = document.querySelectorAll('#upcoming-masters-content .page-link');
+                                        paginationLinks.forEach(link => {
+                                            link.addEventListener('click', function (event) {
+                                                event.preventDefault();
+                                                const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                                loadUpcomingMasters(newPage);
+                                            });
+                                        });
+                                    })
+                                    .catch(error => console.error('Error loading upcoming masters:', error));
+                            }
+
+                        </script>
+                    </div>
+                    
+                    <!-- Completed Lessons Tab -->
                     <div class="tab-pane fade" id="completed-lessons" role="tabpanel" aria-labelledby="completed-lessons-tab">
                         <div id="completed-lessons-content">
                             <script>
