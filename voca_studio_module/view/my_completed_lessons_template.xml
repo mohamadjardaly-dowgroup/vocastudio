@@ -3,25 +3,62 @@
         <div>
             <t t-if="completed_bookings">
                 <div class="row">
-                    <t t-foreach="completed_bookings" t-as="booking">
-                        <div class="col-md-4 mb-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <strong>Teacher:</strong> <t t-esc="booking.booking_id.name" />
-                                    </h5>
-                                    <p class="card-text">
-                                        <strong>Date:</strong> <t t-esc="booking.availablity_date.strftime('%d %B %Y, %I:%M %p')" /><br />
-                                        <strong>Status:</strong> <t t-esc="booking.lesson_state" />
-                                    </p>
-                                    <!-- <t t-if="booking.booking_id.google_meet">
-                                        <a t-att-href="booking.booking_id.google_meet" class="btn btn-primary btn-block" target="_blank">
-                                            View Recording
-                                        </a>
-                                    </t> -->
+                    <t t-foreach="completed_bookings" t-as="record">
+                        <t t-if="record._name == 'voca.teacher.booking.lines'">
+                            <!-- Regular Completed Lesson -->
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <strong>Teacher:</strong> <t t-esc="record.booking_id.name" />
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong>Date:</strong> <t t-esc="record.availablity_date.strftime('%d %B %Y')" /><br />
+                                            <strong>Time:</strong> <t t-esc="record.availablity_date.strftime('%I:%M %p')" /><br />
+
+                                            <!-- <strong>Status:</strong> <t t-esc="record.lesson_state" /> -->
+                                        </p>
+                                        <!-- <t t-if="record.booking_id.google_meet">
+                                            <a t-att-href="record.booking_id.google_meet" class="btn btn-primary btn-block" target="_blank">
+                                                View Recording
+                                            </a>
+                                        </t> -->
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </t>
+                        <t t-if="record._name == 'sale.order.line'">
+                            <!-- Completed Master Class -->
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <strong>Master Class:</strong> <t t-esc="record.product_id.master_class_id.name" />
+                                        </h5>
+                                        <p class="card-text">
+                                            
+                                            <t t-if="record.product_id.master_class_id.datetime_from">
+                                            <strong>Date:</strong>
+                                                <t t-esc="record.product_id.master_class_id.datetime_from.strftime('%d %B %Y')" />
+                                                <br/>
+                                            <strong>Time:</strong>
+                                                <t t-esc="record.product_id.master_class_id.datetime_from.strftime('%I:%M %p')" />
+
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">Not Available</span>
+                                            </t>
+                                            <br />
+                                        </p>
+                                        <!-- <t t-if="record.product_id.master_class_id.instructor.google_meet">
+                                            <a t-att-href="record.product_id.master_class_id.instructor.google_meet" class="btn btn-primary btn-block" target="_blank">
+                                                View Recording
+                                            </a>
+                                        </t> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
                     </t>
                 </div>
 
@@ -49,12 +86,7 @@
                 </nav>
             </t>
             <t t-else="">
-                <h4>Here are your completed lessons</h4>
-                    <button class="btn btn-primary">
-                        <a href="/teacher_profile" style="color:white;">
-                            Add a Lesson
-                        </a>
-                    </button>
+                <p class="text-center">No completed lessons available.</p>
             </t>
         </div>
     </template>
