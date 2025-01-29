@@ -11,6 +11,13 @@ class MasterClass(models.Model):
 
     image_1920 = fields.Image(string="Image")
     #samiha
+    lesson_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('upcoming', 'Upcoming'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled')
+    ], string='Status', default='upcoming')
+    
     date = fields.Date(string=_('Starting Date'))
     seat_price=fields.Monetary(string='Seat Price',currency_field= "currency_id" ,required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
