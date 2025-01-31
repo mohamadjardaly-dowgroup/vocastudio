@@ -1,0 +1,197 @@
+<odoo>
+    <template id="teacher_dashboard_template" name="Teacher Dashboard">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                
+                <!-- Tab Navigation -->
+                <nav class="nav nav-tabs" id="teacherTabs" role="tablist">
+                    <a class="nav-link active" id="upcoming-lessons-tab" data-bs-toggle="tab" href="#upcoming-lessons" role="tab" aria-controls="upcoming-lessons" aria-selected="true" onclick="loadUpcomingLessons()">
+                        Upcoming Lessons
+                    </a>
+                    <a class="nav-link" id="master-classes-tab" data-bs-toggle="tab" href="#master-classes" role="tab" aria-controls="master-classes" aria-selected="false" onclick="loadMasterClasses()">
+                        Master Classes
+                    </a>
+                    <a class="nav-link" id="completed-lessons-tab" data-bs-toggle="tab" href="#completed-lessons" role="tab" aria-controls="completed-lessons" aria-selected="false" onclick="loadCompletedLessons()">
+                        Completed Lessons
+                    </a>
+                </nav>
+
+                <!-- Tab Content -->
+                <div class="tab-content mt-4">
+                    <!-- Upcoming Lessons Tab -->
+                    <div class="tab-pane fade show active" id="upcoming-lessons" role="tabpanel" aria-labelledby="upcoming-lessons-tab">
+                        <div id="upcoming-lessons-content"></div>
+                        <!-- <script>
+                            function loadUpcomingLessons(page = 1) {
+                                fetch(`/teacher_dashboard/upcoming-lessons?page=${page}`)
+                                    .then(response => response.text())
+                                    .then(html => {
+                                        document.getElementById('upcoming-lessons-content').innerHTML = html;
+
+                                        // Add event listeners to the pagination links dynamically
+                                        document.querySelectorAll('#upcoming-lessons-content .page-link').forEach(link => {
+                                            link.addEventListener('click', function (event) {
+                                                event.preventDefault();
+                                                const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                                loadUpcomingLessons(newPage);
+                                            });
+                                        });
+                                    })
+                                    .catch(error => console.error('Error loading upcoming lessons:', error));
+                            }
+
+                            document.addEventListener("DOMContentLoaded", function () {
+                                loadUpcomingLessons();
+                            });
+                        </script> -->
+                    </div>
+                    <!-- MasterClases -->
+                    <div class="tab-pane fade" id="master-classes" role="tabpanel" aria-labelledby="master-classes-tab">
+                        <div id="master-classes-content"></div>
+                    </div>
+
+                    <!-- Completed Lessons Tab -->
+                    <div class="tab-pane fade" id="completed-lessons" role="tabpanel" aria-labelledby="completed-lessons-tab">
+                        <div id="completed-lessons-content"></div>
+                    </div>
+
+
+                    <!-- script -->
+                    <script>
+                        function loadUpcomingLessons(page = 1) {
+                            fetch(`/teacher_dashboard/upcoming-lessons?page=${page}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    document.getElementById('upcoming-lessons-content').innerHTML = html;
+
+                                    // Attach event listeners to dynamically loaded pagination links
+                                    document.querySelectorAll('#upcoming-lessons-content .page-link').forEach(link => {
+                                        link.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                            loadUpcomingLessons(newPage);
+                                        });
+                                    });
+                                })
+                                .catch(error => console.error('Error loading upcoming lessons:', error));
+                        }
+                        <!-- pagination ll completed lesson w 3shn m yt8yr l url -->
+                        function loadCompletedLessons(page = 1) {
+                            fetch(`/teacher_dashboard/completed-lessons?page=${page}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    document.getElementById('completed-lessons-content').innerHTML = html;
+
+                                    // Add event listeners for pagination links
+                                    document.querySelectorAll('#completed-lessons-content .page-link').forEach(link => {
+                                        link.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                            loadCompletedLessons(newPage);
+                                        });
+                                    });
+
+                                    // Add event listeners for "View Students" buttons
+                                    document.querySelectorAll('.toggle-students').forEach(button => {
+                                        button.addEventListener('click', function () {
+                                            const studentList = document.getElementById('student-list-' + this.getAttribute('data-id'));
+                                            studentList.classList.toggle('d-none');
+                                        });
+                                    });
+                                })
+                                .catch(error => console.error('Error loading completed lessons:', error));
+                        }
+                        <!-- pagination lal masterclass -->
+                        function loadMasterClasses(page = 1) {
+                            fetch(`/teacher_dashboard/master-classes?page=${page}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    document.getElementById('master-classes-content').innerHTML = html;
+
+                                    // Add event listeners for pagination links
+                                    document.querySelectorAll('#master-classes-content .page-link').forEach(link => {
+                                        link.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                            loadMasterClasses(newPage);
+                                        });
+                                    });
+
+                                    // Add event listeners for "View Students" buttons
+                                    document.querySelectorAll('.toggle-students').forEach(button => {
+                                        button.addEventListener('click', function () {
+                                            const studentList = document.getElementById('student-list-' + this.getAttribute('data-id'));
+                                            studentList.classList.toggle('d-none');
+                                        });
+                                    });
+                                })
+                                .catch(error => console.error('Error loading master classes:', error));
+                        }
+
+                        <!-- mark the lesson as completed -->
+                        function markLessonCompleted(button) {
+                                const lessonId = button.getAttribute('data-id');
+
+                                fetch('/teacher_dashboard/mark_lesson_completed', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: { lesson_id: lessonId }, id: new Date().getTime() })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        <!-- alert('Lesson marked as completed!'); -->
+                                        loadUpcomingLessons(); // Reload the list after completion
+                                        loadCompletedLessons(); // Move the lesson to completed list
+                                    } else {
+                                        alert('Error: ' + data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('An unexpected error occurred.');
+                                });
+                            }
+
+                            function markMasterclassCompleted(button) {
+                                const masterclassId = button.getAttribute('data-id');
+
+                                fetch('/teacher_dashboard/mark_masterclass_completed', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: { masterclass_id: masterclassId }, id: new Date().getTime() })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        <!-- alert('Master Class marked as completed!'); -->
+                                        loadMasterClasses(); // Reload the list after completion
+                                        loadCompletedLessons(); // Move the masterclass to completed list
+                                    } else {
+                                        alert('Error: ' + data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('An unexpected error occurred.');
+                                });
+                            }
+
+
+                         document.addEventListener("DOMContentLoaded", function () {
+                            
+                            loadUpcomingLessons();
+                            loadCompletedLessons();
+                            loadMasterClasses();
+                        });
+                    </script>
+
+
+
+
+
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
