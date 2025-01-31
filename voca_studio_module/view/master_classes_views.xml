@@ -25,6 +25,7 @@
                         <field name="max_students"/>
                         <field name="remaining_seats"/>
                         <field name="seat_price"/>
+                        <field name="lesson_state"/>
                         <!-- <field name="enrolled_students"/>  -->
                         <field name="lectures"/>
                         <field name="description"/>
