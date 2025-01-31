@@ -27,7 +27,7 @@
                         <field name="seat_price"/>
                         <field name="lesson_state"/>
                         <!-- <field name="enrolled_students"/>  -->
-                        <field name="lectures"/>
+<!--                         <field name="lectures"/> -->
                         <field name="description"/>
                         
                         <!--                            <field name="dates_ids"/>-->
