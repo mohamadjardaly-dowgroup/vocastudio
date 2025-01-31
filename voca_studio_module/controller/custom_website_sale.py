@@ -433,6 +433,170 @@ class StudentDashboard(http.Controller):
             'total_pages': total_pages,
         })
 
+
+class TeacherDashboard(http.Controller):
+    print("Teacher Dashboard Controller")
+    @http.route('/teacher_dashboard', type='http', auth="user", website=True)
+    def teacher_dashboard(self, **kwargs):
+        """Render the Teacher Dashboard"""
+        return request.render('voca_studio_module.teacher_dashboard_template')
+
+    @http.route('/teacher_dashboard/upcoming-lessons', type='http', auth="user", website=True)
+    def teacher_upcoming_lessons(self, page=1, limit=25, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        teacher = request.env.user.partner_id
+
+        # Fetch upcoming lessons for the teacher (sorted by date)
+        upcoming_lessons = request.env['voca.teacher.booking.lines'].sudo().search([
+            ('booking_id', '=', teacher.teacher_id.id),
+            ('lesson_state', '=', 'upcoming')
+        ], order='availablity_date ASC')
+
+        # Pagination logic
+        offset = (page - 1) * limit
+        total_lessons = len(upcoming_lessons)
+        total_pages = ceil(total_lessons / limit)
+        paginated_lessons = upcoming_lessons[offset:offset + limit]
+
+        return request.render('voca_studio_module.teacher_upcoming_lessons_partial', {
+            'upcoming_lessons': paginated_lessons,
+            'page': page,
+            'total_pages': total_pages,
+        })
+
+    @http.route('/teacher_dashboard/completed-lessons', type='http', auth="user", website=True)
+    def teacher_completed_lessons(self, page=1, limit=25, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        teacher = request.env.user.partner_id
+
+        # Fetch completed one-on-one lessons
+        completed_lessons = request.env['voca.teacher.booking.lines'].sudo().search([
+            ('booking_id', '=', teacher.teacher_id.id),
+            ('lesson_state', '=', 'completed')
+        ], order='availablity_date DESC')
+
+        # Fetch completed master classes where the teacher is the instructor
+        completed_master_classes = request.env['master.classes'].sudo().search([
+            ('instructor', '=', teacher.teacher_id.id),
+            ('lesson_state', '=', 'completed')
+        ], order='datetime_from DESC')
+
+        # Fetch students who booked each master class
+        master_class_data = []
+        for master_class in completed_master_classes:
+            students = request.env['sale.order.line'].sudo().search([
+                ('product_id.master_class_id', '=', master_class.id),
+                ('order_id.state', '=', 'sale')  # Only confirmed purchases
+            ]).mapped('order_id.partner_id')
+
+            if master_class:
+                master_class_data.append({
+                    'type': 'master_class',
+                    'master_class': master_class,
+                    'students': students or []
+                })
+
+        # Mark one-on-one lessons with a type
+        completed_lessons_data = [{'type': 'lesson', 'lesson': lesson} for lesson in completed_lessons]
+
+        # Combine normal lessons and master classes
+        all_completed = completed_lessons_data + master_class_data
+
+        # Pagination logic
+        offset = (page - 1) * limit
+        total_completed = len(all_completed)
+        total_pages = ceil(total_completed / limit)
+        paginated_completed = all_completed[offset:offset + limit]
+
+        return request.render('voca_studio_module.teacher_completed_lessons_partial', {
+            'completed_lessons': paginated_completed,
+            'page': page,
+            'total_pages': total_pages,
+        })
+
+
+    @http.route('/teacher_dashboard/master-classes', type='http', auth="user", website=True)
+    def teacher_master_classes(self, page=1, limit=25, **kwargs):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        teacher = request.env.user.partner_id
+
+        # Fetch master classes where the teacher is the instructor
+        master_classes = request.env['master.classes'].sudo().search([
+            ('instructor', '=', teacher.teacher_id.id),
+            ('lesson_state', '=','upcoming')
+        ])
+        
+        print("master_classes: ", master_classes)
+        
+        # Fetch students who have booked each master class
+        master_class_data = []
+        for master_class in master_classes:
+            students = request.env['sale.order.line'].sudo().search([
+                ('product_id.master_class_id', '=', master_class.id),
+                ('order_id.state', '=', 'sale')  
+            ]).mapped('order_id.partner_id')
+
+            master_class_data.append({
+                'master_class': master_class,
+                'students': students
+            })
+
+        # Pagination logic
+        offset = (page - 1) * limit
+        total_master_classes = len(master_class_data)
+        total_pages = ceil(total_master_classes / limit)
+        paginated_master_classes = master_class_data[offset:offset + limit]
+
+        return request.render('voca_studio_module.teacher_master_classes_partial', {
+            'master_classes': paginated_master_classes,
+            'page': page,
+            'total_pages': total_pages,
+        })
+        
+        
+        
+    @http.route('/teacher_dashboard/mark_lesson_completed', type='http', auth="user", methods=['POST'])
+    def mark_lesson_completed(self, **kwargs):
+        """Marks a one-on-one lesson as completed"""
+        lesson_id = kwargs.get('lesson_id')
+        
+        if not lesson_id:
+            return request.redirect('/teacher_dashboard?error=Lesson ID not provided')
+
+        lesson = request.env['voca.teacher.booking.lines'].sudo().browse(int(lesson_id))
+        if lesson.exists() and lesson.lesson_state == 'upcoming':
+            lesson.write({'lesson_state': 'completed'})
+        
+        return request.redirect('/teacher_dashboard')
+
+    @http.route('/teacher_dashboard/mark_masterclass_completed', type='http', auth="user", methods=['POST'])
+    def mark_masterclass_completed(self, **kwargs):
+        """Marks a master class as completed"""
+        masterclass_id = kwargs.get('masterclass_id')
+
+        if not masterclass_id:
+            return request.redirect('/teacher_dashboard?error=Master Class ID not provided')
+
+        master_class = request.env['master.classes'].sudo().browse(int(masterclass_id))
+        if master_class.exists() and master_class.lesson_state == 'upcoming':
+            master_class.write({'lesson_state': 'completed'})
+
+        return request.redirect('/teacher_dashboard')
+
+ 
+
    
     
     
