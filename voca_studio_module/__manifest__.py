@@ -30,6 +30,10 @@
         'view/upcoming_master_classes.xml',
         'view/student_dash.xml',
         'view/product.xml',
+        'view/teacher_dashboard.xml',
+        'view/teacher_upcoming_lessons.xml',
+        'view/teacher_completed_lessons.xml',
+        'view/teacher_masterclasses.xml',
         # 'view/master_classes_categories_view.xml',
 
     ],
