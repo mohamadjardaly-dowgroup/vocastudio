@@ -116,14 +116,6 @@
                                             loadMasterClasses(newPage);
                                         });
                                     });
-
-                                    // Add event listeners for "View Students" buttons
-                                    document.querySelectorAll('.toggle-students').forEach(button => {
-                                        button.addEventListener('click', function () {
-                                            const studentList = document.getElementById('student-list-' + this.getAttribute('data-id'));
-                                            studentList.classList.toggle('d-none');
-                                        });
-                                    });
                                 })
                                 .catch(error => console.error('Error loading master classes:', error));
                         }
