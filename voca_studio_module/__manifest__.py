@@ -13,6 +13,7 @@
         'security/ir.model.access.csv',
         'data/teacher_website_menu.xml',
         'data/master_class_category.xml',
+        'data/cron_job.xml',
         'view/voca_teacher_view.xml',
         'view/voca_teacher_tags_view.xml',
         'view/voca_teacher_categories_view.xml',
