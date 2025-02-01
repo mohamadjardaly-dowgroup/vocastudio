@@ -3,9 +3,8 @@
         <div>
             <t t-if="master_classes">
                 <div class="row">
-                    <t t-foreach="master_classes" t-as="record">
-                        <t t-set="master_class" t-value="record['master_class']"/>
-                        <t t-set="students" t-value="record['students']"/>
+                    <t t-foreach="master_classes" t-as="master_class">
+                        
                         
                         <div class="col-md-4 mb-4">
                             <div class="card shadow-sm border-0">
@@ -51,22 +50,7 @@
                                         </form>
                                     </div>
 
-                                    <!-- View Students -->
-                                    <div class="mt-3">
-                                        <button class="btn btn-sm btn-secondary toggle-students" t-att-data-id="master_class.id">
-                                            View Students
-                                        </button>
-                                        <ul class="student-list mt-2 d-none" t-att-id="'student-list-' + str(master_class.id)">
-                                            <t t-if="students">
-                                                <t t-foreach="students" t-as="student">
-                                                    <li><t t-esc="student.name" /></li>
-                                                </t>
-                                            </t>
-                                            <t t-else="">
-                                                <span class="text-muted">No Students Enrolled</span>
-                                            </t>
-                                        </ul>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
