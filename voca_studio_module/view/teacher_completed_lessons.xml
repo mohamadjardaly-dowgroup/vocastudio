@@ -2,78 +2,50 @@
     <template id="teacher_completed_lessons_partial" name="Teacher Completed Lessons Partial">
         <div>
             <t t-if="completed_lessons">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Lesson Type</th>
-                            <th>Student(s)</th>
-                            <th>Date</th>
-                            <!-- <th>Google Meet</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="completed_lessons" t-as="record">
-                            <t t-if="record['type'] == 'lesson'">
-                                <t t-set="lesson" t-value="record['lesson']"/>
-                                <!-- Regular Completed Lesson -->
-                                <tr>
-                                    <td>One-on-One Lesson</td>
-                                    <td><t t-esc="lesson.booking_order_id.order_id.partner_id.name" /></td>
-                                    <td><t t-esc="lesson.availablity_date.strftime('%d %B %Y, %I:%M %p')" /></td>
-                                    <!-- <td>
-                                        <t t-if="lesson.booking_id.google_meet">
-                                            <a t-att-href="lesson.booking_id.google_meet" class="btn btn-sm btn-primary" target="_blank">
-                                                View Recording
-                                            </a>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="text-muted">No Recording Available</span>
-                                        </t>
-                                    </td> -->
-                                </tr>
-                            </t>
-
-                            <t t-if="record['type'] == 'master_class'">
-                                <t t-set="master_class" t-value="record['master_class']"/>
-                                <t t-set="students" t-value="record['students']"/>
-                                <!-- Completed Master Class -->
-                                <tr>
-                                    <td>Master Class</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-secondary toggle-students" t-att-data-id="master_class.id">
-                                            View Students
-                                        </button>
-                                        <ul class="student-list mt-2 d-none" t-att-id="'student-list-' + str(master_class.id)">
-                                            <t t-if="students">
-                                                <t t-foreach="students" t-as="student">
-                                                    <li><t t-esc="student.name" /></li>
-                                                </t>
-                                            </t>
-                                            <t t-else="">
-                                                <span class="text-muted">No Students Enrolled</span>
-                                            </t>
-                                        </ul>
-                                    </td>
-                                    <td><t t-esc="master_class.datetime_from.strftime('%d %B %Y, %I:%M %p')" /></td>
-                                    <!-- <td>
-                                        <t t-if="master_class.instructor.google_meet">
-                                            <a t-att-href="master_class.instructor.google_meet" class="btn btn-sm btn-primary" target="_blank">
-                                                View Recording
-                                            </a>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="text-muted">No Recording Available</span>
-                                        </t>
-                                    </td> -->
-                                </tr>
-                            </t>
+                <div class="row">
+                    <t t-foreach="completed_lessons" t-as="record">
+                        
+                        <!-- Regular Completed Lesson (One-on-One) -->
+                        <t t-if="record._name == 'voca.teacher.booking.lines'">
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">
+                                            <strong>One-on-One Lesson</strong>
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong>Student:</strong> <t t-esc="record.booking_order_id.order_id.partner_id.name" /><br />
+                                            <strong>Date:</strong> <t t-esc="record.availablity_date.strftime('%d %B %Y')" /><br />
+                                            <strong>Time:</strong> <t t-esc="record.availablity_date.strftime('%I:%M %p')" />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </t>
-                    </tbody>
-                </table>
+
+                        <!-- Completed Master Class -->
+                        <t t-if="record._name == 'master.classes'">
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success">
+                                            <strong>Master Class</strong>
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong>Date:</strong> <t t-esc="record.datetime_from.strftime('%d %B %Y')" /><br />
+                                            <strong>Time:</strong> <t t-esc="record.datetime_from.strftime('%I:%M %p')" />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                    </t>
+                </div>
 
                 <!-- Pagination -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center mt-4">
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
                         <t t-if="page > 1">
                             <li class="page-item">
                                 <a class="page-link" href="#" t-att-href="'/teacher_dashboard/completed-lessons?page=%d' % (page - 1)">Previous</a>
