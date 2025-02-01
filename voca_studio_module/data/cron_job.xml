@@ -13,6 +13,21 @@
             <field name="active" eval="True"/>
         </record>
     </data>
+
+
+    <data noupdate="1">
+        <record id="ir_cron_delete_old_draft_bookings" model="ir.cron">
+            <field name="name">Delete Old Draft Teacher Bookings</field>
+            <field name="model_id" ref="model_voca_teacher_booking_lines"/>
+            <field name="state">code</field>
+            <field name="code">model.delete_old_draft_bookings()</field>
+            <field name="interval_number">36</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+    
 </odoo>
 
 
