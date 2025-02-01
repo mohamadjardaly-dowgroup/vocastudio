@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-
+from datetime import datetime
 
 class TeacherBooking(models.Model):
     _name = 'voca.teacher.booking.lines'
@@ -40,6 +40,22 @@ class TeacherBooking(models.Model):
         for rec in self:
             rec.status = 'refused'
 
+    #samiha automation for completed lessons
+    @api.model
+    def mark_completed_bookings(self):
+        """Marks past upcoming lessons as completed"""
+        now = datetime.now()
+        print("now ................. ", now)
+        upcoming_bookings = self.search([
+            ('lesson_state', '=', 'upcoming'),
+            ('availablity_date', '<', now)
+        ])
+        if upcoming_bookings:
+            upcoming_bookings.write({'lesson_state': 'completed'})
+            return True
+        return False
+        
+
     #samiha check for the same teacher not globally 
     @api.constrains('availablity_date', 'booking_id')
     def _check_unique_availability_date(self):
@@ -54,3 +70,8 @@ class TeacherBooking(models.Model):
                     _('The availability date must be unique for the same teacher. '
                     'Teacher %s already has a booking for this date: %s') % (rec.booking_id.name, rec.availablity_date)
                 )
+    
+
+
+
+
