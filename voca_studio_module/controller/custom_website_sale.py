@@ -540,24 +540,13 @@ class TeacherDashboard(http.Controller):
         
         print("master_classes: ", master_classes)
         
-        # Fetch students who have booked each master class
-        master_class_data = []
-        for master_class in master_classes:
-            students = request.env['sale.order.line'].sudo().search([
-                ('product_id.master_class_id', '=', master_class.id),
-                ('order_id.state', '=', 'sale')  
-            ]).mapped('order_id.partner_id')
-
-            master_class_data.append({
-                'master_class': master_class,
-                'students': students
-            })
+       
 
         # Pagination logic
         offset = (page - 1) * limit
-        total_master_classes = len(master_class_data)
+        total_master_classes = len(master_classes)
         total_pages = ceil(total_master_classes / limit)
-        paginated_master_classes = master_class_data[offset:offset + limit]
+        paginated_master_classes = master_classes[offset:offset + limit]
 
         return request.render('voca_studio_module.teacher_master_classes_partial', {
             'master_classes': paginated_master_classes,
