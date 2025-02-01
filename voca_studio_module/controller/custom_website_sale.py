@@ -469,7 +469,7 @@ class TeacherDashboard(http.Controller):
         })
 
     @http.route('/teacher_dashboard/completed-lessons', type='http', auth="user", website=True)
-    def teacher_completed_lessons(self, page=1, limit=25, **kwargs):
+    def teacher_completed_lessons(self, page=1, limit=10, **kwargs):
         try:
             page = int(page)
         except ValueError:
@@ -489,27 +489,9 @@ class TeacherDashboard(http.Controller):
             ('lesson_state', '=', 'completed')
         ], order='datetime_from DESC')
 
-        # Fetch students who booked each master class
-        master_class_data = []
-        for master_class in completed_master_classes:
-            students = request.env['sale.order.line'].sudo().search([
-                ('product_id.master_class_id', '=', master_class.id),
-                ('order_id.state', '=', 'sale')  # Only confirmed purchases
-            ]).mapped('order_id.partner_id')
-
-            if master_class:
-                master_class_data.append({
-                    'type': 'master_class',
-                    'master_class': master_class,
-                    'students': students or []
-                })
-
-        # Mark one-on-one lessons with a type
-        completed_lessons_data = [{'type': 'lesson', 'lesson': lesson} for lesson in completed_lessons]
-
-        # Combine normal lessons and master classes
-        all_completed = completed_lessons_data + master_class_data
-
+        # Combine both completed one-on-one lessons and master classes
+        all_completed = list(completed_lessons) + list(completed_master_classes)
+        print("all_completed: ", all_completed)
         # Pagination logic
         offset = (page - 1) * limit
         total_completed = len(all_completed)
