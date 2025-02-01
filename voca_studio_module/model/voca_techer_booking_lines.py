@@ -54,6 +54,19 @@ class TeacherBooking(models.Model):
             upcoming_bookings.write({'lesson_state': 'completed'})
             return True
         return False
+
+    @api.model
+    def delete_old_draft_bookings(self):
+        """Deletes teacher bookings that are still in 'draft' state after their availability date has passed."""
+        now = datetime.now()
+        old_draft_bookings = self.search([
+            ('lesson_state', '=', 'draft'),
+            ('availablity_date', '<', now)
+        ])
+        if old_draft_bookings:
+            old_draft_bookings.unlink()
+            return True
+        return False
         
 
     #samiha check for the same teacher not globally 
