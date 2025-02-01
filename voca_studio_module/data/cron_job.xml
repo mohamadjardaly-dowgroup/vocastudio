@@ -1,14 +1,15 @@
+
 <odoo>
     <data noupdate="1">
         
         <record id="ir_cron_mark_completed_bookings" model="ir.cron">
-            <field name="name">Mark Lessons as Completed (Every 5 Minutes)</field>
+            <field name="name">Mark Lessons as Completed Daily</field>
             <field name="model_id" ref="model_voca_teacher_booking_lines"/>
             <field name="state">code</field>
             <field name="code">model.mark_completed_bookings()</field>
             <field name="interval_number">5</field>
-            <field name="interval_type">minutes</field>  <!-- Runs every 5 minutes -->
-            <field name="numbercall">-1</field>  <!-- Runs indefinitely -->
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
             <field name="active" eval="True"/>
         </record>
     </data>
@@ -21,18 +22,3 @@
 
 
 
-<!-- <odoo>
-    <data noupdate="1">
-        
-        <record id="ir_cron_mark_completed_bookings" model="ir.cron">
-            <field name="name">Mark Lessons as Completed Daily</field>
-            <field name="model_id" ref="model_voca_teacher_booking_lines"/>
-            <field name="state">code</field>
-            <field name="code">model.mark_completed_bookings()</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="active" eval="True"/>
-        </record>
-    </data>
-</odoo> -->
