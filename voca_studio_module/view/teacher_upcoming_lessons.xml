@@ -19,7 +19,7 @@
                                     <div class="d-flex justify-content-between">
                                         <t t-if="lesson.booking_id.google_meet">
                                             <a t-att-href="lesson.booking_id.google_meet" class="btn btn-primary flex-grow-1 me-2" target="_blank">
-                                                Join Lesson
+                                                Start Lesson
                                             </a>
                                         </t>
                                         <t t-else="">
