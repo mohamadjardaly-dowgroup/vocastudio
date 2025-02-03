@@ -42,9 +42,10 @@
 
                 // Real-time phone number validation
                 function validatePhone(input) {
-                    const phonePattern = /^\+\d+$/;
+                    const phonePattern = /^\d+$/;  // Only allows digits (0-9)
+                    
                     if (!phonePattern.test(input.value)) {
-                        input.setCustomValidity('Phone number must include a valid country code (e.g., +123456789).');
+                        input.setCustomValidity('Phone number must contain only digits (e.g., 123456789).');
                     } else {
                         input.setCustomValidity('');
                     }
@@ -93,7 +94,8 @@
                     <input class="form-control" type="tel" name="phone"
                         id="phone"
                         placeholder="e.g. 123456789"
-                        required="required"/>
+                        required="required"
+                        oninput="validatePhone(this)"/>
                 </div>
             </div>
 
