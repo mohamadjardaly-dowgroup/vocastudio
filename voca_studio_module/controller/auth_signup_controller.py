@@ -54,7 +54,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         self._validate_email(values.get('login'))
 
         # Validate phone
-        self._validate_phone(values.get('phone'))
+        # self._validate_phone(values.get('phone'))
 
         # Validate passwords
         if values.get('password') != qcontext.get('confirm_password'):
@@ -80,6 +80,15 @@ class VocaAuthSignupHome(AuthSignupHome):
         values['instrument'] = values.get('instrument')
         if values.get('role') == 'student':
             values.update({'role': 'stu'})
+
+        country_id = qcontext.get('country_id')
+        if country_id:
+            country = request.env['res.country'].sudo().browse(int(country_id))
+            values['country_id'] = int(country_id)  # Store country in res.partner
+
+        # Append phone code to the phone number
+        if country and country.phone_code:
+            values['phone'] = f"+{country.phone_code} {values.get('phone', '')}".strip()
 
         return values
 
