@@ -22,8 +22,8 @@ class VocaAuthSignupHome(AuthSignupHome):
 
     def _validate_phone(self, phone):
         """Validate phone format to include a country code."""
-        if not phone or not phone.startswith('+') or not phone[1:].isdigit():
-            raise UserError(_("Phone number must include a valid country code (e.g., +123456789)."))
+        if not phone or not phone[:].isdigit():
+            raise UserError(_("Phone number must contain only digits (e.g., 123456789)."))
 
     def _validate_cv(self, upload_cv_dict, role):
         """Ensure CV is uploaded if the user is a teacher."""
@@ -54,7 +54,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         self._validate_email(values.get('login'))
 
         # Validate phone
-        # self._validate_phone(values.get('phone'))
+        self._validate_phone(values.get('phone'))
 
         # Validate passwords
         if values.get('password') != qcontext.get('confirm_password'):
