@@ -8,7 +8,7 @@ from math import ceil
 from odoo import http
 from odoo.http import request
 from odoo.exceptions import UserError
-
+from odoo.tools import format_amount
 
 
 class CustomWebsiteSale(WebsiteSale):
@@ -81,6 +81,8 @@ class CustomWebsiteSale(WebsiteSale):
                         **kwargs,
                     ),
                 )
+            
+
             return request.render('website_sale.product', {
                 'product': product_template,
                 'master': master,
@@ -114,7 +116,10 @@ class CustomWebsiteSale(WebsiteSale):
                         search=search,
                         **kwargs,
                     ),
-                )                
+                )
+                
+                pricelist = request.website.get_current_pricelist()
+                computed_price = pricelist.get_product_price(package.product_id, 1.0, request.env.user.partner_id)
                 # Render the template with the package data
                 return request.render('website_sale.product', {
                     'product': product_template,
@@ -122,10 +127,11 @@ class CustomWebsiteSale(WebsiteSale):
                     'package': package,
                     'teacher' : teacher,
                     'available_dates': available_dates,
-                    'product_price':package.price,
+                    'product_price': computed_price,
                     'combination_info': combination_info,
                     'category_id': category_id, 
-                    'keep': keep
+                    'keep': keep,
+                    'format_amount': lambda amount, currency: format_amount(request.env, amount, currency),
 
                 })
         else:
