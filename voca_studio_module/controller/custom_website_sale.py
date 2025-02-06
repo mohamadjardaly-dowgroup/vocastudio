@@ -119,7 +119,20 @@ class CustomWebsiteSale(WebsiteSale):
                 )
                 
                 pricelist = request.website._get_current_pricelist()
-                computed_price = pricelist._get_product_price(package.product_id, 1.0, request.env.user.partner_id)
+                package_currency = package.currency_id
+                package_price = package.price
+
+                if package_currency != pricelist.currency_id:
+                    converted_price = package_currency._convert(
+                        from_amount=package_price,
+                        to_currency=pricelist.currency_id,
+                        company=request.env.company,
+                        date=fields.Date.today()
+                    )
+                    # print("Converted Price..........: ", converted_price)
+                else:
+                    converted_price = package_price
+
                 # Render the template with the package data
                 return request.render('website_sale.product', {
                     'product': product_template,
@@ -127,12 +140,12 @@ class CustomWebsiteSale(WebsiteSale):
                     'package': package,
                     'teacher' : teacher,
                     'available_dates': available_dates,
-                    'product_price': computed_price,
+                    'product_price': converted_price,
                     'combination_info': combination_info,
                     'category_id': category_id, 
                     'keep': keep,
                     'format_amount': lambda amount, currency: format_amount(request.env, amount, currency),
-
+                    'currency_id': pricelist.currency_id,
                 })
         else:
             return request.not_found() 
