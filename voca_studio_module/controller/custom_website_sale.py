@@ -118,8 +118,8 @@ class CustomWebsiteSale(WebsiteSale):
                     ),
                 )
                 
-                pricelist = request.website.get_current_pricelist()
-                computed_price = pricelist.get_product_price(package.product_id, 1.0, request.env.user.partner_id)
+                pricelist = request.website._get_current_pricelist()
+                computed_price = pricelist._get_product_price(package.product_id, 1.0, request.env.user.partner_id)
                 # Render the template with the package data
                 return request.render('website_sale.product', {
                     'product': product_template,
