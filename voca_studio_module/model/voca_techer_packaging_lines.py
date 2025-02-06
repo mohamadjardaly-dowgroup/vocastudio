@@ -15,7 +15,9 @@ class TeacherPackaging(models.Model):
                                                )
 
     quantity = fields.Float('Qty')
-    price = fields.Float('Price')
+    price = fields.Monetary('Price', currency_field="currency_id", required=True,store=True,readonly=False)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id.id)
+    
     package_time = fields.Char(string='Time')
 
     order_line_ids = fields.One2many('sale.order', 'package_id', string='Sale Lines')
