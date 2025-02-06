@@ -141,7 +141,7 @@ class CustomWebsiteSale(WebsiteSale):
                     'package': package,
                     'teacher' : teacher,
                     'available_dates': available_dates,
-                    'product_price': package.price,
+                    'product_price': converted_price,
                     'combination_info': combination_info,
                     'category_id': category_id, 
                     'keep': keep,
