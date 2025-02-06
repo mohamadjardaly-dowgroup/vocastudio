@@ -119,7 +119,7 @@ class CustomWebsiteSale(WebsiteSale):
                 )
                 
                 pricelist = request.website._get_current_pricelist()
-                computed_price = pricelist.get_product_price(package.product_id, 1.0, request.env.user.partner_id)
+                computed_price = pricelist._get_product_price(package.product_id, 1.0, request.env.user.partner_id)
                 package_currency = package.currency_id
                 package_price = package.price
 
