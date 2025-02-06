@@ -5,7 +5,7 @@ import pytz
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.controllers.main import QueryURL
 from math import ceil
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 from odoo.exceptions import UserError
 from odoo.tools import format_amount
