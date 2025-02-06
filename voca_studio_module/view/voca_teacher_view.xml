@@ -71,6 +71,7 @@
                                         <field name="quantity"/>
                                         <field name="package_time"/>
                                         <field name="product_id"/>
+                                        <field name="currency_id" optional="hide"/>
 
 
                                     </tree>
