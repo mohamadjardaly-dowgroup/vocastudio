@@ -14,6 +14,7 @@ class Teacher(models.Model):
     google_meet=fields.Char(string='Google Meet',readonly=False)
     zoom =fields.Char(string='Zoom', readonly=False)
     youtube_video=fields.Char(string='Video',readonly=False)
+    youtube_videos = fields.One2many("voca.teacher.video", "teacher_id", string="YouTube Videos")
 
     image_1920 = fields.Image(string="Image", readonly=False, related="instructor.image_1920")  # image.mixin override
 
