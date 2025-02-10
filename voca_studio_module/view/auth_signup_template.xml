@@ -83,7 +83,7 @@
                         <t t-foreach="request.env['res.country'].sudo().search([])" t-as="country">
                             <option t-att-value="country.id"
                                     t-att-data-phone-code="country.phone_code if country.phone_code else 'N/A'">
-                                <t t-esc="country.name"/> (+<t t-esc="country.phone_code or 'No Code'"/>)
+                                +<t t-esc="country.phone_code or 'No Code'"/>
                             </option>
                         </t>
                     </select>
