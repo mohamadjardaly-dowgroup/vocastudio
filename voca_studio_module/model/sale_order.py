@@ -46,8 +46,27 @@ class SaleOrder(models.Model):
                             raise ValidationError(_("Not enough seats available for the master class."))
                         master_class.remaining_seats -= total_seats_needed
                         print("Master Class Remaining Seats after booking:...........", master_class.remaining_seats)
+            # Find the teacher linked to the lesson (product)
+                teacher_packaging_line = self.env['voca.teacher.packaging.lines'].search(
+                    [('product_id', '=', line.product_id.id)], limit=1
+                )
+                print("Teacher Packaging Line:...........", teacher_packaging_line)
+                if teacher_packaging_line:
+                    teacher = teacher_packaging_line.package_id  # Get the related teacher
+                    print("Teacher related to the package :...........", teacher)
+                    if teacher and teacher.instructor and teacher.instructor.email:
+                        # Send email to teacher
+                        self._send_teacher_email(teacher.instructor, line)
         return res
+    def _send_teacher_email(self, teacher, sale_order_line):
+        """ Sends an email to the teacher when a student books a lesson. """
+        print("Sending email to teacher:", teacher.email)
 
+        email_template = self.env.ref('sale.mail_template_sale_confirmation')  # Replace with your actual email template XML ID
+        if email_template:
+            email_template.sudo().send_mail(teacher.id, force_send=True)
+            print("Email sent to:", teacher.email)
+            
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
