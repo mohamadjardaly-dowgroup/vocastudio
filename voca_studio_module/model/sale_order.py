@@ -56,7 +56,8 @@ class SaleOrder(models.Model):
                     print("Teacher related to the package :...........", teacher)
                     if teacher and teacher.instructor and teacher.instructor.email:
                         # Send email to teacher
-                        self._send_teacher_email(teacher.instructor, line)
+                        # self._send_teacher_email(teacher.instructor, line)
+                        print("teacher email")
         return res
     def _send_teacher_email(self, teacher, sale_order_line):
         """ Sends an email to the teacher when a student books a lesson. """
