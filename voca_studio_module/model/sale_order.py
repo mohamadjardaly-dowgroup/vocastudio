@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
         """ Sends an email to the teacher when a student books a lesson. """
         print("Sending email to teacher:", teacher.email)
 
-        email_template = self.env.ref('sale.mail_template_sale_confirmation')  # Replace with your actual email template XML ID
+        email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')  # Replace with your actual email template XML ID
         if email_template:
             email_template.sudo().send_mail(teacher.id, force_send=True)
             print("Email sent to:", teacher.email)
