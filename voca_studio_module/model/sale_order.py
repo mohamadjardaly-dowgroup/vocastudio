@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
                     print("Teacher related to the package :...........", teacher)
                     if teacher and teacher.instructor and teacher.instructor.email:
                         # Send email to teacher
-                        # self._send_teacher_email(teacher.instructor, line)
+                        self._send_teacher_email(teacher.instructor, line)
                         print("teacher email")
         return res
     def _send_teacher_email(self, teacher, sale_order_line):
@@ -65,7 +65,7 @@ class SaleOrder(models.Model):
 
         email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')  # Replace with your actual email template XML ID
         if email_template:
-            email_template.sudo().send_mail(teacher.id, force_send=True)
+            email_template.sudo().send_mail(sale_order_line.id, force_send=True)
             print("Email sent to:", teacher.email)
             
 class SaleOrderLine(models.Model):
