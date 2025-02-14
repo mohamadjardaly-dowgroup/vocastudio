@@ -5,19 +5,19 @@
         <!-- Email Template for Teacher Notification -->
         <record id="mail_template_lesson_booking_teacher" model="mail.template">
             <field name="name">Lesson Booking Notification for Teacher</field>
-            <field name="model_id" ref="sale.model_sale_order_line"/>  <!-- Link to Sale Order Line -->
-            <field name="subject">New Lesson Booking: ${object.product_id.name}</field>
-            <field name="email_from">${(object.order_id.company_id.email or 'info@yourcompany.com')|safe}</field>
-            <field name="email_to">${object.package_id.package_id.instructor.email}</field>
+            <field name="model_id" ref="sale.model_sale_order_line"/>
+            <field name="subject">New Lesson Booking: {{ object.company_id.name }}</field>
+            <field name="email_from">"Voca Studio SARL" <hello@vocastudio.com></field>
+            <field name="email_to">{{ object.package_id.package_id.instructor.email }}</field>
             <field name="body_html">
                 <![CDATA[
-                <p>Hello ${object.package_id.package_id.instructor.name},</p>
+                <p>Hello ,</p>
 
                 <p>A new lesson has been booked.</p>
 
-                <p><strong>Student:</strong> ${object.order_id.partner_id.name}</p>
-                <p><strong>Lesson:</strong> ${object.product_id.name}</p>
-                <p><strong>Date:</strong> ${object.order_id.date_order.strftime('%Y-%m-%d')}</p>
+                <p><strong>Student:</strong> </p>
+                <p><strong>Lesson:</strong> </p>
+                <p><strong>Date:</strong> </p>
 
                 <p>Thank you!</p>
                 ]]>
