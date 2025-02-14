@@ -7,7 +7,7 @@
             <field name="name">Lesson Booking Notification for Teacher</field>
             <field name="model_id" ref="sale.model_sale_order_line"/>
             <field name="subject">New Lesson Booking: {{ object.company_id.name }}</field>
-            <field name="email_from">"Voca Studio SARL" <hello@vocastudio.com></field>
+            <field name="email_from"></field>
             <field name="email_to">{{ object.package_id.package_id.instructor.email }}</field>
             <field name="body_html">
                 <![CDATA[
