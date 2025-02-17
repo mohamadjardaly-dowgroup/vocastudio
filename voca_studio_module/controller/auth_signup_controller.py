@@ -42,24 +42,29 @@ class VocaAuthSignupHome(AuthSignupHome):
         return qcontext
 
     def get_auth_signup_qcontext(self):
-        """Extend signup context with detected country"""
+        """Extend signup context with detected country based on the real user IP"""
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
 
-        # Fetch user's country based on IP (External API)
+        # Get user's real IP from headers (works behind proxies/load balancers)
+        user_ip = request.httprequest.headers.get('X-Forwarded-For', request.httprequest.remote_addr)
+        print("user_ip........", user_ip)
+        if ',' in user_ip:
+            user_ip = user_ip.split(',')[0]  # Take first IP (real user IP)
+
         try:
-            response = requests.get("https://ipapi.co/json/")
+            # Use external API to get geolocation based on user's IP
+            response = requests.get(f"https://ipapi.co/{user_ip}/json/")
             if response.status_code == 200:
                 data = response.json()
                 user_country_code = data.get('country_code')
-                print("user_country_code..........", user_country_code)
+                print("user_country_code........", user_country_code)   
                 if user_country_code:
                     user_country = request.env['res.country'].sudo().search([('code', '=', user_country_code)], limit=1)
                     print("user_country........", user_country)
                     if user_country:
                         qcontext['default_country_id'] = user_country.id
-                        
         except Exception as e:
-            _logger.warning("GeoIP API Error: %s", str(e))
+            request._logger.warning("GeoIP API Error: %s", str(e))
 
         return qcontext
 
