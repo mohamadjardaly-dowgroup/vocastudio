@@ -82,7 +82,8 @@
                     <select name="country_id" id="country_id" class="form-control">
                         <t t-foreach="request.env['res.country'].sudo().search([])" t-as="country">
                             <option t-att-value="country.id"
-                                    t-att-data-phone-code="country.phone_code if country.phone_code else 'N/A'">
+                                    t-att-data-phone-code="country.phone_code if country.phone_code else 'N/A'"
+                                    t-att-selected="'selected' if country.id == default_country_id else None">
                                 +<t t-esc="country.phone_code or 'No Code'"/> <t t-esc="country.name"/>
                             </option>
                         </t>
