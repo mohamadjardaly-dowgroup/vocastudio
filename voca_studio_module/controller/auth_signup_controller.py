@@ -1,4 +1,5 @@
 import re
+import requests
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 from odoo.exceptions import UserError, AccessDenied
 from odoo.http import request
@@ -38,6 +39,28 @@ class VocaAuthSignupHome(AuthSignupHome):
         ]
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
         qcontext.update({k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS_CUSTOM})
+        return qcontext
+
+    def get_auth_signup_qcontext(self):
+        """Extend signup context with detected country"""
+        qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
+
+        # Fetch user's country based on IP (External API)
+        try:
+            response = requests.get("https://ipapi.co/json/")
+            if response.status_code == 200:
+                data = response.json()
+                user_country_code = data.get('country_code')
+                print("user_country_code..........", user_country_code)
+                if user_country_code:
+                    user_country = request.env['res.country'].sudo().search([('code', '=', user_country_code)], limit=1)
+                    print("user_country........", user_country)
+                    if user_country:
+                        qcontext['default_country_id'] = user_country.id
+                        
+        except Exception as e:
+            _logger.warning("GeoIP API Error: %s", str(e))
+
         return qcontext
 
     def _prepare_signup_values(self, qcontext):
