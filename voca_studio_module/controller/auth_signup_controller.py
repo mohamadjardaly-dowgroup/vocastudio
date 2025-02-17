@@ -42,29 +42,39 @@ class VocaAuthSignupHome(AuthSignupHome):
         return qcontext
 
     def get_auth_signup_qcontext(self):
-        """Extend signup context with detected country based on the real user IP"""
+        """Extend signup context with detected country based on user's IP"""
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
 
-        # Get user's real IP from headers (works behind proxies/load balancers)
+        # Debug: Check request headers
         user_ip = request.httprequest.headers.get('X-Forwarded-For', request.httprequest.remote_addr)
-        print("user_ip........", user_ip)
-        if ',' in user_ip:
-            user_ip = user_ip.split(',')[0]  # Take first IP (real user IP)
+
+        if user_ip:
+            # If multiple IPs exist in X-Forwarded-For, take the first one
+            if ',' in user_ip:
+                user_ip = user_ip.split(',')[0]
+
+        _logger.info(f"Detected User IP: {user_ip}")  # Log IP for debugging
 
         try:
-            # Use external API to get geolocation based on user's IP
-            response = requests.get(f"https://ipapi.co/{user_ip}/json/")
-            if response.status_code == 200:
-                data = response.json()
-                user_country_code = data.get('country_code')
-                print("user_country_code........", user_country_code)   
-                if user_country_code:
-                    user_country = request.env['res.country'].sudo().search([('code', '=', user_country_code)], limit=1)
-                    print("user_country........", user_country)
-                    if user_country:
-                        qcontext['default_country_id'] = user_country.id
+            # Step 1: Check if we have a valid IP
+            if user_ip and user_ip not in ['127.0.0.1', 'localhost']:
+                # Step 2: Query GeoIP API
+                response = requests.get(f"https://ipapi.co/{user_ip}/json/")
+                if response.status_code == 200:
+                    data = response.json()
+                    user_country_code = data.get('country_code')
+
+                    _logger.info(f"GeoIP API Response: {data}")  # Debugging API response
+                    _logger.info(f"Detected Country Code: {user_country_code}")
+
+                    if user_country_code:
+                        user_country = request.env['res.country'].sudo().search([('code', '=', user_country_code)], limit=1)
+                        if user_country:
+                            qcontext['default_country_id'] = user_country.id
+                            _logger.info(f"Default Country ID Set: {user_country.id} - {user_country.name}")
+
         except Exception as e:
-            request._logger.warning("GeoIP API Error: %s", str(e))
+            _logger.warning("GeoIP API Error: %s", str(e))
 
         return qcontext
 
