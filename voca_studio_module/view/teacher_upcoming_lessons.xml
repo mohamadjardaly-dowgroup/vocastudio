@@ -11,8 +11,8 @@
                                         <strong>Student:</strong> <t t-esc="lesson.booking_order_id.order_id.partner_id.name" />
                                     </h5>
                                     <p class="card-text">
-                                        <strong>Lesson Date:</strong> <t t-esc="lesson.availablity_date.strftime('%d %B %Y')" /><br />
-                                        <strong>Time:</strong> <t t-esc="lesson.availablity_date.strftime('%I:%M %p')" /><br />
+                                        <strong>Lesson Date:</strong> <t t-esc="lesson.lesson_date_local" /><br />
+<!--                                         <strong>Time:</strong> <t t-esc="lesson.availablity_date.strftime('%I:%M %p')" /><br /> -->
                                     </p>
                                     
                                     <!-- Button Section -->
