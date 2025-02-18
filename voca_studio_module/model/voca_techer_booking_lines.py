@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+import pytz
 
 class TeacherBooking(models.Model):
     _name = 'voca.teacher.booking.lines'
@@ -30,6 +31,27 @@ class TeacherBooking(models.Model):
             ('refused', 'Refused'),
         ], string='Status', index=True, readonly=True, copy=False,
         default='draft', tracking=True)
+
+    lesson_date_local = fields.Char(string="Lesson Date (Local)", compute="_compute_lesson_dates", store=False)
+
+    
+    @api.depends('availablity_date')
+    def _compute_lesson_dates(self):
+        """Compute lesson dates in both UTC and student’s timezone"""
+        for record in self:
+            if record.availablity_date:
+                # Convert to UTC
+
+                # Get student's timezone
+                student_tz = record.booking_order_id.order_id.partner_id.tz or 'UTC'
+                try:
+                    tz = pytz.timezone(student_tz)
+                    local_date = pytz.utc.localize(record.availablity_date).astimezone(tz)
+                    record.lesson_date_local = local_date.strftime('%d %B %Y, %I:%M %p')
+                    print("local_date ", local_date)
+                    print("record.lesson_date_local ", record.lesson_date_local)
+                except Exception:
+                    record.lesson_date_local = record.availablity_date
 
 
     def action_approved(self):
