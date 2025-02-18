@@ -11,8 +11,8 @@
                                         <strong>Teacher:</strong> <t t-esc="booking.booking_id.name" />
                                     </h5>
                                     <p class="card-text">
-                                         <strong>Date:</strong> <t t-esc="booking.availablity_date.strftime('%d %B %Y')" /><br />
-                                        <strong>Time:</strong> <t t-esc="booking.availablity_date.strftime('%I:%M %p')" /><br />
+                                         <strong>Date:</strong><t t-esc="booking.lesson_date_local" /><br />
+<!--                                         <strong>Time:</strong> <t t-esc="booking.availablity_date.strftime('%I:%M %p')" /><br /> -->
 <!--                                         <strong>Status:</strong> <t t-esc="booking.lesson_state" /> -->
                                     </p>
                                     <a t-att-href="booking.booking_id.google_meet" class="btn btn-primary btn-block" target="_blank">
