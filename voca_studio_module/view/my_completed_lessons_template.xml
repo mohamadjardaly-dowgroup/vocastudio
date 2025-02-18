@@ -13,8 +13,8 @@
                                             <strong>Teacher:</strong> <t t-esc="record.booking_id.name" />
                                         </h5>
                                         <p class="card-text">
-                                            <strong>Date:</strong> <t t-esc="record.availablity_date.strftime('%d %B %Y')" /><br />
-                                            <strong>Time:</strong> <t t-esc="record.availablity_date.strftime('%I:%M %p')" />
+                                            <strong>Date:</strong> <t t-esc="record.lesson_date_local" /><br />
+<!--                                             <strong>Time:</strong> <t t-esc="record.availablity_date.strftime('%I:%M %p')" /> -->
                                             
                                             <!-- <strong>Status:</strong> <t t-esc="record.lesson_state" /> -->
                                         </p>
