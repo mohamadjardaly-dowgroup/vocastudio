@@ -39,12 +39,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         ]
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
         qcontext.update({k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS_CUSTOM})
-        return qcontext
-
-    def get_auth_signup_qcontext(self):
-        """Extend signup context with detected country based on user's IP"""
-        qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
-
+        
         # Debug: Check request headers
         user_ip = request.httprequest.headers.get('X-Forwarded-For', request.httprequest.remote_addr)
 
@@ -63,9 +58,10 @@ class VocaAuthSignupHome(AuthSignupHome):
                 if response.status_code == 200:
                     data = response.json()
                     user_country_code = data.get('country_code')
-
-                    _logger.info(f"GeoIP API Response: {data}")  # Debugging API response
-                    _logger.info(f"Detected Country Code: {user_country_code}")
+                    
+                    print("data is ",data)
+                    print("user_country_code is ",user_country_code)
+                    
 
                     if user_country_code:
                         user_country = request.env['res.country'].sudo().search([('code', '=', user_country_code)], limit=1)
@@ -75,8 +71,10 @@ class VocaAuthSignupHome(AuthSignupHome):
 
         except Exception as e:
             _logger.warning("GeoIP API Error: %s", str(e))
-
+        
         return qcontext
+
+    
 
     def _prepare_signup_values(self, qcontext):
         """Prepare and validate signup values."""
