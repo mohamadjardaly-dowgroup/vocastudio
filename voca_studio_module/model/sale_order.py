@@ -76,6 +76,7 @@ class SaleOrderLine(models.Model):
     
     #samiha##########################################################   
     package_id = fields.Many2one('voca.teacher.packaging.lines', string='Package')
+    converted_price = fields.Float(string="Converted Price", store=True)
     
     @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id')
     def _compute_price_unit(self):
@@ -90,9 +91,12 @@ class SaleOrderLine(models.Model):
             if line.package_id:
                 # Use the package price directly for the subtotal
                 print("line.price_unit............",line.price_unit)
-                line.product_uom_qty = line.package_id.quantity
-                line.price_unit = line.package_id.price / line.product_uom_qty
-                print("line.price_unit after division............",line.price_unit)
+                if line.converted_price:
+                    line.product_uom_qty = line.package_id.quantity
+                    line.price_unit = line.converted_price / line.product_uom_qty
+                else:
+                    line.product_uom_qty = line.package_id.quantity
+                    line.price_unit = line.package_id.price / line.product_uom_qty
                 
                 
                 # line.price_total = line.price_subtotal
