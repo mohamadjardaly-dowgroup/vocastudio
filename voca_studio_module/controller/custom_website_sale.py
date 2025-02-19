@@ -121,7 +121,7 @@ class CustomWebsiteSale(WebsiteSale):
                 pricelist = request.website._get_current_pricelist()
                 computed_price = pricelist._get_product_price(package.product_id, 1.0, request.env.user.partner_id)
                 package_currency = package.currency_id
-                package_price = package.price
+                package_price = package.total
 
                 if package_currency != pricelist.currency_id:
                     converted_price = package_currency._convert(
@@ -291,7 +291,7 @@ class CustomSaleOrder(http.Controller):
         if order_line:
             order_line.sudo().write({
                 'product_uom_qty': package.quantity,
-                'price_unit': package.price / package.quantity,
+                'price_unit': package.total / package.quantity,
                 'name': description,
                 'package_id': package.id,
                 'booking_ids': [(6, 0, booking_lines.ids)],
@@ -300,7 +300,7 @@ class CustomSaleOrder(http.Controller):
             sale_order.sudo().write({'order_line': [(0, 0, {
                 'product_id': product.id,
                 'product_uom_qty': package.quantity,
-                'price_unit': package.price / package.quantity,
+                'price_unit': package.total / package.quantity,
                 'name': description,
                 'package_id': package.id,
                 'product_uom': product.uom_id.id,
