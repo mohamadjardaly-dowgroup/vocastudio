@@ -288,10 +288,32 @@ class CustomSaleOrder(http.Controller):
             ('product_id', '=', product.id)
         ], limit=1)
 
+        pricelist = request.website._get_current_pricelist()
+        print("Pricelist in sale order ................: ", pricelist)
+        # Fetch the package's price and currency
+        package_currency = package.currency_id
+        package_price = package.total
+        print("Package Price in sale order ...: ", package_price)
+        
+        
+        # Convert package price to the selected pricelist's currency
+        if package_currency != pricelist.currency_id:
+            converted_price = package_currency._convert(
+                from_amount=package_price,
+                to_currency=pricelist.currency_id,
+                company=request.env.company,
+                date=fields.Date.today()
+            )
+            print("Converted Price in sale order ..........: ", converted_price)
+        else:
+            converted_price = package_price  # No conversion needed if the currencies match
+            print("Converted Price inside else in sale order  ..........: ", converted_price)
+
         if order_line:
             order_line.sudo().write({
                 'product_uom_qty': package.quantity,
-                'price_unit': package.total / package.quantity,
+                'converted_price': converted_price,
+                'price_unit': converted_price  / package.quantity,
                 'name': description,
                 'package_id': package.id,
                 'booking_ids': [(6, 0, booking_lines.ids)],
@@ -300,7 +322,8 @@ class CustomSaleOrder(http.Controller):
             sale_order.sudo().write({'order_line': [(0, 0, {
                 'product_id': product.id,
                 'product_uom_qty': package.quantity,
-                'price_unit': package.total / package.quantity,
+                'converted_price': converted_price,
+                'price_unit': converted_price  / package.quantity,
                 'name': description,
                 'package_id': package.id,
                 'product_uom': product.uom_id.id,
