@@ -68,6 +68,9 @@
                                     <tree editable="bottom">
                                         <field name="name"/>
                                         <field name="price" attrs="{'readonly': [('currency_id', '!=', '1')]}" />
+                                        <field name="discount"/>
+                                        <field name="total"/>
+                                        
                                         <field name="quantity"/>
                                         <field name="package_time"/>
                                         <field name="product_id"/>
