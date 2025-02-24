@@ -21,7 +21,7 @@
                         <group>
                             <field name="name"/>
                             <field name="google_meet" widget="url"/>
-                            <field name="zoom" widget="url"/>
+<!--                             <field name="zoom" widget="url"/> -->
 <!--                             <field name="youtube_video"/> -->
                             <field name="state" invisible="1"/>
                             
