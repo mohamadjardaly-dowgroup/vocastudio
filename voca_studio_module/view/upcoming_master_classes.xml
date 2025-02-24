@@ -43,8 +43,8 @@
                                         <br />
                                         <strong>Seats Booked:</strong> <t t-esc="int(seats_booked)" /><br />
                                     </p>
-                                    <t t-if="master.instructor.google_meet">
-                                        <a t-att-href="master.instructor.zoom" class="btn btn-primary btn-block" target="_blank">
+                                    <t t-if="master.zoom">
+                                        <a t-att-href="master.zoom" class="btn btn-primary btn-block" target="_blank">
                                             Join Meeting
                                         </a>
                                     </t>
