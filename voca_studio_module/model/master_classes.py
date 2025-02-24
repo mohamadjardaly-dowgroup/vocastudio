@@ -25,6 +25,7 @@ class MasterClass(models.Model):
     time = fields.Char(string='Time Per Lesson')
     #samiha
     instructor = fields.Many2one('voca.teacher', string='Instructor',required=True)
+    zoom =fields.Char(string='Zoom', readonly=False)
 
     total_hours = fields.Float('Total Hours')
 
