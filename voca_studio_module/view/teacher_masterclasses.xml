@@ -32,8 +32,8 @@
                                     
                                     <!-- Button Section -->
                                     <div class="d-flex justify-content-between">
-                                        <t t-if="master_class.instructor.zoom">
-                                            <a t-att-href="master_class.instructor.zoom" class="btn btn-primary flex-grow-1 me-2" target="_blank">
+                                        <t t-if="master_class.zoom">
+                                            <a t-att-href="master_class.zoom" class="btn btn-primary flex-grow-1 me-2" target="_blank">
                                                 Join Meeting
                                             </a>
                                         </t>
