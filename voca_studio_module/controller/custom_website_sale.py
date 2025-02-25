@@ -52,10 +52,23 @@ class CustomWebsiteSale(WebsiteSale):
             print( 'master.................................',master.id)
             if not master:
                 return request.not_found()
+
+            # Convert timezone
+            user_tz_name = request.env.user.tz or 'UTC'  # Get user timezone
+            user_tz = pytz.timezone(user_tz_name)
+            server_tz = pytz.UTC  
+
+            start_date = master.datetime_from
+            end_date = master.datetime_to
+
+            # Convert datetime from server time (UTC) to user timezone
+            if start_date:
+                start_date = server_tz.localize(start_date).astimezone(user_tz)
+            if end_date:
+                end_date = server_tz.localize(end_date).astimezone(user_tz)
             
             # dates = master.dates_ids.filtered(lambda d: d.status == 'draft')
-            start_date=master.datetime_from
-            end_date=master.datetime_to 
+            
             # events = [
             #     {
             #         'title': master.name,
