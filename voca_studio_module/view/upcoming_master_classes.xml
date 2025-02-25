@@ -25,7 +25,8 @@
                                             <br />
                                             <strong>From:</strong>
                                             <t t-if="master.datetime_from">
-                                                <t t-esc="master.datetime_from.strftime('%I:%M %p')"/>
+                                                <t t-esc="master_data['start_time'].strftime('%I:%M %p')"/>
+                                                <!-- <t t-esc="master.datetime_from.strftime('%I:%M %p')"/> -->
                                             </t>
                                             <t t-else="">
                                                 <span class="text-muted">Not Available</span>
@@ -34,7 +35,8 @@
                                         <t t-if="master.datetime_to">
                                             <strong>To:</strong>
                                             <t t-if="master.datetime_to">
-                                                <t t-esc="master.datetime_to.strftime('%I:%M %p')"/>
+                                                <t t-esc="master_data['end_time'].strftime('%I:%M %p')"/>
+                                                <!-- <t t-esc="master.datetime_to.strftime('%I:%M %p')"/> -->
                                             </t>
                                             <t t-else="">
                                                 <span class="text-muted">Not Available</span>
@@ -49,7 +51,7 @@
                                         </a>
                                     </t>
                                     <t t-else="">
-                                        <span class="text-muted">link not available.</span>
+                                        <span class="text-muted">Google Meet link not available.</span>
                                     </t>
                                 </div>
                             </div>
