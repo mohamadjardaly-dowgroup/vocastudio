@@ -391,7 +391,7 @@ class StudentDashboard(http.Controller):
         })
 
     @http.route('/my_dashboard/upcoming-masters', type='http', auth="user", website=True)
-    def my_upcoming_masters(self, page=1, limit=12, **kwargs):
+    def my_upcoming_masters(self, page=1, limit=25, **kwargs):
         try:
             page = int(page)
         except ValueError:
@@ -399,7 +399,7 @@ class StudentDashboard(http.Controller):
 
         student = request.env.user.partner_id
 
-        # Fetch all order lines for the student related to master classes
+        # Fetch upcoming master classes booked by the student
         order_lines = request.env['sale.order.line'].sudo().search([
             ('order_id.partner_id', '=', student.id),
             ('order_id.state', '=', 'sale'),
@@ -407,26 +407,35 @@ class StudentDashboard(http.Controller):
             ('product_id.master_class_id.lesson_state', '=', 'upcoming')
         ])
 
-        # Aggregate purchases per master class
-        master_class_data = {}
+        user_tz_name = request.env.user.tz or 'UTC'  # Get the user's timezone
+        user_tz = pytz.timezone(user_tz_name)
+        server_tz = pytz.UTC  # Odoo stores datetime in UTC
+
+        master_class_data = []
         for line in order_lines:
             master_class = line.product_id.master_class_id
             if master_class:
-                if master_class.id not in master_class_data:
-                    master_class_data[master_class.id] = {
-                        'master_class': master_class,
-                        'seats_booked': 0
-                    }
-                master_class_data[master_class.id]['seats_booked'] += line.product_uom_qty  # Sum booked seats
+                # Convert the times from UTC to the user's timezone
+                start_date = master_class.datetime_from
+                end_date = master_class.datetime_to
 
-        # Convert to a list for template rendering
-        aggregated_masters = list(master_class_data.values())
+                if start_date:
+                    start_date = server_tz.localize(start_date).astimezone(user_tz)
+                if end_date:
+                    end_date = server_tz.localize(end_date).astimezone(user_tz)
+
+                master_class_data.append({
+                    'master_class': master_class,
+                    'start_time': start_date ,
+                    'end_time': end_date ,
+                    'seats_booked': line.product_uom_qty,
+                })
 
         # Pagination logic
-        total_masters = len(aggregated_masters)
-        total_pages = ceil(total_masters / limit)
+        total_masters = len(master_class_data)
+        total_pages = (total_masters + limit - 1) // limit  # Simple ceil division
         offset = (page - 1) * limit
-        paginated_masters = aggregated_masters[offset:offset + limit]
+        paginated_masters = master_class_data[offset:offset + limit]
 
         return request.render('voca_studio_module.upcoming_masters_partial', {
             'upcoming_masters': paginated_masters,
@@ -573,23 +582,42 @@ class TeacherDashboard(http.Controller):
         # Fetch master classes where the teacher is the instructor
         master_classes = request.env['master.classes'].sudo().search([
             ('instructor', '=', teacher.teacher_id.id),
-            ('lesson_state', '=','upcoming')
+            ('lesson_state', '=', 'upcoming')
         ])
-        
-        print("master_classes: ", master_classes)
-        
-       
+
+        user_tz_name = request.env.user.tz or 'UTC'  # Get the teacher's timezone
+        user_tz = pytz.timezone(user_tz_name)
+        server_tz = pytz.UTC  # Odoo stores datetime in UTC
+
+        master_class_data = []
+        for master_class in master_classes:
+            # Convert the times from UTC to the user's timezone
+            start_date = master_class.datetime_from
+            end_date = master_class.datetime_to
+
+            if start_date:
+                start_date = server_tz.localize(start_date).astimezone(user_tz)
+            if end_date:
+                end_date = server_tz.localize(end_date).astimezone(user_tz)
+
+            master_class_data.append({
+                'master_class': master_class,
+                'start_time': start_date,
+                'end_time': end_date,
+                'remaining_seats': master_class.remaining_seats,
+            })
 
         # Pagination logic
+        total_master_classes = len(master_class_data)
+        total_pages = (total_master_classes + limit - 1) // limit  # Simple ceil division
         offset = (page - 1) * limit
-        total_master_classes = len(master_classes)
-        total_pages = ceil(total_master_classes / limit)
-        paginated_master_classes = master_classes[offset:offset + limit]
+        paginated_master_classes = master_class_data[offset:offset + limit]
 
         return request.render('voca_studio_module.teacher_master_classes_partial', {
             'master_classes': paginated_master_classes,
             'page': page,
             'total_pages': total_pages,
+            'limit': limit,
         })
         
         
