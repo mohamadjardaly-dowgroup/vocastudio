@@ -15,7 +15,7 @@
 
                 <p>A new lesson has been booked.</p>
 
-                <p><strong>Student:</strong> </p>
+                <p><strong>Student:</strong> <t t-out="object.order_id.partner_id.name"/> </p>
                 <p><strong>Lesson:</strong> </p>
                 <p><strong>Date:</strong> </p>
 
