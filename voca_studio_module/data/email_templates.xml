@@ -11,15 +11,19 @@
             <field name="email_to">{{ object.package_id.package_id.instructor.email }}</field>
             <field name="body_html">
                 <![CDATA[
-                <p>Hello ,</p>
+               
+                
+                <p style="margin:0px 0 16px 0;box-sizing:border-box;">Hello <t t-out="object.package_id.package_id.instructor.name"></t>,</p>
 
-                <p>A new lesson has been booked.</p>
+                <p style="margin:0px 0 16px 0;box-sizing:border-box;">A new lesson has been booked.</p>
 
-                <p><strong>Student:</strong> <t t-out="object.order_id.partner_id.name"/> </p>
-                <p><strong>Lesson:</strong> </p>
-                <p><strong>Date:</strong> </p>
+                <p style="margin:0px 0 16px 0;box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;">Student:</strong> <t t-out="object.order_id.partner_id.name"></t></p>
+<p style="margin:0px 0 16px 0;box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;">Lesson:</strong>  <t t-out="object.product_id.name"></t></p>
+                <p style="margin:0px 0 16px 0;box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;">Date:</strong> <t t-out="object.order_id.date_order.strftime('%Y-%m-%d')"></t></p>
 
-                <p>Thank you!</p>
+                <p style="margin:0px 0 16px 0;box-sizing:border-box;">Thank you!</p>
+                
+            
                 ]]>
             </field>
         </record>
