@@ -152,7 +152,7 @@
                            placeholder="dd/mm/yyyy" />
                 </div>
             </div>
-            <div id="level_field" style="display:block;" class="col-12">
+            <div id="level_field"  class="col-12">
                 <label for="level">Level</label>
                 <select name="level" id="level" class="form-control">
                     <option value="" disabled="disabled" selected="selected">Select Level</option>
