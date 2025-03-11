@@ -17,16 +17,19 @@
                     const phoneField = document.getElementById('phone_field');
                     const uploadField = document.getElementById('upload_field');
                     const instrumentField = document.getElementById('instrument_field');
+                    const levelField = document.getElementById('level_field');
 
                     // Show or hide fields based on the selected value
                     if (selectElement.value === 'teacher') {
                         phoneField.style.display = 'block';
                         uploadField.style.display = 'block';
                         instrumentField.style.display = 'block';
+                        levelField.style.display = 'none';
                     } else if (selectElement.value === 'stu') {
                         phoneField.style.display = 'none';
                         uploadField.style.display = 'none';
                         instrumentField.style.display = 'none';
+                        levelField.style.display = 'block';
                     }
                 }
 
@@ -120,6 +123,15 @@
                            class="form-control datepicker" required="required"
                            placeholder="dd/mm/yyyy" />
                 </div>
+            </div>
+            <div id="level_field" style="display:block;" class="col-12">
+                <label for="level">Level</label>
+                <select name="level" id="level" class="form-control">
+                    <option value="" disabled="disabled" selected="selected">Select Level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced/Professional</option>
+                </select>
             </div>
 
             <div t-if="role == 'teacher'" id="upload_field" style="display:block;">
