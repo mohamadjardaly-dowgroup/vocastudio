@@ -53,6 +53,34 @@
                         input.setCustomValidity('');
                     }
                 }
+                function validateName(input) {
+                    var restrictedWords = ["free", "promo", "bitcoin", "money", "offer"];
+                    var specialChars = /[^a-zA-Z\s]/;  // Only allow letters and spaces
+
+                    var name = input.value.toLowerCase();
+
+                    // Check for restricted words
+                    for (let word of restrictedWords) {
+                        if (name.includes(word)) {
+                            input.setCustomValidity("Username contains restricted words!");
+                            return;
+                        }
+                    }
+
+                    // Check for special characters
+                    if (specialChars.test(input.value)) {
+                        input.setCustomValidity("No special characters allowed in the name!");
+                        return;
+                    }
+
+                    // Check minimum length
+                    if (input.value.length &lt; 3) {
+                        input.setCustomValidity("Name must be at least 3 characters long!");
+                        return;
+                    }
+
+                input.setCustomValidity(""); 
+                }
             </script>
 
             <div class="row mb-3">
@@ -62,7 +90,7 @@
                            class="form-control form-control-sm" required="required"
                            placeholder="Enter your full name"
                            t-att-readonly="'readonly' if only_passwords else None"
-                           t-att-autofocus="'autofocus' if login and not only_passwords else None" />
+                           t-att-autofocus="'autofocus' if login and not only_passwords else None" oninput="validateName(this)" />
                 </div>
             </div>
 
