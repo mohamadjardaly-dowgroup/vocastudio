@@ -20,8 +20,9 @@ class CustomWebsiteSale(WebsiteSale):
         product_template = request.env['product.template'].sudo().browse(product_id)
         product=product_template
         print('Product fetched...........',product_template)
-        if request.env.user._is_public():
-            return request.redirect('/web/login')
+        if not product_template.product_variant_id.is_master:
+            if request.env.user._is_public():
+                return request.redirect('/web/login')
 
         
         # if product._name == 'product.product':
