@@ -28,49 +28,73 @@ class TeacherController(http.Controller):
         except Exception as e:
             return e
 
-    @http.route(['/teacher_profile',
-                 '/teacher_profile/cat/<int:category_id>'], type='http', auth="public",
-                methods=['POST', 'GET'], website=True, csrf=False)
-    def get_teacher_details(self, category_id=None, **kw):
+    @http.route([
+        '/teacher_profile',
+        '/teacher_profile/page/<int:page>',
+        '/teacher_profile/cat/<int:category_id>',
+        '/teacher_profile/cat/<int:category_id>/page/<int:page>'
+    ], type='http', auth="public", methods=['GET'], website=True, csrf=False)
+    def get_teacher_details(self, category_id=None, page=1, **kw):
         try:
-            teacher = request.env['voca.teacher'].sudo().search([('state', '=', 'approved')])
-            categ = request.env['voca.teacher.categories'].sudo().search([])
-            print("all teacher :", teacher, kw)
+            per_page = 6  # Number of teachers per page
+
+            # Apply category filtering before pagination
+            teacher_domain = [('state', '=', 'approved')]
             if category_id:
-                print("nnnnnnnnnn")
-                teachers = request.env['voca.teacher'].sudo().search([('categories', '=', int(category_id)), ('state', '=', 'approved')])
-                return request.render('voca_studio_module.teacher_profile_card_with_category', {
-                    'teachers': teachers,
-                    'categories': categ,  # Optionally pass the category for UI
-                })
-            else:
+                teacher_domain.append(('categories', 'in', [int(category_id)]))  # Fix category filtering
+
+            # Count total teachers after filtering
+            total_teachers = request.env['voca.teacher'].sudo().search_count(teacher_domain)
+
+            # Odoo's built-in pager with URL including category
+            pager = request.website.pager(
+                url=f"/teacher_profile{'/cat/' + str(category_id) if category_id else ''}",
+                total=total_teachers,
+                page=page,
+                step=per_page,
+                url_args={},  # No need for ?page=x, handled in the route
                 
-                teacher_data = []
-                category_data=[]
-                for t in teacher:
-                    teacher_data.append({
-                        'id': t.id,
-                        'name': t.name,
-                        'experience': t.experience,
-                        'categories':  [{'id': cat.id, 'name': cat.name} for cat in t.categories],
-                        'language': t.lang,
-                        'instrument':t.instrument,
-                        'about': t.about or '',
-                        'image_url': f"/web/image/voca.teacher/{t.id}/image_1920",
-                    })
-                for category in categ:
-                    category_data.append({
-                        'id': category.id,
-                        'name': category.name,
-                        'image_url': f"/web/image/voca.teacher.categories/{category.id}/image_1920",
-                    })
-                values = {
-                    'teachers': teacher_data,
-                    'categories': category_data,
-                }
-                return request.render("voca_studio_module.teacher_profile_card", values)
+            )
+
+            # Fetch only paginated teachers **after filtering**
+            teachers = request.env['voca.teacher'].sudo().search(
+                teacher_domain,
+                offset=pager['offset'],
+                limit=per_page
+            )
+
+            # Fetch all categories
+            categ = request.env['voca.teacher.categories'].sudo().search([])
+
+            # Convert teacher data to JSON for easy use in the template
+            teacher_data = [{
+                'id': t.id,
+                'name': t.name,
+                'experience': t.experience,
+                'instrument':t.instrument,
+                'categories': [{'id': cat.id, 'name': cat.name} for cat in t.categories],
+                'language': t.language,
+                'about': t.about or '',
+                'image_url': f"/web/image/voca.teacher/{t.id}/image_1920",
+            } for t in teachers]
+
+            category_data = [{
+                'id': cat.id,
+                'name': cat.name,
+                'image_url': f"/web/image/voca.teacher.categories/{cat.id}/image_1920"
+            } for cat in categ]
+
+            values = {
+                'teachers': teacher_data,
+                'categories': category_data,
+                'pager': pager,  # Pass the pager object to the template
+                'category_id': category_id,  # Maintain category selection
+            }
+
+            return request.render("voca_studio_module.teacher_profile_card", values)
+
         except Exception as e:
-            return e
+            return str(e)
 
     @http.route(['/teacher_profile/<int:teacher_id>'
                  ], type='http', auth="public",
