@@ -30,7 +30,7 @@ class TeacherBooking(models.Model):
             ('booked', 'Booked'),
             ('refused', 'Refused'),
         ], string='Status', index=True, readonly=True, copy=False,
-        default='draft', tracking=True)
+        default='approved', tracking=True)
 
     lesson_date_local = fields.Char(string="Lesson Date (Local)", compute="_compute_lesson_dates", store=False)
 
