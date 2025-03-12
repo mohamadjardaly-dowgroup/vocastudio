@@ -35,7 +35,7 @@ class VocaAuthSignupHome(AuthSignupHome):
         """Extend context with additional fields for signup."""
         SIGN_UP_REQUEST_PARAMS_CUSTOM = [
             'first_name', 'nickname', 'phone', 'gender', 'birthday', 'role',
-            'experience', 'about', 'is_teacher', 'attachment_ids','instrument','level'
+            'experience', 'about', 'is_teacher', 'attachment_ids','instrument','level','terms'
         ]
         qcontext = super(VocaAuthSignupHome, self).get_auth_signup_qcontext()
         qcontext.update({k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS_CUSTOM})
@@ -82,6 +82,10 @@ class VocaAuthSignupHome(AuthSignupHome):
             'login', 'name', 'password', 'first_name', 'nickname', 'phone', 'gender', 
             'birthday', 'role', 'experience', 'about', 'is_teacher','instrument'
         )}
+        
+        if not qcontext.get("terms"):
+            raise UserError("You must accept the Terms and Conditions to proceed.")
+            
         restricted_words = ["free", "promo", "bitcoin", "money", "offer"]
         special_chars_pattern = re.compile(r"[^a-zA-Z\s]")  # No special characters
         nickname = values.get("nickname", "").strip().lower()
