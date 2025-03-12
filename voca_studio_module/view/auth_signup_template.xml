@@ -206,5 +206,30 @@
                 });
             </script>
         </xpath>
+         <xpath expr="//input[@name='confirm_password']" position="after">
+            <div class="row mb-3 mt-3">
+                <div class="col-12">
+                    <input type="checkbox" name="terms" id="terms" required="required" onchange="validateTerms()"/>
+                    <label for="terms">
+                        I accept the <a href="/terms-conditions" target="_blank">Terms and Conditions</a>
+                    </label>
+                    <p id="terms-error" style="color: red; display: none;">You must accept the Terms and Conditions.</p>
+                </div>
+            </div>
+        </xpath>
+
+        <script>
+            function validateTerms() {
+                var checkbox = document.getElementById("terms");
+                var errorText = document.getElementById("terms-error");
+
+                if (!checkbox.checked) {
+                    errorText.style.display = "block";
+                } else {
+                    errorText.style.display = "none";
+                }
+            }
+
+        </script>
     </template>
 </odoo>
