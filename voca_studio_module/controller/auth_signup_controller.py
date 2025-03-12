@@ -82,6 +82,18 @@ class VocaAuthSignupHome(AuthSignupHome):
             'login', 'name', 'password', 'first_name', 'nickname', 'phone', 'gender', 
             'birthday', 'role', 'experience', 'about', 'is_teacher','instrument'
         )}
+        restricted_words = ["free", "promo", "bitcoin", "money", "offer"]
+        special_chars_pattern = re.compile(r"[^a-zA-Z\s]")  # No special characters
+        nickname = values.get("nickname", "").strip().lower()
+
+        if any(word in nickname for word in restricted_words):
+            raise UserError("Invalid username: It contains restricted words.")
+
+        if special_chars_pattern.search(nickname):
+            raise UserError("Invalid username: Special characters are not allowed.")
+
+        if len(nickname) < 3:
+            raise UserError("Invalid username: Must be at least 3 characters long.")
         if values.get('role') == 'student':
             print("inside the if role is student .............. ")
             level = qcontext.get('level')
