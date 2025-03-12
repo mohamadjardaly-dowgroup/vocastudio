@@ -36,7 +36,7 @@ class TeacherController(http.Controller):
     ], type='http', auth="public", methods=['GET'], website=True, csrf=False)
     def get_teacher_details(self, category_id=None, page=1, **kw):
         try:
-            per_page = 6  # Number of teachers per page
+            per_page = 8  # Number of teachers per page
 
             # Apply category filtering before pagination
             teacher_domain = [('state', '=', 'approved')]
