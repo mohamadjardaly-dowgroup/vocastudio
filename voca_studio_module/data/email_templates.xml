@@ -43,7 +43,7 @@
 
                 <strong>Class Name:</strong> <t t-out="object.product_id.name"></t> <br/>
                 <strong>Instructor:</strong> <t t-out="object.product_id.master_class_id.instructor.name"></t> <br/>
-                <strong>Start Date and Time:</strong> <t t-out="object.product_id.master_class_id.datetime_from.strftime('%Y-%m-%d %I:%M %p')"></t> <br/>
+                <strong>Start Date and Time:</strong> <t t-out="object.product_id.master_class_id.datetime_from"></t> <br/>
                 <strong>Meeting Link:</strong> <a t-att-href="object.product_id.master_class_id.zoom">Join Here</a> <br/><br/>
 
                 If you have any questions, feel free to contact us. <br/><br/>
