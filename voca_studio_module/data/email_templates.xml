@@ -36,7 +36,7 @@
             <field name="auto_delete" eval="False"/>
             <field name="body_html">
             <![CDATA[
-                <t t-out="object.order_id.partner_id.name"/>, <br/><br/>
+                <t t-out="object.order_id.partner_id.name"></t>, <br/><br/>
 
                 Thank you for purchasing the <strong><t t-out="object.product_id.name"></t></strong> MasterClass! <br/>
                 Below are the details of your class: <br/><br/>
