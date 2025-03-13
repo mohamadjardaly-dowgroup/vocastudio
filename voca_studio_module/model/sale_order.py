@@ -46,6 +46,11 @@ class SaleOrder(models.Model):
                             raise ValidationError(_("Not enough seats available for the master class."))
                         master_class.remaining_seats -= total_seats_needed
                         print("Master Class Remaining Seats after booking:...........", master_class.remaining_seats)
+                    if not order.partner_id.user_ids:
+                        print(" student is not signed up but he purchased a masterclass :...........", order.partner_id.email)
+                        self._send_guest_masterclass_email(order.partner_id, line) 
+
+                
             # Find the teacher linked to the lesson (product)
                 teacher_packaging_line = self.env['voca.teacher.packaging.lines'].search(
                     [('product_id', '=', line.product_id.id)], limit=1
@@ -59,6 +64,18 @@ class SaleOrder(models.Model):
                         self._send_teacher_email(teacher.instructor, line)
                         print("teacher email")
         return res
+        
+    def _send_guest_masterclass_email(self, partner, sale_order_line):
+        """Send an email to the guest customer with MasterClass details"""
+        if not partner.email:
+            print("Guest has no email, skipping email sending...")
+            return
+        
+        template_id = self.env.ref('voca_studio_module.email_template_guest_masterclass')
+        print("Template ID:...........", template_id)
+        if template_id:
+            template_id.sudo().send_mail(sale_order_line.id, force_send=True)
+            print("Email sent to guest:", partner.email)
     def _send_teacher_email(self, teacher, sale_order_line):
         """ Sends an email to the teacher when a student books a lesson. """
         print("Sending email to teacher:", teacher.email)
@@ -67,6 +84,7 @@ class SaleOrder(models.Model):
         if email_template:
             email_template.sudo().send_mail(sale_order_line.id, force_send=True)
             print("Email sent to:", teacher.email)
+    
             
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
