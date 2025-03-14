@@ -48,7 +48,7 @@ class MasterClass(models.Model):
     #samiha####################################################
     
     max_students = fields.Integer(string="Maximum Students", required=True)  # Add this field
-    remaining_seats = fields.Integer(string="Remaining Seats", compute="_compute_remaining_seats", store=True, readonly=False)
+    remaining_seats = fields.Integer(string="Remaining Seats", compute="_compute_remaining_seats", store=True)
     
     
 
