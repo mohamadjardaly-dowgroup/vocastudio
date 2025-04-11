@@ -158,6 +158,24 @@ class VocaAuthSignupHome(AuthSignupHome):
 
     @http.route('/web/signup/<string:role>', type='http', auth='public', website=True, sitemap=False)
     def web_auth_signup(self, role, *args, **kw):
+        #Verify CAPTCHA
+        recaptcha_response = kw.get('g-recaptcha-response')
+        secret_key = '6LcM3xMrAAAAAFaw38z7jqD4rZN9A71Fu6RAbzEW'
+
+        captcha_check = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={
+                'secret': secret_key,
+                'response': recaptcha_response
+            }
+        ).json()
+
+        if not captcha_check.get('success'):
+            # Re-render signup page with error
+            return request.render('auth_signup.signup', {
+                'error': 'CAPTCHA validation failed. Please try again.',
+                'values': kw,
+            })
         """Handle web signup with role-based validations."""
         qcontext = self.get_auth_signup_qcontext()
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
