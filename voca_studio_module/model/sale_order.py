@@ -2,34 +2,38 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     package_id = fields.Many2one('voca.teacher.packaging.lines', string='Teacher package')
+    seats_reserved = fields.Boolean(string="Masterclass seats reserved", default=False)
 
     def write(self, vals):
-        # Save previous payment_state to detect transition
-        # old_paid_status = {order.id: order.payment_state for order in self}
+      
+
         res = super().write(vals)
 
         for order in self:
-            # Only run when transitioning from unpaid -> paid while in quotation sent state
             if (
                 order.state == "sent"
+               
             ):
                 order._process_booking_lines()
         return res
 
     def action_confirm(self):
-        print("Sale Order Confirmed:", self.name)
         res = super().action_confirm()
         self._process_booking_lines()
         return res
 
     def _process_booking_lines(self):
         for order in self:
+            if order.seats_reserved:
+                continue  # Prevent multiple seat deductions
+
             for line in order.order_line:
-                # Process booking lines
+                # Handle booking lines
                 if line.booking_ids:
                     for booking_id in line.booking_ids:
                         booking_id.write({'status': 'booked', 'lesson_state': 'upcoming'})
@@ -37,7 +41,7 @@ class SaleOrder(models.Model):
                     for booking_master_id in line.booking_master_ids:
                         booking_master_id.write({'status': 'booked'})
 
-                # Handle seat availability for masterclass
+                # Handle seat deduction for masterclass
                 if line.product_id.is_master:
                     master_class = line.product_id.master_class_id
                     if master_class:
@@ -46,7 +50,7 @@ class SaleOrder(models.Model):
                             raise ValidationError(_("Not enough seats available for the master class."))
                         master_class.remaining_seats -= total_seats_needed
 
-                    # Send email to guest (unregistered users)
+                    # Send email to guest (if not signed up)
                     if not order.partner_id.user_ids:
                         self._send_guest_masterclass_email(order.partner_id, line)
 
@@ -59,8 +63,9 @@ class SaleOrder(models.Model):
                     if teacher and teacher.instructor and teacher.instructor.email:
                         self._send_teacher_email(teacher.instructor, line)
 
+            order.seats_reserved = True  # Flag as handled
+
     def _send_teacher_email(self, teacher, sale_order_line):
-        print("Sending email to teacher:", teacher.email)
         email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')
         if email_template:
             email_template.sudo().send_mail(sale_order_line.id, force_send=True)
@@ -71,7 +76,6 @@ class SaleOrder(models.Model):
         template_id = self.env.ref('voca_studio_module.email_template_guest_masterclass')
         if template_id:
             template_id.sudo().send_mail(sale_order_line.id, force_send=True)
-
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
