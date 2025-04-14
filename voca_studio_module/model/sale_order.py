@@ -1,131 +1,104 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.http import request
-from odoo import _, api, fields, models
-from odoo.osv import expression
-
-from odoo.addons.http_routing.models.ir_http import unslug
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    package_id = fields.Many2one('voca.teacher.packaging.lines',string='Teacher package')
-    
-    #samiha##########################################################
+    package_id = fields.Many2one('voca.teacher.packaging.lines', string='Teacher package')
+
+    def write(self, vals):
+        # Save previous payment_state to detect transition
+        # old_paid_status = {order.id: order.payment_state for order in self}
+        res = super().write(vals)
+
+        for order in self:
+            # Only run when transitioning from unpaid -> paid while in quotation sent state
+            if (
+                order.state == "sent"
+            ):
+                order._process_booking_lines()
+        return res
+
     def action_confirm(self):
-        print("Sale Order Confirmed: ...................", self.name)
-        res = super(SaleOrder, self).action_confirm()
-        
+        print("Sale Order Confirmed:", self.name)
+        res = super().action_confirm()
+        self._process_booking_lines()
+        return res
+
+    def _process_booking_lines(self):
         for order in self:
             for line in order.order_line:
+                # Process booking lines
                 if line.booking_ids:
-                    print("I am inside if line.booking ids ////////")
                     for booking_id in line.booking_ids:
-                        print('Updating Booking ID:', booking_id.id)
-                        booking_id.write({'status': 'booked','lesson_state': 'upcoming'})
-                        print("the status of booking id is ...............",booking_id.status)
-                        
-                elif line.booking_master_ids :
-                    print("I am inside if booking_master_ids ////////")
+                        booking_id.write({'status': 'booked', 'lesson_state': 'upcoming'})
+                elif line.booking_master_ids:
                     for booking_master_id in line.booking_master_ids:
-                        print('Updating Booking ID:', booking_master_id.id)
                         booking_master_id.write({'status': 'booked'})
-                        print("the status of booking id is ...............",booking_master_id.status)
-             # Update remaining seats for master class
+
+                # Handle seat availability for masterclass
                 if line.product_id.is_master:
                     master_class = line.product_id.master_class_id
-                    print("Master Class:...........", master_class)
                     if master_class:
                         total_seats_needed = line.product_uom_qty
-                        print("Total Seats Needed:...........", total_seats_needed)
                         if master_class.remaining_seats < total_seats_needed:
-                            print("Master Class Remaining Seats:...........", master_class.remaining_seats)
                             raise ValidationError(_("Not enough seats available for the master class."))
                         master_class.remaining_seats -= total_seats_needed
-                        print("Master Class Remaining Seats after booking:...........", master_class.remaining_seats)
-                    if not order.partner_id.user_ids:
-                        print(" student is not signed up but he purchased a masterclass :...........", order.partner_id.email)
-                        self._send_guest_masterclass_email(order.partner_id, line) 
 
-                
-            # Find the teacher linked to the lesson (product)
+                    # Send email to guest (unregistered users)
+                    if not order.partner_id.user_ids:
+                        self._send_guest_masterclass_email(order.partner_id, line)
+
+                # Send email to teacher
                 teacher_packaging_line = self.env['voca.teacher.packaging.lines'].search(
                     [('product_id', '=', line.product_id.id)], limit=1
                 )
-                print("Teacher Packaging Line:...........", teacher_packaging_line)
                 if teacher_packaging_line:
-                    teacher = teacher_packaging_line.package_id  # Get the related teacher
-                    print("Teacher related to the package :...........", teacher)
+                    teacher = teacher_packaging_line.package_id
                     if teacher and teacher.instructor and teacher.instructor.email:
-                        # Send email to teacher
                         self._send_teacher_email(teacher.instructor, line)
-                        print("teacher email")
-        return res
-        
-    def _send_guest_masterclass_email(self, partner, sale_order_line):
-        """Send an email to the guest customer with MasterClass details"""
-        if not partner.email:
-            print("Guest has no email, skipping email sending...")
-            return
-        
-        template_id = self.env.ref('voca_studio_module.email_template_guest_masterclass')
-        print("Template ID:...........", template_id)
-        if template_id:
-            template_id.sudo().send_mail(sale_order_line.id, force_send=True)
-            print("Email sent to guest:", partner.email)
-    def _send_teacher_email(self, teacher, sale_order_line):
-        """ Sends an email to the teacher when a student books a lesson. """
-        print("Sending email to teacher:", teacher.email)
 
-        email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')  # Replace with your actual email template XML ID
+    def _send_teacher_email(self, teacher, sale_order_line):
+        print("Sending email to teacher:", teacher.email)
+        email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')
         if email_template:
             email_template.sudo().send_mail(sale_order_line.id, force_send=True)
-            print("Email sent to:", teacher.email)
-    
-            
+
+    def _send_guest_masterclass_email(self, partner, sale_order_line):
+        if not partner.email:
+            return
+        template_id = self.env.ref('voca_studio_module.email_template_guest_masterclass')
+        if template_id:
+            template_id.sudo().send_mail(sale_order_line.id, force_send=True)
+
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    booking_ids= fields.One2many('voca.teacher.booking.lines', 'booking_order_id', string='Booking')
-    booking_master_ids= fields.One2many('master.class.date', 'booking_order_id', string='Booking master')
-    
-    #samiha##########################################################   
+    booking_ids = fields.One2many('voca.teacher.booking.lines', 'booking_order_id', string='Booking')
+    booking_master_ids = fields.One2many('master.class.date', 'booking_order_id', string='Booking master')
+
     package_id = fields.Many2one('voca.teacher.packaging.lines', string='Package')
+    lesson_state = fields.Selection([
+        ('upcoming', 'Upcoming'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled')
+    ], string='Status', default='upcoming')
+
     converted_price = fields.Float(string="Converted Price", store=True)
-    
+
     @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id')
     def _compute_price_unit(self):
         for line in self:
-            # Check if a package is associated with the order line
-            # if line.package_id:
-            #     print("I am inside if line.package_id", line.package_id)
-            #     # Use the price from the package
-            #     line.price_unit = line.package_id.price
-            #     line.product_uom_qty = line.package_id.quantity
-            
             if line.package_id:
-                # Use the package price directly for the subtotal
-                print("line.price_unit............",line.price_unit)
                 if line.converted_price:
                     line.product_uom_qty = line.package_id.quantity
                     line.price_unit = line.converted_price / line.product_uom_qty
                 else:
                     line.product_uom_qty = line.package_id.quantity
                     line.price_unit = line.package_id.price / line.product_uom_qty
-                
-                
-                # line.price_total = line.price_subtotal
             else:
-            
-            # if line.product_id.is_master:
-            #     # Use the price from the master class
-            #     line.price_unit = line.product_id.seat_price
-            #     continue
-
-            # Default behavior for other cases
                 if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
                     continue
                 if not line.product_uom or not line.product_id:
@@ -141,4 +114,3 @@ class SaleOrderLine(models.Model):
                         ),
                         fiscal_position=line.order_id.fiscal_position_id,
                     )
-    
