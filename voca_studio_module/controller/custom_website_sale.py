@@ -167,11 +167,11 @@ class CustomWebsiteSale(WebsiteSale):
             
             
         return super(CustomWebsiteSale, self).product(product, **kwargs)
-        
-        
+
     @http.route('/available_dates', type='http', auth='public')
-    def available_dates(self, teacher_id):
+    def available_dates(self, teacher_id, date=None):
         print("Teacher ID: ", teacher_id)
+        print("Requested Date: ", date)  # Debugging log
 
         # Retrieve the user's time zone or default to UTC
         user_tz_name = request.env.user.tz or 'UTC'
@@ -189,10 +189,10 @@ class CustomWebsiteSale(WebsiteSale):
 
             # Assume avail_date is in UTC and convert to user's time zone
             avail_date = pytz.UTC.localize(avail_date).astimezone(user_tz)
-            print("avail_date in hasan code : ", avail_date)
+            print("Converted Availability Date: ", avail_date)
 
-            # Format the date and time for the user's time zone
-            day_with_date = avail_date.strftime('%A, %b %d/%Y')
+            # Format the date for the frontend request format (YYYY-MM-DD)
+            day_with_date = avail_date.strftime('%Y-%m-%d')
             time = avail_date.strftime('%I:%M %p')
 
             if day_with_date not in bookings_by_day:
@@ -206,12 +206,106 @@ class CustomWebsiteSale(WebsiteSale):
 
         print("Bookings by day: ", bookings_by_day)
 
-        # Return the data as JSON
+        # If a specific date is requested, return only that date's slots
+        if date:
+            return http.Response(
+                json.dumps(bookings_by_day.get(date, [])),  # Return only matching date's data
+                content_type='application/json',
+                status=200
+            )
+
+        # Otherwise, return all available dates
         return http.Response(
             json.dumps(bookings_by_day),
             content_type='application/json',
             status=200
         )
+        
+    @http.route('/available_times', type='http', auth='public')
+    def available_times(self, teacher_id, date):
+        print("Fetching times for...........:", teacher_id, date)
+
+        user_tz_name = request.env.user.tz or 'UTC'
+        user_tz = pytz.timezone(user_tz_name)
+
+        teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
+        time_slots = []
+
+        for book in teacher.booking_ids.filtered(lambda x: x.status in ['approved', 'booked']):
+            avail_date = book.availablity_date
+
+            if isinstance(avail_date, str):
+                avail_date = datetime.strptime(avail_date, '%Y-%m-%d %H:%M:%S')
+
+            avail_date = pytz.UTC.localize(avail_date).astimezone(user_tz)
+
+            # Match the date requested
+            if avail_date.strftime('%Y-%m-%d') != date:
+                continue
+
+            time_str = avail_date.strftime('%I:%M %p')  # e.g., "09:00 AM"
+            time_slots.append({
+                'time': time_str,
+                'status': book.status
+            })
+
+        # ✅ Sort the time slots chronologically using parsed datetime objects
+        time_slots.sort(key=lambda x: datetime.strptime(x['time'], '%I:%M %p'))
+
+        print(f"Sorted time slots for......... {date}: {time_slots}")
+
+        return http.Response(
+            json.dumps(time_slots),
+            content_type='application/json',
+            status=200
+        )
+
+
+        
+        
+    # @http.route('/available_dates', type='http', auth='public')
+    # def available_dates(self, teacher_id):
+    #     print("Teacher ID: ", teacher_id)
+
+    #     # Retrieve the user's time zone or default to UTC
+    #     user_tz_name = request.env.user.tz or 'UTC'
+    #     user_tz = pytz.timezone(user_tz_name)
+    #     print(f"User's Time Zone: {user_tz}")
+
+    #     teacher = request.env['voca.teacher'].sudo().browse(int(teacher_id))
+    #     bookings_by_day = {}
+
+    #     for book in teacher.booking_ids.filtered(lambda x: x.status in ['approved', 'booked']):
+    #         avail_date = book.availablity_date
+
+    #         if isinstance(avail_date, str):
+    #             avail_date = datetime.strptime(avail_date, '%Y-%m-%d %H:%M:%S')
+
+    #         # Assume avail_date is in UTC and convert to user's time zone
+    #         avail_date = pytz.UTC.localize(avail_date).astimezone(user_tz)
+    #         print("avail_date in hasan code : ", avail_date)
+
+    #         # Format the date and time for the user's time zone
+    #         day_with_date = avail_date.strftime('%A, %b %d/%Y')
+    #         time = avail_date.strftime('%I:%M %p')
+
+    #         if day_with_date not in bookings_by_day:
+    #             bookings_by_day[day_with_date] = []
+
+    #         # Include status for each time slot
+    #         bookings_by_day[day_with_date].append({
+    #             'time': time,
+    #             'status': book.status  # Add the status (approved or booked)
+    #         })
+
+    #     print("Bookings by day: ", bookings_by_day)
+
+    #     # Return the data as JSON
+    #     return http.Response(
+    #         json.dumps(bookings_by_day),
+    #         content_type='application/json',
+    #         status=200
+    #     )
             
         
 
