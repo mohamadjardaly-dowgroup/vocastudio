@@ -9,7 +9,8 @@ from odoo import fields, http
 from odoo.http import request
 from odoo.exceptions import UserError
 from odoo.tools import format_amount
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class CustomWebsiteSale(WebsiteSale):
     @http.route(['/shop/<int:product_id>'] ,type='http', auth="public", website=True)
@@ -133,6 +134,10 @@ class CustomWebsiteSale(WebsiteSale):
                 )
                 
                 pricelist = request.website._get_current_pricelist()
+                _logger.info("DEBUG: Pricelist Currency Name: %s (ID: %s)", pricelist.currency_id.name, pricelist.currency_id.id)
+                _logger.info("DEBUG: Package Currency Name: %s (ID: %s)", package.currency_id.name, package.currency_id.id)
+                _logger.info("DEBUG: Pricelist Currency Rate: %s", pricelist.currency_id.rate)
+                _logger.info("DEBUG: Package Currency Rate: %s", package.currency_id.rate)
                 computed_price = pricelist._get_product_price(package.product_id, 1.0, request.env.user.partner_id)
                 package_currency = package.currency_id
                 package_price = package.total
