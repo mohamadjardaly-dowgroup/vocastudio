@@ -44,6 +44,23 @@
 
                         </group>
                         <notebook>
+                            <page string="Recurring Availability">
+                                <group>
+                                <field name="duration"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                </group>
+                                <field name="schedule_ids">
+                                <tree editable="bottom">
+                                    <field name="weekday"/>
+                                    <field name="time_from"/>
+                                    <field name="time_to"/>
+                                </tree>
+                                </field>
+                                
+                                <button name="generate_booking_lines" type="object" string="Generate Bookings" class="btn-primary"/>
+                                
+                            </page>
                             <page string="Booking" name="booking">
                                 <field name="booking_ids">
                                     <tree editable="bottom">
