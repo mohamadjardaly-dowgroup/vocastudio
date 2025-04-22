@@ -1,7 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 
-from datetime import date
+from datetime import date, datetime, timedelta
 
 
 class Teacher(models.Model):
@@ -9,6 +9,11 @@ class Teacher(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']  # Inherit mail.thread and mail.activity.mixin
 
     # _description = 'Portal'
+
+    duration = fields.Integer(string="Lesson Duration (minutes)", default=45)
+    date_start = fields.Date(string="Start Date")
+    date_end = fields.Date(string="End Date")
+    schedule_ids = fields.One2many('voca.teacher.schedule', 'teacher_id', string="Weekly Schedule")
 
     name = fields.Char(string='Name', related='instructor.name')
     google_meet=fields.Char(string='Google Meet',readonly=False)
@@ -56,6 +61,47 @@ class Teacher(models.Model):
     attachment_video_ids = fields.Many2many('ir.attachment' ,string="Video" ,readonly=False)
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
+
+    #samiha import datetime, timedelta
+    def generate_booking_lines(self):
+        BookingLine = self.env['voca.teacher.booking.lines']
+
+        for teacher in self:
+            if not (teacher.date_start and teacher.date_end and teacher.duration and teacher.schedule_ids):
+                continue  # Skip if missing any necessary field
+
+            # Clear old booking lines if needed (optional)
+            # teacher.booking_ids.unlink()
+
+            current_date = teacher.date_start
+            while current_date <= teacher.date_end:
+                weekday_str = str(current_date.weekday())  # 0 = Monday, ..., 6 = Sunday
+
+                # Find all schedule templates for this weekday
+                day_schedules = teacher.schedule_ids.filtered(lambda s: s.weekday == weekday_str)
+                for schedule in day_schedules:
+                    start_time = schedule.time_from
+                    end_time = schedule.time_to
+
+                    # Convert to datetime on current date
+                    dt_start = datetime.combine(current_date, datetime.min.time()) + timedelta(hours=start_time)
+                    dt_end = datetime.combine(current_date, datetime.min.time()) + timedelta(hours=end_time)
+
+                    while dt_start + timedelta(minutes=teacher.duration) <= dt_end:
+                        # Check if booking already exists for this teacher and date
+                        exists = BookingLine.search_count([
+                            ('booking_id', '=', teacher.id),
+                            ('availablity_date', '=', dt_start)
+                        ])
+                        if not exists:
+                            BookingLine.create({
+                                'booking_id': teacher.id,
+                                'availablity_date': dt_start,
+                            })
+                        dt_start += timedelta(minutes=teacher.duration)
+
+                current_date += timedelta(days=1)
+
 
 
     def action_approved(self):
