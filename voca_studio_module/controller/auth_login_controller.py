@@ -17,7 +17,7 @@ class VocaAuthLogin(Home):
         uid = request.session.uid
         user = request.env['res.users'].sudo().browse(uid)
         print("user is ", user.partner_id)
-        teacher = request.env['voca.teacher'].sudo().search([('instructor', '=', user.partner_id.id)])
+        teacher = request.env['voca.teacher'].sudo().search([('instructor', '=', user.partner_id.id)],limit=1)
         print("teacher is ", teacher.state, request.params['login_success'])
         if user and teacher.state in ['draft','refused']:
             print("helllooo")
