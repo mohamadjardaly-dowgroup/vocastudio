@@ -74,6 +74,7 @@ class TeacherController(http.Controller):
                 'instrument':t.instrument,
                 'categories': [{'id': cat.id, 'name': cat.name} for cat in t.categories],
                 'language': t.language,
+                'lang': t.lang,
                 'about': t.about or '',
                 'image_url': f"/web/image/voca.teacher/{t.id}/image_1920",
             } for t in teachers]
