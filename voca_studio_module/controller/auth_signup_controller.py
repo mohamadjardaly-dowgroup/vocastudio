@@ -178,6 +178,7 @@ class VocaAuthSignupHome(AuthSignupHome):
             })
         """Handle web signup with role-based validations."""
         qcontext = self.get_auth_signup_qcontext()
+        qcontext['role'] = role
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
