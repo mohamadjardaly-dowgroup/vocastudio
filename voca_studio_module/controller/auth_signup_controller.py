@@ -162,20 +162,20 @@ class VocaAuthSignupHome(AuthSignupHome):
         recaptcha_response = kw.get('g-recaptcha-response')
         secret_key = '6LcM3xMrAAAAAFaw38z7jqD4rZN9A71Fu6RAbzEW'
 
-        captcha_check = requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={
-                'secret': secret_key,
-                'response': recaptcha_response
-            }
-        ).json()
+        # captcha_check = requests.post(
+        #     'https://www.google.com/recaptcha/api/siteverify',
+        #     data={
+        #         'secret': secret_key,
+        #         'response': recaptcha_response
+        #     }
+        # ).json()
 
-        if not captcha_check.get('success'):
-            # Re-render signup page with error
-            return request.render('auth_signup.signup', {
-                'error': 'CAPTCHA validation failed. Please try again.',
-                'values': kw,
-            })
+        # if not captcha_check.get('success'):
+        #     # Re-render signup page with error
+        #     return request.render('auth_signup.signup', {
+        #         'error': 'CAPTCHA validation failed. Please try again.',
+        #         'values': kw,
+        #     })
         """Handle web signup with role-based validations."""
         qcontext = self.get_auth_signup_qcontext()
         qcontext['role'] = role
@@ -229,6 +229,20 @@ class VocaAuthSignupHome(AuthSignupHome):
                     _logger.warning("%s", e)
                     qcontext['error'] = _("Could not create a new account.") + "\n" + str(e)
 
+        captcha_check = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={
+                'secret': secret_key,
+                'response': recaptcha_response
+            }
+        ).json()
+
+        if not captcha_check.get('success'):
+            # Re-render signup page with error
+            return request.render('auth_signup.signup', {
+                'error': 'CAPTCHA validation failed. Please try again.',
+                'values': kw,
+            })
         response = request.render('auth_signup.signup', qcontext)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
