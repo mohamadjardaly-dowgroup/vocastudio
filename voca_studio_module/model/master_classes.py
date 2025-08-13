@@ -33,6 +33,7 @@ class MasterClass(models.Model):
 
     categories = fields.Many2many('master.classes.categories', string='Category')
     description = fields.Text('Description')
+    description_html = fields.Html("Description")
 
 
     # New fields for booking date-time range
