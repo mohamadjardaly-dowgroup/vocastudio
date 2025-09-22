@@ -10,6 +10,8 @@ class TeacherVideo(models.Model):
     embed_url = fields.Char(string="Embed URL", compute="_compute_embed_url", store=True)
 
     teacher_id = fields.Many2one("voca.teacher", string="Teacher", ondelete="cascade")
+    masterclass_id = fields.Many2one("master.classes", string="Masterclass", ondelete="cascade")
+    
     
     
     @api.depends("youtube_url")
@@ -29,3 +31,4 @@ class TeacherVideo(models.Model):
 
             # Construct the embed URL if a valid video ID was found
             record.embed_url = f"https://www.youtube.com/embed/{video_id}" if video_id else ""
+
