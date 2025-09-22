@@ -29,7 +29,7 @@
                         <field name="lesson_state"/>
                         <!-- <field name="enrolled_students"/>  -->
 <!--                         <field name="lectures"/> -->
-                        <field name="description"/>
+                        <field name="description_html"/>
                         
                         <!--                            <field name="dates_ids"/>-->
                         <field name="categories" widget="many2many_tags"/>
