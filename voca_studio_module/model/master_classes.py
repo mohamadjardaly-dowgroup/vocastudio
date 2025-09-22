@@ -11,6 +11,8 @@ class MasterClass(models.Model):
 
     image_1920 = fields.Image(string="Image")
     #samiha
+    youtube_videos = fields.One2many("voca.teacher.video", "masterclass_id", string="YouTube Videos")
+    
     lesson_state = fields.Selection([
         ('draft', 'Draft'),
         ('upcoming', 'Upcoming'),
