@@ -34,6 +34,22 @@
                         <!--                            <field name="dates_ids"/>-->
                         <field name="categories" widget="many2many_tags"/>
                     </group>
+
+                    <notebook>
+                        <page string="Videos">
+                                <field name="youtube_videos">
+                                    <tree editable="bottom">
+                                        <field name="youtube_url"/>
+                                        <field name="embed_url" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+
+                    </notebook>
+
+
+                    
                     <!-- <notebook>
                         <page string="Booking" name="booking">
                             <field name="dates_ids">
