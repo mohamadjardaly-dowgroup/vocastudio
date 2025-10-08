@@ -77,6 +77,18 @@ class SaleOrder(models.Model):
             # Mark after all relevant lines are processed to make it idempotent
             order.seats_reserved = True
 
+    def _send_teacher_email(self, teacher, sale_order_line):
+        email_template = self.env.ref('voca_studio_module.mail_template_lesson_booking_teacher')
+        if email_template:
+            email_template.sudo().send_mail(sale_order_line.id, force_send=True)
+
+    def _send_guest_masterclass_email(self, partner, sale_order_line):
+        if not partner.email:
+            return
+        template_id = self.env.ref('voca_studio_module.email_template_guest_masterclass')
+        if template_id:
+            template_id.sudo().send_mail(sale_order_line.id, force_send=True)
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
