@@ -59,8 +59,8 @@ class SaleOrder(models.Model):
                         })
 
                     # Guest email if the buyer is not a portal user
-                    if not order.partner_id.user_ids:
-                        self._send_guest_masterclass_email(order.partner_id, line)
+                    # if not order.partner_id.user_ids:
+                    self._send_guest_masterclass_email(order.partner_id, line)
 
                 # 3) Teacher email only if it’s actually a class/booking line
                 #    (masterclass OR has bookings). Never for regular products.
