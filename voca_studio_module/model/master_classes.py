@@ -20,7 +20,7 @@ class MasterClass(models.Model):
         ('canceled', 'Canceled')
     ], string='Status', default='upcoming')
     
-    date = fields.Date(string=_('Starting Date'))
+    date = fields.Date(string=_('Starting Date'), required=True)
     seat_price=fields.Monetary(string='Seat Price',currency_field= "currency_id" ,required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     
@@ -52,6 +52,16 @@ class MasterClass(models.Model):
     
     max_students = fields.Integer(string="Maximum Students", required=True)  # Add this field
     remaining_seats = fields.Integer(string="Remaining Seats", compute="_compute_remaining_seats", store=True)
+
+    
+    _sql_constraints = [
+        ('check_positive_seat_price',
+         'CHECK(seat_price > 0)',
+         'Seat price must be greater than zero.'),
+        ('check_positive_max_students',
+         'CHECK(max_students > 0)',
+         'Maximum students must be greater than zero.')
+    ]
     
     
 
