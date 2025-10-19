@@ -213,17 +213,78 @@ class MasterClassController(http.Controller):
                 methods=['GET'], website=True, csrf=False)
     def get_class_cat_details(self, category_id=None, **kw):
         try:
-            # teacher = request.env['master.classes'].sudo().search([])
-            categ = request.env['master.classes.categories'].sudo().search([])
-            # print("all teacher :", teacher, kw)
-            master = request.env['master.classes'].sudo().search([('categories', '=', int(category_id))])
-            print("master", master)
+            now_dt = fields.Datetime.now()
+
+            # Read current pages from querystring, default to 1
+            page_u = int(kw.get('page_u', 1))
+            page_p = int(kw.get('page_p', 1))
+            step_u = 12   # items per page (Upcoming)
+            step_p = 12   # items per page (Past)
+            offset_u = (page_u - 1) * step_u
+            offset_p = (page_p - 1) * step_p
+
+            # Domains
+            upcoming_domain = [
+                ('categories', '=', int(category_id)),
+                '|',
+                    ('lesson_state', '=', 'upcoming'),
+                    '&', ('lesson_state', '=', False), ('datetime_from', '>=', now_dt),
+            ]
+            past_domain = [
+                ('categories', '=', int(category_id)),
+                '|',
+                    ('lesson_state', '=', 'completed'),
+                    ('datetime_to', '<', now_dt),
+            ]
+
+            # Counts
+            total_u = request.env['master.classes'].sudo().search_count(upcoming_domain)
+            total_p = request.env['master.classes'].sudo().search_count(past_domain)
+
+            # Records (with limit/offset)
+            upcoming_master = request.env['master.classes'].sudo().search(
+                upcoming_domain, order="datetime_from ASC", limit=step_u, offset=offset_u
+            )
+            past_master = request.env['master.classes'].sudo().search(
+                past_domain, order="datetime_from DESC", limit=step_p, offset=offset_p
+            )
+
+            base_url = f'/master_class/cat/{category_id}'
+
+            # --- helper to build a pager dict that won't collide ---
+            def build_pager(total, page, step, page_key, other_page_key, other_page_val, tab_name):
+                page_count = max(1, ceil(total / float(step))) if step else 1
+
+                def make_url(target_page):
+                    args = {
+                        page_key: target_page,
+                        other_page_key: other_page_val,
+                        'tab': tab_name,
+                    }
+                    return f"{base_url}?{url_encode(args)}#{'past-pane' if tab_name == 'past' else 'upcoming-pane'}"
+
+                return {
+                    'page': page,
+                    'page_count': page_count,
+                    'prev_url': make_url(max(1, page - 1)),
+                    'next_url': make_url(min(page_count, page + 1)),
+                    'pages': [{'num': i, 'url': make_url(i), 'current': (i == page)}
+                              for i in range(1, page_count + 1)],
+                }
+
+            pager_u = build_pager(total_u, page_u, step_u, 'page_u', 'page_p', page_p, 'upcoming')
+            pager_p = build_pager(total_p, page_p, step_p, 'page_p', 'page_u', page_u, 'past')
 
             return request.render('voca_studio_module.master_class_card_with_category', {
-                'master': master,  # Optionally pass the category for UI
+                'upcoming_master': upcoming_master,
+                'past_master': past_master,
+                'pager_u': pager_u,
+                'pager_p': pager_p,
             })
         except Exception as e:
-            return e
+            return request.make_response("Error loading masterclasses: %s" % e)
+    
+    
 
     @http.route(['/master_profile/<int:master_id>'
                  ], type='http', auth="public",
