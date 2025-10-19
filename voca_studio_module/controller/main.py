@@ -228,15 +228,11 @@ class MasterClassController(http.Controller):
             # Domains
             upcoming_domain = [
                 ('categories', '=', int(category_id)),
-                '|',
-                    ('lesson_state', '=', 'upcoming'),
-                    '&', ('lesson_state', '=', False), ('datetime_from', '>=', now_dt),
+                ('lesson_state', '=', 'upcoming'),   
             ]
             past_domain = [
                 ('categories', '=', int(category_id)),
-                '|',
-                    ('lesson_state', '=', 'completed'),
-                    ('datetime_to', '<', now_dt),
+                ('lesson_state', '=', 'completed'),
             ]
 
             # Counts
