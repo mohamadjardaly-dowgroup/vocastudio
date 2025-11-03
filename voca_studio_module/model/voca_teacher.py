@@ -63,32 +63,71 @@ class Teacher(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
     #samiha import datetime, timedelta
+    
     def generate_booking_lines(self):
         BookingLine = self.env['voca.teacher.booking.lines']
 
         for teacher in self:
             if not (teacher.date_start and teacher.date_end and teacher.duration and teacher.schedule_ids):
-                continue  # Skip if missing any necessary field
+                continue  
 
-            # Clear old booking lines if needed (optional)
-            # teacher.booking_ids.unlink()
+            # -------------------------------------------------------------------
+            # 1️⃣ CLEANUP: Remove invalid draft/unbooked slots
+            # -------------------------------------------------------------------
+            all_lines = BookingLine.search([
+                ('booking_id', '=', teacher.id),
+                ('booking_order_id', '=', False),
+                ('lesson_state', '=', 'draft'),
+            ])
 
+            for line in all_lines:
+                avail_dt = line.availablity_date
+                date_only = avail_dt.date()
+                time_float = avail_dt.hour + avail_dt.minute / 60.0
+
+                # --- Case 1: Out of range ---
+                if date_only < teacher.date_start or date_only > teacher.date_end:
+                    line.unlink()
+                    continue
+
+                weekday_str = str(date_only.weekday())
+                valid_schedules = teacher.schedule_ids.filtered(lambda s: s.weekday == weekday_str)
+                if not valid_schedules:
+                    line.unlink()
+                    continue
+
+                # --- Case 2: Within day but not inside any interval ---
+                valid_time = False
+                aligned = False
+                for sched in valid_schedules:
+                    if sched.time_from <= time_float < sched.time_to:
+                        valid_time = True
+                        # check if the time aligns with duration intervals
+                        start_time = sched.time_from
+                        while start_time + (teacher.duration / 60.0) <= sched.time_to:
+                            if abs(start_time - time_float) < 1e-6:  # small tolerance for float
+                                aligned = True
+                                break
+                            start_time += teacher.duration / 60.0
+                if not valid_time or not aligned:
+                    line.unlink()
+
+            # -------------------------------------------------------------------
+            # 2️⃣ GENERATION: Create valid slots if missing
+            # -------------------------------------------------------------------
             current_date = teacher.date_start
             while current_date <= teacher.date_end:
-                weekday_str = str(current_date.weekday())  # 0 = Monday, ..., 6 = Sunday
-
-                # Find all schedule templates for this weekday
+                weekday_str = str(current_date.weekday())
                 day_schedules = teacher.schedule_ids.filtered(lambda s: s.weekday == weekday_str)
+
                 for schedule in day_schedules:
                     start_time = schedule.time_from
                     end_time = schedule.time_to
 
-                    # Convert to datetime on current date
                     dt_start = datetime.combine(current_date, datetime.min.time()) + timedelta(hours=start_time)
                     dt_end = datetime.combine(current_date, datetime.min.time()) + timedelta(hours=end_time)
 
                     while dt_start + timedelta(minutes=teacher.duration) <= dt_end:
-                        # Check if booking already exists for this teacher and date
                         exists = BookingLine.search_count([
                             ('booking_id', '=', teacher.id),
                             ('availablity_date', '=', dt_start)
@@ -97,6 +136,7 @@ class Teacher(models.Model):
                             BookingLine.create({
                                 'booking_id': teacher.id,
                                 'availablity_date': dt_start,
+                                'lesson_state': 'draft',
                             })
                         dt_start += timedelta(minutes=teacher.duration)
 
@@ -167,6 +207,7 @@ class Teacher(models.Model):
         product = self.env['product.product'].create(product_vals)
         package.product_id = product.id
         return package
+
 
 
 
