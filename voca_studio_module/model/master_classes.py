@@ -125,9 +125,13 @@ class MasterClass(models.Model):
         self.env['stock.quant'].create(quant_data)
         # Explicitly set is_master on the product template
         product.product_tmpl_id.write({'is_master': True})
+
+        first_cat = self.env['master.classes.categories'].sudo().search([], limit=1, order='id asc')
+        if first_cat:
+            master.categories = [(6, 0, [first_cat.id])]
         
-        master_class_category = self.env.ref('voca_studio_module.master_class_category')
-        master.categories = [(4, master_class_category.id)]
+        # master_class_category = self.env.ref('voca_studio_module.master_class_category')
+        # master.categories = [(4, master_class_category.id)]
         
         return master
 
