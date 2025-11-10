@@ -15,6 +15,7 @@
                     <group>
                         <field name="image_1920" class="oe_avatar" widget="image" options="{'size': [100,100]}"/>
                         <field name="instructor"/>
+                        <field name="master_lang"/>
                         <field name="zoom" widget="url"/>
                         <field name="date"/>
                         
