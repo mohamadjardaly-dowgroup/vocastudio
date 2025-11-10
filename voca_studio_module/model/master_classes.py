@@ -8,6 +8,7 @@ class MasterClass(models.Model):
     _description = 'MasterClass'
 
     name = fields.Char(string='Subject', default='New')
+    master_lang = fields.Char(string='Language')
 
     image_1920 = fields.Image(string="Image")
     #samiha
