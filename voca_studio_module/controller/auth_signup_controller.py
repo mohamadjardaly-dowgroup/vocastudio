@@ -78,6 +78,10 @@ class VocaAuthSignupHome(AuthSignupHome):
 
     def _prepare_signup_values(self, qcontext):
         """Prepare and validate signup values."""
+
+        if qcontext.get('token'):
+            return super(VocaAuthSignupHome, self)._prepare_signup_values(qcontext)
+        
         values = {key: qcontext.get(key) for key in (
             'login', 'name', 'password', 'first_name', 'nickname', 'phone', 'gender', 
             'birthday', 'role', 'experience', 'about', 'is_teacher','instrument'
@@ -234,3 +238,4 @@ class VocaAuthSignupHome(AuthSignupHome):
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
+
