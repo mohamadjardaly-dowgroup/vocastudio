@@ -88,6 +88,8 @@ class CustomWebsiteSale(WebsiteSale):
                 booking_status = f"{master.remaining_seats} seats available"
                 can_book = True
             print("master.remaining_seats inside controller .....................",master.remaining_seats)
+            pricelist = request.website._get_current_pricelist()
+
             keep = QueryURL(
                     '/shop',
                     **self._product_get_query_url_kwargs(
@@ -110,7 +112,11 @@ class CustomWebsiteSale(WebsiteSale):
                 'start_date': start_date.strftime('%H:%M:%S'),
                 'end_date': end_date.strftime('%H:%M:%S'),
                 'category_id': category_id,
-                'keep': keep
+                'keep': keep,
+                'pricelist': pricelist,
+                'currency_id': pricelist.currency_id,
+                'currency': pricelist.currency_id,
+                'format_amount': lambda amount, currency: format_amount(request.env, amount, currency),
             })
       
         print("DEBUG: package_id =", package_id)  # Check if package_id is captured
