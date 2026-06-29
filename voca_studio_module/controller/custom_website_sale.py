@@ -478,10 +478,18 @@ class StudentDashboard(http.Controller):
         ])
 
         # Filter upcoming bookings
+        # upcoming_bookings = request.env['voca.teacher.booking.lines'].sudo().search([
+        #     ('booking_order_id', 'in', order_lines.ids),
+        #     ('lesson_state', '=', 'upcoming')
+        # ])
+        
         upcoming_bookings = request.env['voca.teacher.booking.lines'].sudo().search([
             ('booking_order_id', 'in', order_lines.ids),
-            ('lesson_state', '=', 'upcoming')
-        ])
+            ('lesson_state', '=', 'upcoming'),
+            '|',
+            ('booking_type', '=', False),
+            ('booking_type', '=', 'private_lesson'),
+        ], order='availablity_date ASC')
 
         # Pagination logic
         offset = (page - 1) * limit
@@ -623,7 +631,10 @@ class TeacherDashboard(http.Controller):
         # Fetch upcoming lessons for the teacher (sorted by date)
         upcoming_lessons = request.env['voca.teacher.booking.lines'].sudo().search([
             ('booking_id', '=', teacher.teacher_id.id),
-            ('lesson_state', '=', 'upcoming')
+            ('lesson_state', '=', 'upcoming'),
+            '|',
+            ('booking_type', '=', False),
+            ('booking_type', '=', 'private_lesson'),
         ], order='availablity_date ASC')
 
         # Pagination logic

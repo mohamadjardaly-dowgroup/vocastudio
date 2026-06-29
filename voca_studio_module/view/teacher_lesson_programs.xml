@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="teacher_lesson_programs_partial" name="Teacher Lesson Programs Partial">
+        <div>
+            <t t-if="lesson_programs">
+                <div class="row">
+                    <t t-foreach="lesson_programs" t-as="item">
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+
+                                    <h5 class="card-title">
+                                        <strong>
+                                            <t t-esc="item['program'].name if item['program'] else item['line'].name"/>
+                                        </strong>
+                                    </h5>
+
+                                    <p class="card-text">
+                                        <strong>Student:</strong>
+                                        <t t-esc="item['student'].name"/>
+                                    </p>
+
+                                    <p class="card-text mb-1">
+                                        <strong>Selected Lessons:</strong>
+                                    </p>
+
+                                    <ul class="mb-3">
+                                        <t t-foreach="item['sessions']" t-as="session">
+                                            <li>
+                                                <t t-esc="session['local_date']"/>
+                                            </li>
+                                        </t>
+                                    </ul>
+
+                                    <t t-if="item['line'].order_id.partner_id.email">
+                                        <p>
+                                            <strong>Student Email:</strong>
+                                            <t t-esc="item['line'].order_id.partner_id.email"/>
+                                        </p>
+                                    </t>
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % p">
+                                    <t t-esc="p"/>
+                                </a>
+                            </li>
+                        </t>
+
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+
+            <t t-else="">
+                <p class="text-center">No lesson series assigned.</p>
+            </t>
+        </div>
+    </template>
+
+</odoo>

@@ -8,6 +8,17 @@
                     <a class="nav-link active" id="upcoming-lessons-tab" data-bs-toggle="tab" href="#upcoming-lessons" role="tab" aria-controls="upcoming-lessons" aria-selected="true" onclick="loadUpcomingLessons()">
                         Upcoming Lessons
                     </a>
+                    <a class="nav-link"
+                    id="lesson-programs-tab"
+                    data-bs-toggle="tab"
+                    href="#lesson-programs"
+                    role="tab"
+                    aria-controls="lesson-programs"
+                    aria-selected="false"
+                    onclick="loadLessonPrograms()">
+                        Lesson Series
+                    </a>
+
                     <a class="nav-link" id="master-classes-tab" data-bs-toggle="tab" href="#master-classes" role="tab" aria-controls="master-classes" aria-selected="false" onclick="loadMasterClasses()">
                         Master Classes
                     </a>
@@ -45,6 +56,11 @@
                             });
                         </script> -->
                     </div>
+
+                    <div class="tab-pane fade" id="lesson-programs" role="tabpanel" aria-labelledby="lesson-programs-tab">
+                        <div id="lesson-programs-content"></div>
+                    </div>
+
                     <!-- MasterClases -->
                     <div class="tab-pane fade" id="master-classes" role="tabpanel" aria-labelledby="master-classes-tab">
                         <div id="master-classes-content"></div>
@@ -58,6 +74,23 @@
 
                     <!-- script -->
                     <script>
+                        function loadLessonPrograms(page = 1) {
+                            fetch(`/teacher_dashboard/lesson-programs?page=${page}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    document.getElementById('lesson-programs-content').innerHTML = html;
+
+                                    document.querySelectorAll('#lesson-programs-content .page-link').forEach(link => {
+                                        link.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                            loadLessonPrograms(newPage);
+                                        });
+                                    });
+                                })
+                                .catch(error => console.error('Error loading lesson programs:', error));
+                        }
+
                         function loadUpcomingLessons(page = 1) {
                             fetch(`/teacher_dashboard/upcoming-lessons?page=${page}`)
                                 .then(response => response.text())
@@ -173,6 +206,7 @@
                          document.addEventListener("DOMContentLoaded", function () {
                             
                             loadUpcomingLessons();
+                            loadLessonPrograms();
                             loadCompletedLessons();
                             loadMasterClasses();
                         });

@@ -37,6 +37,11 @@
         'view/teacher_completed_lessons.xml',
         'view/teacher_masterclasses.xml',
         # 'view/master_classes_categories_view.xml',
+        
+        'view/lesson_program_backend_views.xml',
+        'view/lesson_program_website.xml',
+        'view/student_lesson_programs.xml',
+        'view/teacher_lesson_programs.xml',
 
     ],
     'assets': {

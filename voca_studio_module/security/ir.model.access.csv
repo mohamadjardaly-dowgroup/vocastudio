@@ -11,4 +11,5 @@ access_master_classes_categories,access.master.classes.categories,model_master_c
 access_master_class_date,access.master.class.date,model_master_class_date,,1,1,1,1
 access_voca_teacher_video,access.voca.teacher.video,model_voca_teacher_video,,1,1,1,1
 access_voca_teacher_schedule,access_voca_teacher_schedule,model_voca_teacher_schedule,,1,1,1,1
+access_voca_lesson_program,access.voca.lesson.program,model_voca_lesson_program,,1,1,1,1
 

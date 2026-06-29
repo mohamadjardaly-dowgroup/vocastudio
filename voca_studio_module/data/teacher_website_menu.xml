@@ -37,4 +37,13 @@
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" type="int">80</field>
     </record>
+
+
+    <record id="website_menu_lesson_programs" model="website.menu">
+        <field name="name">Lessons</field>
+        <field name="url">/lessons</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">75</field>
+    </record>
+
 </odoo>

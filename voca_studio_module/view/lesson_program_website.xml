@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="lesson_program_list_template" name="Lesson Programs">
+        <t t-call="portal.portal_layout">
+            <div class="container py-4">
+
+                <h1 class="mb-4">Lessons</h1>
+
+                <t t-if="programs">
+                    <div class="master-class-grid">
+                        <t t-foreach="programs" t-as="program">
+                            <div class="teacher-details">
+                                <img t-if="program.image_1920"
+                                     class="teacher-image teacher-child-image"
+                                     t-attf-src="data:image/*;base64,{{program.image_1920}}"
+                                     alt="Lesson Cover"/>
+
+                                <img t-elif="program.teacher_id.image_1920"
+                                     class="teacher-image teacher-child-image"
+                                     t-attf-src="data:image/*;base64,{{program.teacher_id.image_1920}}"
+                                     alt="Teacher Image"/>
+
+                                <div class="content-box">
+                                    <h4 class="profile-header">
+                                        <t t-esc="program.name"/>
+                                    </h4>
+
+                                    <p class="profile-text mb-0">
+                                        <strong>Teacher:</strong>
+                                        <t t-esc="program.teacher_id.name"/>
+                                    </p>
+
+                                    <p class="profile-text mb-0">
+                                        <strong>Number of Lessons:</strong>
+                                        <t t-esc="program.session_count"/>
+                                    </p>
+
+                                    <p class="profile-text mb-0">
+                                        <strong>Price:</strong>
+                                        <t t-esc="format_amount(program.price, program.currency_id)"/>
+                                    </p>
+
+                                    <p class="profile-text mb-2" t-if="program.description">
+                                        <t t-esc="program.description"/>
+                                    </p>
+
+                                    <a class="teacher-profile-btn"
+                                       t-att-href="'/lesson-program/%s' % program.id">
+                                        Book Now
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="alert alert-info">
+                        No lessons are available yet.
+                    </div>
+                </t>
+
+            </div>
+        </t>
+    </template>
+
+
+    <template id="lesson_program_booking_template" name="Lesson Program Booking">
+        <t t-call="portal.portal_layout">
+
+            <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet"/>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+            <div class="container py-4 lesson-program-booking-page">
+
+                <div class="breadcrumb mb-4">
+                    <a href="/">Home</a>
+                    <span class="mx-2">/</span>
+                    <a href="/lessons">Lessons</a>
+                    <span class="mx-2">/</span>
+                    <span t-esc="program.name"/>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-6 mb-4">
+                        <div id="lesson-program-calendar"></div>
+
+                        <div class="available-times-container mt-4">
+                            <h4>Available Times</h4>
+                            <div id="available-times"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+
+                        <t t-if="program.image_1920">
+                            <img t-attf-src="data:image/*;base64,{{program.image_1920}}"
+                                 class="img-fluid rounded mb-3"
+                                 alt="Lesson Cover"/>
+                        </t>
+
+                        <h1>
+                            <t t-esc="program.name"/>
+                        </h1>
+
+                        <p>
+                            <strong>Teacher:</strong>
+                            <t t-esc="teacher.name"/>
+                        </p>
+
+                        <p>
+                            <strong>Number of Lessons:</strong>
+                            <t t-esc="session_count"/>
+                        </p>
+
+                        <p>
+                            <strong>Price:</strong>
+                            <t t-esc="format_amount(converted_price, currency_id)"/>
+                        </p>
+
+                        <div t-if="program.description_html" class="mb-3">
+                            <t t-raw="program.description_html"/>
+                        </div>
+
+                        <div t-elif="program.description" class="mb-3">
+                            <p t-esc="program.description"/>
+                        </div>
+
+                        <input type="hidden" id="lesson_program_id" t-att-value="program.id"/>
+                        <input type="hidden" id="session_count" t-att-value="session_count"/>
+                        <input type="hidden" id="selected_booking_ids"/>
+
+                        <h5 id="selection-info" class="my-3" style="color:#6656A5;">
+                            Please select <t t-esc="session_count"/> lesson time(s).
+                        </h5>
+
+                        <div id="lesson-program-message"
+                            class="alert alert-warning d-none"
+                            role="alert">
+                        </div>
+
+                        <button id="lesson-program-add-to-cart"
+                                class="btn btn-primary disabled"
+                                style="opacity: 0.5; pointer-events: none;">
+                            <i class="fa fa-calendar me-2"></i>
+                            Book Now
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const programId = document.getElementById("lesson_program_id").value;
+                    const sessionCount = parseInt(document.getElementById("session_count").value, 10);
+                    const addToCartButton = document.getElementById("lesson-program-add-to-cart");
+                    const selectedInput = document.getElementById("selected_booking_ids");
+                    const selectionInfo = document.getElementById("selection-info");
+
+                    const messageBox = document.getElementById("lesson-program-message");
+
+                    function showMessage(message, type = "warning") {
+                        messageBox.className = `alert alert-${type}`;
+                        messageBox.innerText = message;
+                        messageBox.classList.remove("d-none");
+
+                        setTimeout(() => {
+                            messageBox.classList.add("d-none");
+                        }, 4000);
+                    }
+
+                    let selectedBookingIds = [];
+
+                    function refreshButtonState() {
+                        selectedInput.value = JSON.stringify(selectedBookingIds);
+
+                        const remaining = sessionCount - selectedBookingIds.length;
+
+                        if (remaining > 0) {
+                            selectionInfo.innerText = `Please select ${remaining} more lesson time(s).`;
+                            addToCartButton.style.opacity = "0.5";
+                            addToCartButton.style.pointerEvents = "none";
+                            addToCartButton.classList.add("disabled");
+                        } else {
+                            selectionInfo.innerText = `You selected all ${sessionCount} lesson time(s).`;
+                            addToCartButton.style.opacity = "1";
+                            addToCartButton.style.pointerEvents = "auto";
+                            addToCartButton.classList.remove("disabled");
+                        }
+                    }
+
+                    const calendarEl = document.getElementById("lesson-program-calendar");
+
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: "dayGridMonth",
+                        headerToolbar: {
+                            left: "prev,next today",
+                            center: "title",
+                            right: "dayGridMonth,timeGridWeek"
+                        },
+                        validRange: {
+                            start: new Date().toISOString().split("T")[0]
+                        },
+                        events: function (fetchInfo, successCallback, failureCallback) {
+                            fetch(`/lesson_program/available_dates?program_id=${programId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const events = [];
+
+                                    for (const date in data) {
+                                        events.push({
+                                            title: "",
+                                            start: date,
+                                            allDay: true,
+                                            display: "background",
+                                            className: "fc-available-date"
+                                        });
+                                    }
+
+                                    successCallback(events);
+                                })
+                                .catch(error => {
+                                    console.error("Error fetching calendar data:", error);
+                                    failureCallback(error);
+                                });
+                        },
+                        dateClick: function (info) {
+                            fetch(`/lesson_program/available_times?program_id=${programId}&amp;date=${info.dateStr}`)
+                                .then(response =&gt; response.json())
+                                .then(times =&gt; {
+                                    const container = document.getElementById("available-times");
+                                    container.innerHTML = "";
+
+                                    if (!times.length) {
+                                        container.innerHTML = "<p>No available times for this date.</p>";
+                                        return;
+                                    }
+
+                                    times.forEach(slot =&gt; {
+                                        const btn = document.createElement("button");
+                                        btn.type = "button";
+                                        btn.innerText = slot.time;
+                                        btn.className = "btn btn-outline-primary m-1";
+                                        btn.dataset.bookingId = slot.booking_id;
+
+                                        if (selectedBookingIds.includes(slot.booking_id)) {
+                                            btn.classList.add("selected-slot");
+                                        }
+
+                                        btn.addEventListener("click", function () {
+                                            const bookingId = parseInt(this.dataset.bookingId, 10);
+
+                                            if (selectedBookingIds.includes(bookingId)) {
+                                                selectedBookingIds = selectedBookingIds.filter(id =&gt; id !== bookingId);
+                                                this.classList.remove("selected-slot");
+                                            } else {
+                                                if (selectedBookingIds.length &gt;= sessionCount) {
+                                                    showMessage(`You can only select ${sessionCount} lesson time(s).`, "warning");
+
+                                                    return;
+                                                }
+
+                                                selectedBookingIds.push(bookingId);
+                                                this.classList.add("selected-slot");
+                                            }
+
+                                            refreshButtonState();
+                                        });
+
+                                        container.appendChild(btn);
+                                    });
+                                });
+                        }
+                    });
+
+                    calendar.render();
+                    refreshButtonState();
+
+                    addToCartButton.addEventListener("click", function (event) {
+                        event.preventDefault();
+
+                        if (selectedBookingIds.length !== sessionCount) {
+                            showMessage(`Please select exactly ${sessionCount} lesson time(s).`, "warning");
+
+                            return;
+                        }
+
+                        addToCartButton.style.opacity = "0.5";
+                        addToCartButton.style.pointerEvents = "none";
+                        addToCartButton.classList.add("disabled");
+
+                        const formData = new FormData();
+                        formData.append("program_id", programId);
+                        formData.append("selected_booking_ids", JSON.stringify(selectedBookingIds));
+
+                        fetch("/custom/update_lesson_program_order_line", {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success &amp;&amp; data.redirect) {
+                                window.location.href = data.redirect;
+                            } else {
+                                showMessage(data.error || "Could not add lesson program to cart.", "danger");
+
+                                refreshButtonState();
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            showMessage("An unexpected error occurred. Please try again.", "danger");
+
+                            refreshButtonState();
+                        });
+                    });
+                });
+            </script>
+
+            <style>
+                .selected-slot {
+                    background-color: #6656A5 !important;
+                    color: white !important;
+                    border-color: #6656A5 !important;
+                }
+
+                .fc-available-date {
+                    background-color: rgba(102, 86, 165, 0.25) !important;
+                }
+            </style>
+
+        </t>
+    </template>
+
+</odoo>

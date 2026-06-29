@@ -15,3 +15,6 @@ from . import product_product
 # samiha
 from . import product_template
 from . import teacher_video
+
+from . import voca_lesson_program
+from . import lesson_booking

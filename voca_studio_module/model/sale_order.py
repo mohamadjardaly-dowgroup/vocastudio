@@ -42,8 +42,23 @@ class SaleOrder(models.Model):
 
             for line in relevant_lines:
                 # 1) Update bookings, if any
+                # if line.booking_ids:
+                #     line.booking_ids.write({'status': 'booked', 'lesson_state': 'upcoming'})
                 if line.booking_ids:
-                    line.booking_ids.write({'status': 'booked', 'lesson_state': 'upcoming'})
+                    booking_vals = {
+                        'status': 'booked',
+                        'lesson_state': 'upcoming',
+                    }
+
+                    if line.lesson_program_id:
+                        booking_vals.update({
+                            'booking_type': 'lesson_program',
+                            'lesson_program_id': line.lesson_program_id.id,
+                        })
+
+                    line.booking_ids.write(booking_vals)
+                    
+    
                 if line.booking_master_ids:
                     line.booking_master_ids.write({'status': 'booked'})
 
@@ -92,6 +107,12 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
+    
+    
+    lesson_program_id = fields.Many2one(
+        "voca.lesson.program",
+        string="Lesson Program",
+    )
 
     booking_ids = fields.One2many('voca.teacher.booking.lines', 'booking_order_id', string='Booking')
     booking_master_ids = fields.One2many('master.class.date', 'booking_order_id', string='Booking master')
@@ -107,10 +128,49 @@ class SaleOrderLine(models.Model):
 
     # Idempotency flag so teacher doesn’t get emailed twice for this line
     teacher_emailed = fields.Boolean(string="Teacher emailed", default=False)
+    
+    def _get_displayed_quantity(self):
+        """
+        Fallback needed because the website cart template calls this method.
+        Some Odoo setups/views expect it from website sale stock logic.
+        """
+        self.ensure_one()
+        return self.product_uom_qty
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id')
+    def _get_max_available_qty(self):
+        """
+        Fallback needed because the website cart template calls this method.
+        For service products, including lesson programs, stock should not limit quantity.
+        """
+        self.ensure_one()
+
+        if not self.product_id or self.product_id.type != 'product':
+            return 0
+
+        try:
+            return self.product_id.free_qty
+        except Exception:
+            return 0
+    
+    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id', 'lesson_program_id', 'converted_price')
     def _compute_price_unit(self):
         for line in self:
+
+            # Lesson Program:
+            # Example: total price = 600, sessions = 5
+            # sale qty = 5, unit price must be 120
+            if line.lesson_program_id:
+                session_count = line.lesson_program_id.session_count or line.product_uom_qty or 1.0
+                line.product_uom_qty = session_count
+
+                if line.converted_price:
+                    line.price_unit = line.converted_price / session_count
+                else:
+                    line.price_unit = line.lesson_program_id.price / session_count
+
+                continue
+
+            # Existing teacher package logic
             if line.package_id:
                 if line.converted_price:
                     line.product_uom_qty = line.package_id.quantity
@@ -118,17 +178,46 @@ class SaleOrderLine(models.Model):
                 else:
                     line.product_uom_qty = line.package_id.quantity
                     line.price_unit = line.package_id.price / line.product_uom_qty
+
+                continue
+
+            # Default Odoo sale price logic
+            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+                continue
+
+            if not line.product_uom or not line.product_id:
+                line.price_unit = 0.0
             else:
-                if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
-                    continue
-                if not line.product_uom or not line.product_id:
-                    line.price_unit = 0.0
-                else:
-                    line = line.with_company(line.company_id)
-                    price = line._get_display_price()
-                    line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
-                        price,
-                        line.currency_id or line.order_id.currency_id,
-                        product_taxes=line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company),
-                        fiscal_position=line.order_id.fiscal_position_id,
-                    )
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company),
+                    fiscal_position=line.order_id.fiscal_position_id,
+                )
+
+    # @api.depends('product_id', 'product_uom', 'product_uom_qty', 'package_id')
+    # def _compute_price_unit(self):
+    #     for line in self:
+    #         if line.package_id:
+    #             if line.converted_price:
+    #                 line.product_uom_qty = line.package_id.quantity
+    #                 line.price_unit = line.converted_price / line.product_uom_qty
+    #             else:
+    #                 line.product_uom_qty = line.package_id.quantity
+    #                 line.price_unit = line.package_id.price / line.product_uom_qty
+    #         else:
+    #             if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+    #                 continue
+    #             if not line.product_uom or not line.product_id:
+    #                 line.price_unit = 0.0
+    #             else:
+    #                 line = line.with_company(line.company_id)
+    #                 price = line._get_display_price()
+    #                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+    #                     price,
+    #                     line.currency_id or line.order_id.currency_id,
+    #                     product_taxes=line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company),
+    #                     fiscal_position=line.order_id.fiscal_position_id,
+    #                 )
