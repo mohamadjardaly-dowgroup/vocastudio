@@ -86,22 +86,26 @@
 
                     <!-- Left side: calendar always visible, available times hidden until date click -->
                     <div class="col-lg-7 mb-4">
-                        <div class="lesson-program-scheduler d-flex gap-3 align-items-start">
+                        <div class="row g-3 lesson-program-scheduler">
 
                             <!-- Calendar: always visible -->
-                            <div class="lesson-calendar-wrapper">
-                                <div id="lesson-program-calendar"></div>
+                            <div class="col-md-8">
+                                <div class="lesson-calendar-box">
+                                    <div id="lesson-program-calendar"></div>
+                                </div>
                             </div>
 
                             <!-- Available Times: hidden until date is selected -->
-                            <div id="available-times-panel" class="available-times-container d-none">
-                                <h4 class="mb-3">Available Times</h4>
+                            <div class="col-md-4">
+                                <div id="available-times-panel" class="available-times-container d-none">
+                                    <h4 class="mb-3">Available Times</h4>
 
-                                <div id="selected-date-label"
-                                     class="selected-date-label mb-3">
+                                    <div id="selected-date-label"
+                                         class="selected-date-label mb-3">
+                                    </div>
+
+                                    <div id="available-times" class="lesson-times-grid"></div>
                                 </div>
-
-                                <div id="available-times" class="lesson-times-grid"></div>
                             </div>
 
                         </div>
@@ -317,11 +321,10 @@
                         }
                     });
 
-                    calendar.render();
-
-                    setTimeout(() =&gt; {
+                    window.setTimeout(function () {
+                        calendar.render();
                         calendar.updateSize();
-                    }, 100);
+                    }, 300);
 
                     refreshButtonState();
 
@@ -368,18 +371,19 @@
                     width: 100%;
                 }
 
-                .lesson-calendar-wrapper {
-                    flex: 1 1 auto;
-                    min-width: 0;
+                .lesson-calendar-box {
+                    width: 100%;
+                    min-height: 620px;
+                    background: #ffffff;
                 }
 
                 #lesson-program-calendar {
                     width: 100%;
                     min-height: 620px;
+                    display: block;
                 }
 
                 .available-times-container {
-                    flex: 0 0 300px;
                     background: #ffffff;
                     border: 1px solid #e5e5e5;
                     border-radius: 12px;
@@ -446,19 +450,9 @@
                     justify-content: center;
                 }
 
-                @media (max-width: 991.98px) {
-                    .lesson-program-scheduler {
-                        flex-direction: column;
-                    }
-
+                @media (max-width: 767.98px) {
                     .available-times-container {
-                        flex: 0 0 auto;
-                        width: 100%;
                         max-height: none;
-                    }
-
-                    .lesson-calendar-wrapper {
-                        width: 100%;
                     }
                 }
 
