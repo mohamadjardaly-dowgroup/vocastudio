@@ -172,38 +172,48 @@
                 </div>
             </div>
 
-            <script>
+            <script type="text/javascript">
+                window.addEventListener("load", function () {
+                    setTimeout(function () {
+                        initLessonProgramCalendar();
+                    }, 500);
+                });
+            
                 function initLessonProgramCalendar() {
-                    const calendarEl = document.getElementById("lesson-program-calendar");
+                    var calendarEl = document.getElementById("lesson-program-calendar");
             
                     if (!calendarEl) {
-                        console.error("Calendar container not found: #lesson-program-calendar");
+                        console.error("Calendar container not found");
                         return;
                     }
             
                     if (typeof FullCalendar === "undefined") {
-                        console.error("FullCalendar is not loaded yet");
-                        calendarEl.innerHTML = "<div class='alert alert-danger'>Calendar could not load. Please refresh the page.</div>";
+                        console.error("FullCalendar is not loaded");
+                        calendarEl.innerHTML = "<div style='padding:15px;border:1px solid #dc3545;color:#dc3545;border-radius:8px;'>Calendar could not load. Please refresh the page.</div>";
                         return;
                     }
             
-                    const programId = document.getElementById("lesson_program_id").value;
-                    const sessionCount = parseInt(document.getElementById("session_count").value, 10);
-                    const addToCartButton = document.getElementById("lesson-program-add-to-cart");
-                    const selectedInput = document.getElementById("selected_booking_ids");
-                    const selectionInfo = document.getElementById("selection-info");
-                    const selectedDateLabel = document.getElementById("selected-date-label");
-                    const availableTimesPanel = document.getElementById("available-times-panel");
-                    const messageBox = document.getElementById("lesson-program-message");
+                    var programId = document.getElementById("lesson_program_id").value;
+                    var sessionCount = parseInt(document.getElementById("session_count").value, 10);
+                    var addToCartButton = document.getElementById("lesson-program-add-to-cart");
+                    var selectedInput = document.getElementById("selected_booking_ids");
+                    var selectionInfo = document.getElementById("selection-info");
+                    var selectedDateLabel = document.getElementById("selected-date-label");
+                    var availableTimesPanel = document.getElementById("available-times-panel");
+                    var messageBox = document.getElementById("lesson-program-message");
             
-                    let selectedBookingIds = [];
+                    var selectedBookingIds = [];
             
-                    function showMessage(message, type = "warning") {
-                        messageBox.className = `alert alert-${type}`;
+                    function showMessage(message, type) {
+                        if (!type) {
+                            type = "warning";
+                        }
+            
+                        messageBox.className = "alert alert-" + type;
                         messageBox.innerText = message;
                         messageBox.classList.remove("d-none");
             
-                        setTimeout(() =&gt; {
+                        setTimeout(function () {
                             messageBox.classList.add("d-none");
                         }, 4000);
                     }
@@ -211,22 +221,22 @@
                     function refreshButtonState() {
                         selectedInput.value = JSON.stringify(selectedBookingIds);
             
-                        const remaining = sessionCount - selectedBookingIds.length;
+                        var remaining = sessionCount - selectedBookingIds.length;
             
                         if (remaining &gt; 0) {
-                            selectionInfo.innerText = `Please select ${remaining} more lesson time(s).`;
+                            selectionInfo.innerText = "Please select " + remaining + " more lesson time(s).";
                             addToCartButton.style.opacity = "0.5";
                             addToCartButton.style.pointerEvents = "none";
                             addToCartButton.classList.add("disabled");
                         } else {
-                            selectionInfo.innerText = `You selected all ${sessionCount} lesson time(s).`;
+                            selectionInfo.innerText = "You selected all " + sessionCount + " lesson time(s).";
                             addToCartButton.style.opacity = "1";
                             addToCartButton.style.pointerEvents = "auto";
                             addToCartButton.classList.remove("disabled");
                         }
                     }
             
-                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: "dayGridMonth",
                         height: "auto",
                         headerToolbar: {
@@ -238,12 +248,14 @@
                             start: new Date().toISOString().split("T")[0]
                         },
                         events: function (fetchInfo, successCallback, failureCallback) {
-                            fetch(`/lesson_program/available_dates?program_id=${programId}`)
-                                .then(response =&gt; response.json())
-                                .then(data =&gt; {
-                                    const events = [];
+                            fetch("/lesson_program/available_dates?program_id=" + programId)
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (data) {
+                                    var events = [];
             
-                                    for (const date in data) {
+                                    for (var date in data) {
                                         events.push({
                                             title: "",
                                             start: date,
@@ -255,19 +267,19 @@
             
                                     successCallback(events);
                                 })
-                                .catch(error =&gt; {
+                                .catch(function (error) {
                                     console.error("Error fetching calendar data:", error);
                                     failureCallback(error);
                                 });
                         },
                         dateClick: function (info) {
-                            document.querySelectorAll(".fc-daygrid-day.selected-calendar-date").forEach(day =&gt; {
+                            document.querySelectorAll(".fc-daygrid-day.selected-calendar-date").forEach(function (day) {
                                 day.classList.remove("selected-calendar-date");
                             });
             
                             info.dayEl.classList.add("selected-calendar-date");
             
-                            const formattedDate = info.date.toLocaleDateString(undefined, {
+                            var formattedDate = info.date.toLocaleDateString(undefined, {
                                 weekday: "long",
                                 year: "numeric",
                                 month: "long",
@@ -277,10 +289,12 @@
                             selectedDateLabel.innerText = formattedDate;
                             availableTimesPanel.classList.remove("d-none");
             
-                            fetch(`/lesson_program/available_times?program_id=${programId}&amp;date=${info.dateStr}`)
-                                .then(response =&gt; response.json())
-                                .then(times =&gt; {
-                                    const container = document.getElementById("available-times");
+                            fetch("/lesson_program/available_times?program_id=" + programId + "&amp;date=" + info.dateStr)
+                                .then(function (response) {
+                                    return response.json();
+                                })
+                                .then(function (times) {
+                                    var container = document.getElementById("available-times");
                                     container.innerHTML = "";
             
                                     if (!times.length) {
@@ -291,26 +305,27 @@
             
                                     container.classList.add("lesson-times-grid");
             
-                                    times.forEach(slot =&gt; {
-                                        const btn = document.createElement("button");
+                                    times.forEach(function (slot) {
+                                        var btn = document.createElement("button");
                                         btn.type = "button";
                                         btn.innerText = slot.time;
                                         btn.className = "lesson-time-pill btn btn-outline-primary";
                                         btn.dataset.bookingId = slot.booking_id;
             
-                                        if (selectedBookingIds.includes(slot.booking_id)) {
+                                        if (selectedBookingIds.indexOf(slot.booking_id) !== -1) {
                                             btn.classList.add("selected-slot");
                                         }
             
                                         btn.addEventListener("click", function () {
-                                            const bookingId = parseInt(this.dataset.bookingId, 10);
+                                            var bookingId = parseInt(this.dataset.bookingId, 10);
+                                            var existingIndex = selectedBookingIds.indexOf(bookingId);
             
-                                            if (selectedBookingIds.includes(bookingId)) {
-                                                selectedBookingIds = selectedBookingIds.filter(id =&gt; id !== bookingId);
+                                            if (existingIndex !== -1) {
+                                                selectedBookingIds.splice(existingIndex, 1);
                                                 this.classList.remove("selected-slot");
                                             } else {
                                                 if (selectedBookingIds.length &gt;= sessionCount) {
-                                                    showMessage(`You can only select ${sessionCount} lesson time(s).`, "warning");
+                                                    showMessage("You can only select " + sessionCount + " lesson time(s).", "warning");
                                                     return;
                                                 }
             
@@ -324,9 +339,9 @@
                                         container.appendChild(btn);
                                     });
                                 })
-                                .catch(error =&gt; {
+                                .catch(function (error) {
                                     console.error("Error fetching available times:", error);
-                                    const container = document.getElementById("available-times");
+                                    var container = document.getElementById("available-times");
                                     container.classList.remove("lesson-times-grid");
                                     container.innerHTML = "<p class='text-danger mb-0'>Could not load available times.</p>";
                                 });
@@ -335,7 +350,7 @@
             
                     calendar.render();
             
-                    setTimeout(() =&gt; {
+                    setTimeout(function () {
                         calendar.updateSize();
                     }, 300);
             
@@ -345,7 +360,7 @@
                         event.preventDefault();
             
                         if (selectedBookingIds.length !== sessionCount) {
-                            showMessage(`Please select exactly ${sessionCount} lesson time(s).`, "warning");
+                            showMessage("Please select exactly " + sessionCount + " lesson time(s).", "warning");
                             return;
                         }
             
@@ -353,7 +368,7 @@
                         addToCartButton.style.pointerEvents = "none";
                         addToCartButton.classList.add("disabled");
             
-                        const formData = new FormData();
+                        var formData = new FormData();
                         formData.append("program_id", programId);
                         formData.append("selected_booking_ids", JSON.stringify(selectedBookingIds));
             
@@ -361,8 +376,10 @@
                             method: "POST",
                             body: formData
                         })
-                        .then(response =&gt; response.json())
-                        .then(data =&gt; {
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
                             if (data.success &amp;&amp; data.redirect) {
                                 window.location.href = data.redirect;
                             } else {
@@ -370,19 +387,14 @@
                                 refreshButtonState();
                             }
                         })
-                        .catch(error =&gt; {
+                        .catch(function (error) {
                             console.error(error);
                             showMessage("An unexpected error occurred. Please try again.", "danger");
                             refreshButtonState();
                         });
                     });
                 }
-            
-                window.addEventListener("load", function () {
-                    setTimeout(initLessonProgramCalendar, 300);
-                });
             </script>
-
             <style>
                 .lesson-program-scheduler {
                     width: 100%;
