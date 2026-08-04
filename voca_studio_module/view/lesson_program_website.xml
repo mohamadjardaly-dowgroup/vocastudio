@@ -84,25 +84,24 @@
 
                 <div class="row">
 
-                    <!-- Left side: calendar + available times -->
+                    <!-- Left side: calendar always visible, available times hidden until date click -->
                     <div class="col-lg-7 mb-4">
-                        <div class="lesson-program-scheduler row g-3">
+                        <div class="lesson-program-scheduler d-flex gap-3 align-items-start">
 
-                            <div class="col-md-7">
+                            <!-- Calendar: always visible -->
+                            <div class="lesson-calendar-wrapper">
                                 <div id="lesson-program-calendar"></div>
                             </div>
 
-                            <div class="col-md-5">
-                                <div id="available-times-panel" class="available-times-container d-none">
-                                    <h4 class="mb-3">Available Times</h4>
+                            <!-- Available Times: hidden until date is selected -->
+                            <div id="available-times-panel" class="available-times-container d-none">
+                                <h4 class="mb-3">Available Times</h4>
 
-                                    <div id="selected-date-label"
-                                         class="selected-date-label mb-3">
-                                    </div>
-
-                                    <div id="available-times" class="lesson-times-grid">
-                                    </div>
+                                <div id="selected-date-label"
+                                     class="selected-date-label mb-3">
                                 </div>
+
+                                <div id="available-times" class="lesson-times-grid"></div>
                             </div>
 
                         </div>
@@ -319,6 +318,11 @@
                     });
 
                     calendar.render();
+
+                    setTimeout(() =&gt; {
+                        calendar.updateSize();
+                    }, 100);
+
                     refreshButtonState();
 
                     addToCartButton.addEventListener("click", function (event) {
@@ -361,15 +365,28 @@
 
             <style>
                 .lesson-program-scheduler {
-                    align-items: flex-start;
+                    width: 100%;
+                }
+
+                .lesson-calendar-wrapper {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                }
+
+                #lesson-program-calendar {
+                    width: 100%;
+                    min-height: 620px;
                 }
 
                 .available-times-container {
+                    flex: 0 0 300px;
                     background: #ffffff;
                     border: 1px solid #e5e5e5;
                     border-radius: 12px;
                     padding: 16px;
                     min-height: 280px;
+                    max-height: 620px;
+                    overflow-y: auto;
                     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
                 }
 
@@ -429,13 +446,19 @@
                     justify-content: center;
                 }
 
-                @media (max-width: 767.98px) {
-                    .lesson-times-grid {
-                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                @media (max-width: 991.98px) {
+                    .lesson-program-scheduler {
+                        flex-direction: column;
                     }
 
                     .available-times-container {
-                        margin-top: 12px;
+                        flex: 0 0 auto;
+                        width: 100%;
+                        max-height: none;
+                    }
+
+                    .lesson-calendar-wrapper {
+                        width: 100%;
                     }
                 }
 
