@@ -83,73 +83,89 @@
                 </div>
 
                 <div class="row">
-
-                    <div class="col-lg-6 mb-4">
-                        <div id="lesson-program-calendar"></div>
-
-                        <div class="available-times-container mt-4">
-                            <h4>Available Times</h4>
-                            <div id="available-times"></div>
+                    <!-- Left side: calendar + times beside each other -->
+                    <div class="col-lg-7 mb-4">
+                        <div class="lesson-program-scheduler row g-3">
+                
+                            <div class="col-md-8">
+                                <div id="lesson-program-calendar"></div>
+                            </div>
+                
+                            <div class="col-md-4">
+                                <div class="available-times-container">
+                                    <h4 class="mb-3">Available Times</h4>
+                
+                                    <div id="selected-date-label"
+                                         class="selected-date-label mb-3 d-none">
+                                    </div>
+                
+                                    <div id="available-times">
+                                        <p class="text-muted">Select a date to see available times.</p>
+                                    </div>
+                                </div>
+                            </div>
+                
                         </div>
                     </div>
-
-                    <div class="col-lg-6 mb-4">
-
+                
+                    <!-- Right side: lesson details -->
+                    <div class="col-lg-5 mb-4">
+                
                         <t t-if="program.image_1920">
                             <img t-attf-src="data:image/*;base64,{{program.image_1920}}"
                                  class="img-fluid rounded mb-3"
                                  alt="Lesson Cover"/>
                         </t>
-
+                
                         <h1>
                             <t t-esc="program.name"/>
                         </h1>
-
+                
                         <p>
                             <strong>Teacher:</strong>
                             <t t-esc="teacher.name"/>
                         </p>
-
+                
                         <p>
                             <strong>Number of Lessons:</strong>
                             <t t-esc="session_count"/>
                         </p>
-
+                
                         <p>
                             <strong>Price:</strong>
                             <t t-esc="format_amount(converted_price, currency_id)"/>
                         </p>
-
+                
                         <div t-if="program.description_html" class="mb-3">
                             <t t-raw="program.description_html"/>
                         </div>
-
+                
                         <div t-elif="program.description" class="mb-3">
                             <p t-esc="program.description"/>
                         </div>
-
+                
                         <input type="hidden" id="lesson_program_id" t-att-value="program.id"/>
                         <input type="hidden" id="session_count" t-att-value="session_count"/>
                         <input type="hidden" id="selected_booking_ids"/>
-
+                
                         <h5 id="selection-info" class="my-3" style="color:#6656A5;">
                             Please select <t t-esc="session_count"/> lesson time(s).
                         </h5>
-
+                
                         <div id="lesson-program-message"
-                            class="alert alert-warning d-none"
-                            role="alert">
+                             class="alert alert-warning d-none"
+                             role="alert">
                         </div>
-
+                
                         <button id="lesson-program-add-to-cart"
                                 class="btn btn-primary disabled"
                                 style="opacity: 0.5; pointer-events: none;">
                             <i class="fa fa-calendar me-2"></i>
                             Book Now
                         </button>
-
+                
                     </div>
-
+                
                 </div>
             </div>
 
