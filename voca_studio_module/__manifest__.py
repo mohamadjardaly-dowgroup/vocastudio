@@ -30,9 +30,7 @@
         'view/my_upcoming_lessons_template.xml',
         'view/my_completed_lessons_template.xml',
         'view/upcoming_master_classes.xml',
-        'view/student_dash.xml',
         'view/product.xml',
-        'view/teacher_dashboard.xml',
         'view/teacher_upcoming_lessons.xml',
         'view/teacher_completed_lessons.xml',
         'view/teacher_masterclasses.xml',
@@ -42,6 +40,9 @@
         'view/lesson_program_website.xml',
         'view/student_lesson_programs.xml',
         'view/teacher_lesson_programs.xml',
+
+        'view/student_dash.xml',
+        'view/teacher_dashboard.xml',
 
     ],
     'assets': {
