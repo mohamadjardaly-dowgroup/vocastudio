@@ -1,6 +1,10 @@
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ==========================================================
+         LESSON PROGRAM LIST
+    =========================================================== -->
     <template id="lesson_program_list_template" name="Lesson Programs">
         <t t-call="portal.portal_layout">
             <div class="container py-4">
@@ -9,8 +13,10 @@
 
                 <t t-if="programs">
                     <div class="master-class-grid">
+
                         <t t-foreach="programs" t-as="program">
                             <div class="teacher-details">
+
                                 <img t-if="program.image_1920"
                                      class="teacher-image teacher-child-image"
                                      t-attf-src="data:image/*;base64,{{program.image_1920}}"
@@ -22,6 +28,7 @@
                                      alt="Teacher Image"/>
 
                                 <div class="content-box">
+
                                     <h4 class="profile-header">
                                         <t t-esc="program.name"/>
                                     </h4>
@@ -41,7 +48,8 @@
                                         <t t-esc="format_amount(program.price, program.currency_id)"/>
                                     </p>
 
-                                    <p class="profile-text mb-2" t-if="program.description">
+                                    <p class="profile-text mb-2"
+                                       t-if="program.description">
                                         <t t-esc="program.description"/>
                                     </p>
 
@@ -49,9 +57,11 @@
                                        t-att-href="'/lesson-program/%s' % program.id">
                                         Book Now
                                     </a>
+
                                 </div>
                             </div>
                         </t>
+
                     </div>
                 </t>
 
@@ -66,57 +76,94 @@
     </template>
 
 
-    <template id="lesson_program_booking_template" name="Lesson Program Booking">
+    <!-- ==========================================================
+         LESSON PROGRAM BOOKING PAGE
+    =========================================================== -->
+    <template id="lesson_program_booking_template"
+              name="Lesson Program Booking">
+
         <t t-call="portal.portal_layout">
 
-            <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet"/>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css"/>
+
+            <script type="text/javascript"
+                    src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js">
+            </script>
 
             <div class="container py-4 lesson-program-booking-page">
 
+                <!-- Breadcrumb -->
                 <div class="breadcrumb mb-4">
                     <a href="/">Home</a>
                     <span class="mx-2">/</span>
+
                     <a href="/lessons">Lessons</a>
                     <span class="mx-2">/</span>
+
                     <span t-esc="program.name"/>
                 </div>
 
                 <div class="row">
 
-                    <!-- Left side: calendar always visible, available times hidden until date click -->
+                    <!-- ==================================================
+                         LEFT: CALENDAR AND AVAILABLE TIMES
+                    =================================================== -->
                     <div class="col-lg-7 mb-4">
+
                         <div class="row g-3 lesson-program-scheduler">
 
-                            <!-- Calendar: always visible -->
-                            <div class="col-md-8">
+                            <!-- Calendar starts at full width -->
+                            <div id="lesson-calendar-column"
+                                 class="col-12">
+
                                 <div class="lesson-calendar-box">
+
                                     <div id="lesson-program-calendar"></div>
+
+                                    <div id="lesson-calendar-loading"
+                                         class="lesson-calendar-loading">
+                                        Loading calendar...
+                                    </div>
+
                                 </div>
                             </div>
 
-                            <!-- Available Times: hidden until date is selected -->
-                            <div class="col-md-4">
-                                <div id="available-times-panel" class="available-times-container d-none">
-                                    <h4 class="mb-3">Available Times</h4>
+                            <!-- Hidden until the user selects a date -->
+                            <div id="lesson-times-column"
+                                 class="col-md-4"
+                                 style="display:none;">
+
+                                <div id="available-times-panel"
+                                     class="available-times-container">
+
+                                    <h4 class="mb-3">
+                                        Available Times
+                                    </h4>
 
                                     <div id="selected-date-label"
                                          class="selected-date-label mb-3">
                                     </div>
 
-                                    <div id="available-times" class="lesson-times-grid"></div>
+                                    <div id="available-times"
+                                         class="lesson-times-grid">
+                                    </div>
+
                                 </div>
                             </div>
 
                         </div>
                     </div>
 
-                    <!-- Right side: lesson details -->
+
+                    <!-- ==================================================
+                         RIGHT: PROGRAM INFORMATION
+                    =================================================== -->
                     <div class="col-lg-5 mb-4">
 
                         <t t-if="program.image_1920">
                             <img t-attf-src="data:image/*;base64,{{program.image_1920}}"
-                                 class="img-fluid rounded mb-3"
+                                 class="img-fluid rounded mb-3 lesson-program-cover"
                                  alt="Lesson Cover"/>
                         </t>
 
@@ -139,20 +186,32 @@
                             <t t-esc="format_amount(converted_price, currency_id)"/>
                         </p>
 
-                        <div t-if="program.description_html" class="mb-3">
+                        <div t-if="program.description_html"
+                             class="mb-3">
                             <t t-raw="program.description_html"/>
                         </div>
 
-                        <div t-elif="program.description" class="mb-3">
+                        <div t-elif="program.description"
+                             class="mb-3">
                             <p t-esc="program.description"/>
                         </div>
 
-                        <input type="hidden" id="lesson_program_id" t-att-value="program.id"/>
-                        <input type="hidden" id="session_count" t-att-value="session_count"/>
-                        <input type="hidden" id="selected_booking_ids"/>
+                        <input type="hidden"
+                               id="lesson_program_id"
+                               t-att-value="program.id"/>
 
-                        <h5 id="selection-info" class="my-3" style="color:#6656A5;">
-                            Please select <t t-esc="session_count"/> lesson time(s).
+                        <input type="hidden"
+                               id="session_count"
+                               t-att-value="session_count"/>
+
+                        <input type="hidden"
+                               id="selected_booking_ids"/>
+
+                        <h5 id="selection-info"
+                            class="my-3 lesson-selection-info">
+                            Please select
+                            <t t-esc="session_count"/>
+                            lesson time(s).
                         </h5>
 
                         <div id="lesson-program-message"
@@ -161,8 +220,10 @@
                         </div>
 
                         <button id="lesson-program-add-to-cart"
+                                type="button"
                                 class="btn btn-primary disabled"
-                                style="opacity: 0.5; pointer-events: none;">
+                                disabled="disabled">
+
                             <i class="fa fa-calendar me-2"></i>
                             Book Now
                         </button>
@@ -172,262 +233,663 @@
                 </div>
             </div>
 
+
+            <!-- ==========================================================
+                 JAVASCRIPT
+            =========================================================== -->
             <script type="text/javascript">
-                window.addEventListener("load", function () {
-                    setTimeout(function () {
-                        initLessonProgramCalendar();
-                    }, 500);
-                });
-            
-                function initLessonProgramCalendar() {
-                    var calendarEl = document.getElementById("lesson-program-calendar");
-            
-                    if (!calendarEl) {
-                        console.error("Calendar container not found");
-                        return;
-                    }
-            
-                    if (typeof FullCalendar === "undefined") {
-                        console.error("FullCalendar is not loaded");
-                        calendarEl.innerHTML = "<div style='padding:15px;border:1px solid #dc3545;color:#dc3545;border-radius:8px;'>Calendar could not load. Please refresh the page.</div>";
-                        return;
-                    }
-            
-                    var programId = document.getElementById("lesson_program_id").value;
-                    var sessionCount = parseInt(document.getElementById("session_count").value, 10);
-                    var addToCartButton = document.getElementById("lesson-program-add-to-cart");
-                    var selectedInput = document.getElementById("selected_booking_ids");
-                    var selectionInfo = document.getElementById("selection-info");
-                    var selectedDateLabel = document.getElementById("selected-date-label");
-                    var availableTimesPanel = document.getElementById("available-times-panel");
-                    var messageBox = document.getElementById("lesson-program-message");
-            
-                    var selectedBookingIds = [];
-            
-                    function showMessage(message, type) {
-                        if (!type) {
-                            type = "warning";
-                        }
-            
-                        messageBox.className = "alert alert-" + type;
-                        messageBox.innerText = message;
-                        messageBox.classList.remove("d-none");
-            
-                        setTimeout(function () {
-                            messageBox.classList.add("d-none");
-                        }, 4000);
-                    }
-            
-                    function refreshButtonState() {
-                        selectedInput.value = JSON.stringify(selectedBookingIds);
-            
-                        var remaining = sessionCount - selectedBookingIds.length;
-            
-                        if (remaining &gt; 0) {
-                            selectionInfo.innerText = "Please select " + remaining + " more lesson time(s).";
-                            addToCartButton.style.opacity = "0.5";
-                            addToCartButton.style.pointerEvents = "none";
-                            addToCartButton.classList.add("disabled");
-                        } else {
-                            selectionInfo.innerText = "You selected all " + sessionCount + " lesson time(s).";
-                            addToCartButton.style.opacity = "1";
-                            addToCartButton.style.pointerEvents = "auto";
-                            addToCartButton.classList.remove("disabled");
+                (function () {
+                    "use strict";
+
+                    function clearElement(element) {
+                        while (element.firstChild) {
+                            element.removeChild(element.firstChild);
                         }
                     }
-            
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: "dayGridMonth",
-                        height: "auto",
-                        headerToolbar: {
-                            left: "prev,next today",
-                            center: "title",
-                            right: "dayGridMonth,timeGridWeek"
-                        },
-                        validRange: {
-                            start: new Date().toISOString().split("T")[0]
-                        },
-                        events: function (fetchInfo, successCallback, failureCallback) {
-                            fetch("/lesson_program/available_dates?program_id=" + programId)
-                                .then(function (response) {
-                                    return response.json();
-                                })
-                                .then(function (data) {
-                                    var events = [];
-            
-                                    for (var date in data) {
-                                        events.push({
-                                            title: "",
-                                            start: date,
-                                            allDay: true,
-                                            display: "background",
-                                            className: "fc-available-date"
-                                        });
-                                    }
-            
-                                    successCallback(events);
-                                })
-                                .catch(function (error) {
-                                    console.error("Error fetching calendar data:", error);
-                                    failureCallback(error);
-                                });
-                        },
-                        dateClick: function (info) {
-                            document.querySelectorAll(".fc-daygrid-day.selected-calendar-date").forEach(function (day) {
-                                day.classList.remove("selected-calendar-date");
-                            });
-            
-                            info.dayEl.classList.add("selected-calendar-date");
-            
-                            var formattedDate = info.date.toLocaleDateString(undefined, {
-                                weekday: "long",
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric"
-                            });
-            
-                            selectedDateLabel.innerText = formattedDate;
-                            availableTimesPanel.classList.remove("d-none");
-            
-                            fetch("/lesson_program/available_times?program_id=" + programId + "&amp;date=" + info.dateStr)
-                                .then(function (response) {
-                                    return response.json();
-                                })
-                                .then(function (times) {
-                                    var container = document.getElementById("available-times");
-                                    container.innerHTML = "";
-            
-                                    if (!times.length) {
-                                        container.classList.remove("lesson-times-grid");
-                                        container.innerHTML = "<p class='text-muted mb-0'>No available times for this date.</p>";
-                                        return;
-                                    }
-            
-                                    container.classList.add("lesson-times-grid");
-            
-                                    times.forEach(function (slot) {
-                                        var btn = document.createElement("button");
-                                        btn.type = "button";
-                                        btn.innerText = slot.time;
-                                        btn.className = "lesson-time-pill btn btn-outline-primary";
-                                        btn.dataset.bookingId = slot.booking_id;
-            
-                                        if (selectedBookingIds.indexOf(slot.booking_id) !== -1) {
-                                            btn.classList.add("selected-slot");
-                                        }
-            
-                                        btn.addEventListener("click", function () {
-                                            var bookingId = parseInt(this.dataset.bookingId, 10);
-                                            var existingIndex = selectedBookingIds.indexOf(bookingId);
-            
-                                            if (existingIndex !== -1) {
-                                                selectedBookingIds.splice(existingIndex, 1);
-                                                this.classList.remove("selected-slot");
-                                            } else {
-                                                if (selectedBookingIds.length &gt;= sessionCount) {
-                                                    showMessage("You can only select " + sessionCount + " lesson time(s).", "warning");
-                                                    return;
-                                                }
-            
-                                                selectedBookingIds.push(bookingId);
-                                                this.classList.add("selected-slot");
-                                            }
-            
-                                            refreshButtonState();
-                                        });
-            
-                                        container.appendChild(btn);
-                                    });
-                                })
-                                .catch(function (error) {
-                                    console.error("Error fetching available times:", error);
-                                    var container = document.getElementById("available-times");
-                                    container.classList.remove("lesson-times-grid");
-                                    container.innerHTML = "<p class='text-danger mb-0'>Could not load available times.</p>";
-                                });
-                        }
-                    });
-            
-                    calendar.render();
-            
-                    setTimeout(function () {
-                        calendar.updateSize();
-                    }, 300);
-            
-                    refreshButtonState();
-            
-                    addToCartButton.addEventListener("click", function (event) {
-                        event.preventDefault();
-            
-                        if (selectedBookingIds.length !== sessionCount) {
-                            showMessage("Please select exactly " + sessionCount + " lesson time(s).", "warning");
+
+                    function createTextMessage(container, message, className) {
+                        clearElement(container);
+
+                        var element = document.createElement("p");
+                        element.textContent = message;
+                        element.className = className || "";
+                        container.appendChild(element);
+                    }
+
+                    function showCalendarError(calendarElement, message) {
+                        clearElement(calendarElement);
+
+                        var errorBox = document.createElement("div");
+                        errorBox.textContent = message;
+                        errorBox.className = "lesson-calendar-error";
+
+                        calendarElement.appendChild(errorBox);
+                    }
+
+                    function waitForFullCalendar(attempt) {
+                        if (typeof FullCalendar !== "undefined") {
+                            initLessonProgramBooking();
                             return;
                         }
-            
-                        addToCartButton.style.opacity = "0.5";
-                        addToCartButton.style.pointerEvents = "none";
-                        addToCartButton.classList.add("disabled");
-            
-                        var formData = new FormData();
-                        formData.append("program_id", programId);
-                        formData.append("selected_booking_ids", JSON.stringify(selectedBookingIds));
-            
-                        fetch("/custom/update_lesson_program_order_line", {
-                            method: "POST",
-                            body: formData
-                        })
-                        .then(function (response) {
-                            return response.json();
-                        })
-                        .then(function (data) {
-                            if (data.success &amp;&amp; data.redirect) {
-                                window.location.href = data.redirect;
-                            } else {
-                                showMessage(data.error || "Could not add lesson program to cart.", "danger");
-                                refreshButtonState();
+
+                        if (attempt &lt; 30) {
+                            window.setTimeout(function () {
+                                waitForFullCalendar(attempt + 1);
+                            }, 200);
+                            return;
+                        }
+
+                        var calendarElement =
+                            document.getElementById("lesson-program-calendar");
+
+                        var loadingElement =
+                            document.getElementById("lesson-calendar-loading");
+
+                        if (loadingElement) {
+                            loadingElement.style.display = "none";
+                        }
+
+                        if (calendarElement) {
+                            showCalendarError(
+                                calendarElement,
+                                "Calendar could not load. Please refresh the page."
+                            );
+                        }
+
+                        console.error("FullCalendar did not load.");
+                    }
+
+                    function initLessonProgramBooking() {
+                        var calendarElement =
+                            document.getElementById("lesson-program-calendar");
+
+                        var loadingElement =
+                            document.getElementById("lesson-calendar-loading");
+
+                        var programInput =
+                            document.getElementById("lesson_program_id");
+
+                        var sessionCountInput =
+                            document.getElementById("session_count");
+
+                        var selectedInput =
+                            document.getElementById("selected_booking_ids");
+
+                        var addToCartButton =
+                            document.getElementById("lesson-program-add-to-cart");
+
+                        var selectionInfo =
+                            document.getElementById("selection-info");
+
+                        var messageBox =
+                            document.getElementById("lesson-program-message");
+
+                        var calendarColumn =
+                            document.getElementById("lesson-calendar-column");
+
+                        var timesColumn =
+                            document.getElementById("lesson-times-column");
+
+                        var selectedDateLabel =
+                            document.getElementById("selected-date-label");
+
+                        var availableTimesContainer =
+                            document.getElementById("available-times");
+
+                        if (!calendarElement ||
+                            !programInput ||
+                            !sessionCountInput ||
+                            !selectedInput ||
+                            !addToCartButton ||
+                            !selectionInfo ||
+                            !messageBox ||
+                            !calendarColumn ||
+                            !timesColumn ||
+                            !selectedDateLabel ||
+                            !availableTimesContainer) {
+
+                            console.error(
+                                "One or more lesson-program elements are missing."
+                            );
+                            return;
+                        }
+
+                        var programId = programInput.value;
+
+                        var sessionCount = parseInt(
+                            sessionCountInput.value,
+                            10
+                        );
+
+                        var selectedBookingIds = [];
+                        var messageTimer = null;
+                        var timesPanelHasOpened = false;
+
+                        function showMessage(message, type) {
+                            if (!type) {
+                                type = "warning";
                             }
-                        })
-                        .catch(function (error) {
-                            console.error(error);
-                            showMessage("An unexpected error occurred. Please try again.", "danger");
-                            refreshButtonState();
-                        });
-                    });
-                }
+
+                            if (messageTimer) {
+                                window.clearTimeout(messageTimer);
+                            }
+
+                            messageBox.className =
+                                "alert alert-" + type;
+
+                            messageBox.textContent = message;
+                            messageBox.classList.remove("d-none");
+
+                            messageTimer = window.setTimeout(function () {
+                                messageBox.classList.add("d-none");
+                            }, 4000);
+                        }
+
+                        function refreshButtonState() {
+                            selectedInput.value =
+                                JSON.stringify(selectedBookingIds);
+
+                            var remaining =
+                                sessionCount - selectedBookingIds.length;
+
+                            if (remaining &gt; 0) {
+                                selectionInfo.textContent =
+                                    "Please select " +
+                                    remaining +
+                                    " more lesson time(s).";
+
+                                addToCartButton.disabled = true;
+                                addToCartButton.classList.add("disabled");
+                            } else {
+                                selectionInfo.textContent =
+                                    "You selected all " +
+                                    sessionCount +
+                                    " lesson time(s).";
+
+                                addToCartButton.disabled = false;
+                                addToCartButton.classList.remove("disabled");
+                            }
+                        }
+
+                        function openAvailableTimesPanel(calendar) {
+                            if (timesPanelHasOpened) {
+                                return;
+                            }
+
+                            calendarColumn.classList.remove("col-12");
+                            calendarColumn.classList.add("col-md-8");
+
+                            timesColumn.style.display = "block";
+                            timesPanelHasOpened = true;
+
+                            window.setTimeout(function () {
+                                calendar.updateSize();
+                            }, 50);
+                        }
+
+                        function markSelectedDate(dayElement) {
+                            var selectedDays = document.querySelectorAll(
+                                ".fc-daygrid-day.selected-calendar-date"
+                            );
+
+                            var index;
+
+                            for (index = 0; index &lt; selectedDays.length; index++) {
+                                selectedDays[index].classList.remove(
+                                    "selected-calendar-date"
+                                );
+                            }
+
+                            if (dayElement) {
+                                dayElement.classList.add(
+                                    "selected-calendar-date"
+                                );
+                            }
+                        }
+
+                        function formatSelectedDate(dateObject) {
+                            return dateObject.toLocaleDateString(
+                                undefined,
+                                {
+                                    weekday: "long",
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric"
+                                }
+                            );
+                        }
+
+                        function createTimeButton(slot) {
+                            var button = document.createElement("button");
+                            var bookingId = parseInt(slot.booking_id, 10);
+
+                            button.type = "button";
+                            button.textContent = slot.time;
+                            button.className =
+                                "lesson-time-pill btn btn-outline-primary";
+
+                            button.setAttribute(
+                                "data-booking-id",
+                                bookingId
+                            );
+
+                            if (selectedBookingIds.indexOf(bookingId) !== -1) {
+                                button.classList.add("selected-slot");
+                            }
+
+                            button.addEventListener("click", function () {
+                                var currentBookingId = parseInt(
+                                    this.getAttribute("data-booking-id"),
+                                    10
+                                );
+
+                                var selectedIndex =
+                                    selectedBookingIds.indexOf(
+                                        currentBookingId
+                                    );
+
+                                if (selectedIndex !== -1) {
+                                    selectedBookingIds.splice(
+                                        selectedIndex,
+                                        1
+                                    );
+
+                                    this.classList.remove(
+                                        "selected-slot"
+                                    );
+                                } else {
+                                    if (selectedBookingIds.length &gt;=
+                                        sessionCount) {
+
+                                        showMessage(
+                                            "You can only select " +
+                                            sessionCount +
+                                            " lesson time(s).",
+                                            "warning"
+                                        );
+
+                                        return;
+                                    }
+
+                                    selectedBookingIds.push(
+                                        currentBookingId
+                                    );
+
+                                    this.classList.add(
+                                        "selected-slot"
+                                    );
+                                }
+
+                                refreshButtonState();
+                            });
+
+                            return button;
+                        }
+
+                        function loadAvailableTimes(dateString) {
+                            clearElement(availableTimesContainer);
+
+                            var loadingMessage =
+                                document.createElement("p");
+
+                            loadingMessage.className =
+                                "text-muted mb-0";
+
+                            loadingMessage.textContent =
+                                "Loading available times...";
+
+                            availableTimesContainer.appendChild(
+                                loadingMessage
+                            );
+
+                            var url =
+                                "/lesson_program/available_times" +
+                                "?program_id=" +
+                                encodeURIComponent(programId) +
+                                "&amp;date=" +
+                                encodeURIComponent(dateString);
+
+                            fetch(url, {
+                                method: "GET",
+                                credentials: "same-origin"
+                            })
+                            .then(function (response) {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        "HTTP error " + response.status
+                                    );
+                                }
+
+                                return response.json();
+                            })
+                            .then(function (times) {
+                                clearElement(
+                                    availableTimesContainer
+                                );
+
+                                if (!times || !times.length) {
+                                    availableTimesContainer.classList.remove(
+                                        "lesson-times-grid"
+                                    );
+
+                                    createTextMessage(
+                                        availableTimesContainer,
+                                        "No available times for this date.",
+                                        "text-muted mb-0"
+                                    );
+
+                                    return;
+                                }
+
+                                availableTimesContainer.classList.add(
+                                    "lesson-times-grid"
+                                );
+
+                                var index;
+
+                                for (index = 0; index &lt; times.length; index++) {
+                                    availableTimesContainer.appendChild(
+                                        createTimeButton(times[index])
+                                    );
+                                }
+                            })
+                            .catch(function (error) {
+                                console.error(
+                                    "Error loading available times:",
+                                    error
+                                );
+
+                                availableTimesContainer.classList.remove(
+                                    "lesson-times-grid"
+                                );
+
+                                createTextMessage(
+                                    availableTimesContainer,
+                                    "Could not load available times.",
+                                    "text-danger mb-0"
+                                );
+                            });
+                        }
+
+                        var calendar = new FullCalendar.Calendar(
+                            calendarElement,
+                            {
+                                initialView: "dayGridMonth",
+                                height: "auto",
+
+                                headerToolbar: {
+                                    left: "prev,next today",
+                                    center: "title",
+                                    right: "dayGridMonth,timeGridWeek"
+                                },
+
+                                validRange: {
+                                    start: new Date()
+                                        .toISOString()
+                                        .split("T")[0]
+                                },
+
+                                events: function (
+                                    fetchInfo,
+                                    successCallback,
+                                    failureCallback
+                                ) {
+                                    var url =
+                                        "/lesson_program/available_dates" +
+                                        "?program_id=" +
+                                        encodeURIComponent(programId);
+
+                                    fetch(url, {
+                                        method: "GET",
+                                        credentials: "same-origin"
+                                    })
+                                    .then(function (response) {
+                                        if (!response.ok) {
+                                            throw new Error(
+                                                "HTTP error " +
+                                                response.status
+                                            );
+                                        }
+
+                                        return response.json();
+                                    })
+                                    .then(function (data) {
+                                        var events = [];
+                                        var dateKey;
+
+                                        for (dateKey in data) {
+                                            if (
+                                                Object.prototype
+                                                    .hasOwnProperty
+                                                    .call(data, dateKey)
+                                            ) {
+                                                events.push({
+                                                    title: "",
+                                                    start: dateKey,
+                                                    allDay: true,
+                                                    display: "background",
+                                                    classNames: [
+                                                        "fc-available-date"
+                                                    ]
+                                                });
+                                            }
+                                        }
+
+                                        successCallback(events);
+                                    })
+                                    .catch(function (error) {
+                                        console.error(
+                                            "Error loading calendar dates:",
+                                            error
+                                        );
+
+                                        failureCallback(error);
+                                    });
+                                },
+
+                                dateClick: function (info) {
+                                    markSelectedDate(info.dayEl);
+
+                                    selectedDateLabel.textContent =
+                                        formatSelectedDate(info.date);
+
+                                    openAvailableTimesPanel(calendar);
+
+                                    loadAvailableTimes(info.dateStr);
+                                }
+                            }
+                        );
+
+                        try {
+                            calendar.render();
+
+                            if (loadingElement) {
+                                loadingElement.style.display = "none";
+                            }
+
+                            window.setTimeout(function () {
+                                calendar.updateSize();
+                            }, 100);
+                        } catch (error) {
+                            console.error(
+                                "Calendar rendering failed:",
+                                error
+                            );
+
+                            if (loadingElement) {
+                                loadingElement.style.display = "none";
+                            }
+
+                            showCalendarError(
+                                calendarElement,
+                                "Calendar could not be displayed."
+                            );
+
+                            return;
+                        }
+
+                        refreshButtonState();
+
+                        addToCartButton.addEventListener(
+                            "click",
+                            function (event) {
+                                event.preventDefault();
+
+                                if (
+                                    selectedBookingIds.length !==
+                                    sessionCount
+                                ) {
+                                    showMessage(
+                                        "Please select exactly " +
+                                        sessionCount +
+                                        " lesson time(s).",
+                                        "warning"
+                                    );
+
+                                    return;
+                                }
+
+                                addToCartButton.disabled = true;
+                                addToCartButton.classList.add(
+                                    "disabled"
+                                );
+
+                                var formData = new FormData();
+
+                                formData.append(
+                                    "program_id",
+                                    programId
+                                );
+
+                                formData.append(
+                                    "selected_booking_ids",
+                                    JSON.stringify(
+                                        selectedBookingIds
+                                    )
+                                );
+
+                                fetch(
+                                    "/custom/update_lesson_program_order_line",
+                                    {
+                                        method: "POST",
+                                        credentials: "same-origin",
+                                        body: formData
+                                    }
+                                )
+                                .then(function (response) {
+                                    return response.json().then(
+                                        function (data) {
+                                            return {
+                                                ok: response.ok,
+                                                data: data
+                                            };
+                                        }
+                                    );
+                                })
+                                .then(function (result) {
+                                    if (
+                                        result.ok &amp;&amp;
+                                        result.data.success &amp;&amp;
+                                        result.data.redirect
+                                    ) {
+                                        window.location.href =
+                                            result.data.redirect;
+
+                                        return;
+                                    }
+
+                                    showMessage(
+                                        result.data.error ||
+                                        "Could not add the lesson program to the cart.",
+                                        "danger"
+                                    );
+
+                                    refreshButtonState();
+                                })
+                                .catch(function (error) {
+                                    console.error(
+                                        "Cart update failed:",
+                                        error
+                                    );
+
+                                    showMessage(
+                                        "An unexpected error occurred. Please try again.",
+                                        "danger"
+                                    );
+
+                                    refreshButtonState();
+                                });
+                            }
+                        );
+                    }
+
+                    if (document.readyState === "loading") {
+                        document.addEventListener(
+                            "DOMContentLoaded",
+                            function () {
+                                waitForFullCalendar(0);
+                            }
+                        );
+                    } else {
+                        waitForFullCalendar(0);
+                    }
+                }());
             </script>
+
+
+            <!-- ==========================================================
+                 CSS
+            =========================================================== -->
             <style>
                 .lesson-program-scheduler {
                     width: 100%;
                 }
 
                 .lesson-calendar-box {
+                    position: relative;
                     width: 100%;
-                    min-height: 620px;
+                    min-height: 570px;
                     background: #ffffff;
                 }
 
                 #lesson-program-calendar {
                     width: 100%;
-                    min-height: 620px;
-                    display: block;
+                    min-height: 570px;
+                }
+
+                .lesson-calendar-loading {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: #6c757d;
+                    font-size: 16px;
+                }
+
+                .lesson-calendar-error {
+                    padding: 15px;
+                    border: 1px solid #dc3545;
+                    color: #dc3545;
+                    border-radius: 8px;
+                    background: #ffffff;
                 }
 
                 .available-times-container {
+                    width: 100%;
+                    padding: 16px;
                     background: #ffffff;
                     border: 1px solid #e5e5e5;
                     border-radius: 12px;
-                    padding: 16px;
-                    min-height: 280px;
-                    max-height: 620px;
-                    overflow-y: auto;
                     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+                    max-height: 570px;
+                    overflow-y: auto;
                 }
 
                 .selected-date-label {
-                    background: #f3f0ff;
-                    color: #4B3F79;
-                    border-left: 4px solid #6656A5;
                     padding: 10px 12px;
+                    background: #f3f0ff;
+                    color: #4b3f79;
+                    border-left: 4px solid #6656a5;
                     border-radius: 8px;
                     font-weight: 600;
                     line-height: 1.45;
@@ -441,51 +903,79 @@
 
                 .lesson-time-pill {
                     width: 100%;
+                    min-width: 0;
+                    padding: 10px 5px;
                     white-space: nowrap;
-                    border-color: #6656A5 !important;
-                    color: #6656A5 !important;
+                    color: #6656a5 !important;
+                    border-color: #6656a5 !important;
                     border-radius: 8px;
-                    padding: 10px 6px;
                     font-weight: 500;
                 }
 
                 .lesson-time-pill:hover {
-                    background-color: #f3f0ff !important;
-                    color: #4B3F79 !important;
+                    color: #4b3f79 !important;
+                    background: #f3f0ff !important;
                 }
 
-                .selected-slot {
-                    background-color: #6656A5 !important;
-                    color: white !important;
-                    border-color: #6656A5 !important;
+                .lesson-time-pill.selected-slot,
+                .lesson-time-pill.selected-slot:hover {
+                    color: #ffffff !important;
+                    background: #6656a5 !important;
+                    border-color: #6656a5 !important;
+                }
+
+                .lesson-selection-info {
+                    color: #6656a5;
+                }
+
+                #lesson-program-add-to-cart:disabled {
+                    opacity: 0.55;
+                    cursor: not-allowed;
                 }
 
                 .fc-available-date {
-                    background-color: rgba(102, 86, 165, 0.25) !important;
+                    background: rgba(102, 86, 165, 0.25) !important;
                 }
 
                 .fc-daygrid-day.selected-calendar-date {
                     background: #fff9d8 !important;
                 }
 
-                .fc-daygrid-day.selected-calendar-date .fc-daygrid-day-number {
-                    background: #6656A5;
-                    color: #ffffff !important;
-                    border-radius: 50%;
-                    width: 28px;
-                    height: 28px;
+                .fc-daygrid-day.selected-calendar-date
+                .fc-daygrid-day-number {
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
+                    width: 28px;
+                    height: 28px;
+                    color: #ffffff !important;
+                    background: #6656a5;
+                    border-radius: 50%;
                 }
 
-                @media (max-width: 767.98px) {
+                @media (max-width: 991.98px) {
+                    .lesson-calendar-box,
+                    #lesson-program-calendar {
+                        min-height: 500px;
+                    }
+
                     .available-times-container {
                         max-height: none;
                     }
                 }
 
-                @media (max-width: 420px) {
+                @media (max-width: 575.98px) {
+                    .lesson-times-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+
+                    .lesson-calendar-box,
+                    #lesson-program-calendar {
+                        min-height: 450px;
+                    }
+                }
+
+                @media (max-width: 390px) {
                     .lesson-times-grid {
                         grid-template-columns: 1fr;
                     }
@@ -496,3 +986,4 @@
     </template>
 
 </odoo>
+```
