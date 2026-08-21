@@ -18,7 +18,11 @@ class TeacherController(http.Controller):
                 methods=['POST', 'GET'], website=True, csrf=False)
     def get_teacher_details_homepage(self, **kw):
         try:
-            teacher = request.env['voca.teacher'].sudo().search([])
+            # teacher = request.env['voca.teacher'].sudo().search([])
+            teacher = request.env['voca.teacher'].sudo().search([
+                ('state', '=', 'approved'),
+                ('show_on_teacher_page', '=', True),
+            ])
             categ = request.env['voca.teacher.categories'].sudo().search([])
             print("all teacher home :", teacher, kw)
 
@@ -41,7 +45,13 @@ class TeacherController(http.Controller):
             per_page = 8  # Number of teachers per page
 
             # Apply category filtering before pagination
-            teacher_domain = [('state', '=', 'approved')]
+            # teacher_domain = [('state', '=', 'approved')]
+
+            teacher_domain = [
+                ('state', '=', 'approved'),
+                ('show_on_teacher_page', '=', True),
+            ]
+            
             if category_id:
                 teacher_domain.append(('categories', 'in', [int(category_id)]))  # Fix category filtering
 
