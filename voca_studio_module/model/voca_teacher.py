@@ -11,6 +11,13 @@ class Teacher(models.Model):
     # _description = 'Portal'
 
     duration = fields.Integer(string="Lesson Duration (minutes)", default=45)
+
+    show_on_teacher_page = fields.Boolean(
+        string="Show on Teachers Page",
+        default=True,
+        help="If disabled, the teacher will not appear on the public Our Teachers page."
+    )
+    
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
     schedule_ids = fields.One2many('voca.teacher.schedule', 'teacher_id', string="Weekly Schedule")
