@@ -20,7 +20,7 @@
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="show_on_teacher_page"/>
+                            <!-- <field name="show_on_teacher_page"/> -->
                             <field name="google_meet" widget="url"/>
 <!--                             <field name="zoom" widget="url"/> -->
 <!--                             <field name="youtube_video"/> -->
