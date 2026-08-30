@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="teacher_lesson_programs_partial"
+              name="Teacher Lesson Programs Partial">
+
+        <div>
+
+            <t t-if="lesson_programs">
+
+                <div class="row">
+
+                    <t t-foreach="lesson_programs" t-as="item">
+
+                        <t t-set="program" t-value="item['program']"/>
+                        <t t-set="student" t-value="item['student']"/>
+
+                        <div class="col-md-6 mb-4">
+
+                            <div class="card shadow-sm border-0 h-100">
+
+                                <div class="card-body d-flex flex-column">
+
+                                    <!-- Program title -->
+                                    <h5 class="card-title mb-3">
+
+                                        <strong>
+                                            <t t-if="program">
+                                                <t t-esc="program.name"/>
+                                            </t>
+
+                                            <t t-else="">
+                                                Lesson Series
+                                            </t>
+                                        </strong>
+
+                                    </h5>
+
+                                    <!-- Student name only -->
+                                    <p class="card-text mb-3">
+
+                                        <strong>Student:</strong>
+
+                                        <t t-if="student">
+                                            <t t-esc="student.name"/>
+                                        </t>
+
+                                        <t t-else="">
+                                            <span class="text-muted">
+                                                Not Available
+                                            </span>
+                                        </t>
+
+                                    </p>
+
+                                    <!-- Selected sessions -->
+                                    <p class="card-text mb-2">
+                                        <strong>Lesson Times:</strong>
+                                    </p>
+
+                                    <t t-if="item['sessions']">
+
+                                        <ul class="lesson-program-session-list mb-4">
+
+                                            <t t-foreach="item['sessions']"
+                                               t-as="session">
+
+                                                <li class="mb-1">
+                                                    <i class="fa fa-calendar me-2"/>
+                                                    <t t-esc="session['local_date']"/>
+                                                </li>
+
+                                            </t>
+
+                                        </ul>
+
+                                    </t>
+
+                                    <t t-else="">
+
+                                        <p class="text-muted mb-4">
+                                            No lesson times are available.
+                                        </p>
+
+                                    </t>
+
+                                    <!-- Google Meet button -->
+                                    <div class="mt-auto">
+
+                                        <t t-if="program and program.teacher_id.google_meet">
+
+                                            <a t-att-href="program.teacher_id.google_meet"
+                                               class="btn btn-primary"
+                                               target="_blank"
+                                               rel="noopener noreferrer">
+
+                                                <i class="fa fa-video-camera me-2"/>
+                                                Start Lesson
+
+                                            </a>
+
+                                        </t>
+
+                                        <t t-else="">
+
+                                            <span class="text-muted">
+                                                Google Meet link is not available.
+                                            </span>
+
+                                        </t>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </t>
+
+                </div>
+
+                <!-- Pagination -->
+                <nav t-if="total_pages &gt; 1"
+                     aria-label="Lesson series pagination"
+                     class="mt-4">
+
+                    <ul class="pagination justify-content-center">
+
+                        <t t-if="page &gt; 1">
+
+                            <li class="page-item">
+
+                                <a class="page-link"
+                                   t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % (page - 1)">
+                                    Previous
+                                </a>
+
+                            </li>
+
+                        </t>
+
+                        <t t-foreach="range(1, total_pages + 1)"
+                           t-as="page_number">
+
+                            <li t-att-class="'page-item ' + ('active' if page_number == page else '')">
+
+                                <a class="page-link"
+                                   t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % page_number">
+
+                                    <t t-esc="page_number"/>
+
+                                </a>
+
+                            </li>
+
+                        </t>
+
+                        <t t-if="page &lt; total_pages">
+
+                            <li class="page-item">
+
+                                <a class="page-link"
+                                   t-att-href="'/teacher_dashboard/lesson-programs?page=%d' % (page + 1)">
+                                    Next
+                                </a>
+
+                            </li>
+
+                        </t>
+
+                    </ul>
+
+                </nav>
+
+            </t>
+
+            <t t-else="">
+
+                <div class="text-center py-4">
+
+                    <p class="text-muted mb-0">
+                        No upcoming lesson series are assigned.
+                    </p>
+
+                </div>
+
+            </t>
+
+        </div>
+
+        <style>
+            .lesson-program-session-list {
+                padding-left: 0;
+                list-style: none;
+            }
+
+            .lesson-program-session-list li {
+                color: #444444;
+            }
+
+            .lesson-program-session-list .fa-calendar {
+                color: #6656a5;
+            }
+        </style>
+
+    </template>
+
+</odoo>

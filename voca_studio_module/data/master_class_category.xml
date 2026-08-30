@@ -1,0 +1,5 @@
+<odoo>
+    <record id="master_class_category" model="master.classes.categories">
+        <field name="name">cat</field>
+    </record>
+</odoo>

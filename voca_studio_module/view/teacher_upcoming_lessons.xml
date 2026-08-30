@@ -1,0 +1,74 @@
+<odoo>
+    <template id="teacher_upcoming_lessons_partial" name="Teacher Upcoming Lessons Partial">
+        <div>
+            <t t-if="upcoming_lessons">
+                <div class="row">
+                    <t t-foreach="upcoming_lessons" t-as="lesson">
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <strong>Student:</strong> <t t-esc="lesson.booking_order_id.order_id.partner_id.name" />
+                                    </h5>
+                                    <p class="card-text">
+                                        <strong>Lesson Date:</strong> <t t-esc="lesson.lesson_date_local" /><br />
+<!--                                         <strong>Time:</strong> <t t-esc="lesson.availablity_date.strftime('%I:%M %p')" /><br /> -->
+                                    </p>
+                                    
+                                    <!-- Button Section -->
+                                    <div class="d-flex justify-content-between">
+                                        <t t-if="lesson.booking_id.google_meet">
+                                            <a t-att-href="lesson.booking_id.google_meet" class="btn btn-primary flex-grow-1 me-2" target="_blank">
+                                                Start Lesson
+                                            </a>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted flex-grow-1">No Link Available</span>
+                                        </t>
+
+                                        <form action="/teacher_dashboard/mark_lesson_completed" method="post">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                            <input type="hidden" name="lesson_id" t-att-value="lesson.id" />
+                                            <button type="submit" class="btn btn-success flex-grow-1">
+                                                Mark as Completed
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" href="/teacher_dashboard/upcoming-lessons?page=%d" 
+                                    t-att-href="'/teacher_dashboard/upcoming-lessons?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" href="/teacher_dashboard/upcoming-lessons?page=%d" 
+                                    t-att-href="'/teacher_dashboard/upcoming-lessons?page=%d' % p">
+                                    <t t-esc="p" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" href="/teacher_dashboard/upcoming-lessons?page=%d" 
+                                    t-att-href="'/teacher_dashboard/upcoming-lessons?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+            <t t-else="">
+                <p class="text-center">No upcoming lessons available.</p>
+            </t>
+        </div>
+    </template>
+</odoo>

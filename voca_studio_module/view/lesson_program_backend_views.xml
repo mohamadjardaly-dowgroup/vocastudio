@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_voca_lesson_program_tree" model="ir.ui.view">
+        <field name="name">voca.lesson.program.tree</field>
+        <field name="model">voca.lesson.program</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="session_count"/>
+                <field name="price"/>
+                <field name="currency_id"/>
+                <field name="is_published"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_voca_lesson_program_form" model="ir.ui.view">
+        <field name="name">voca.lesson.program.form</field>
+        <field name="model">voca.lesson.program</field>
+        <field name="arch" type="xml">
+            <form string="Lesson Program">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="teacher_id"/>
+                            <field name="session_count"/>
+                            <field name="duration" readonly="1"/>
+                            <field name="price"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="image_1920" widget="image"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="is_published"/>
+                            <field name="state"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Website Description">
+                            <field name="description_html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_voca_lesson_program" model="ir.actions.act_window">
+        <field name="name">Lesson Programs</field>
+        <field name="res_model">voca.lesson.program</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_voca_lesson_program_root"
+              name="Lesson Programs"
+              sequence="50"/>
+
+    <menuitem id="menu_voca_lesson_program"
+              name="Lesson Programs"
+              parent="menu_voca_lesson_program_root"
+              action="action_voca_lesson_program"
+              sequence="10"/>
+
+</odoo>

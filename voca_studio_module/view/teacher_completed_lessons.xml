@@ -1,0 +1,74 @@
+<odoo>
+    <template id="teacher_completed_lessons_partial" name="Teacher Completed Lessons Partial">
+        <div>
+            <t t-if="completed_lessons">
+                <div class="row">
+                    <t t-foreach="completed_lessons" t-as="record">
+                        
+                        <!-- Regular Completed Lesson (One-on-One) -->
+                        <t t-if="record._name == 'voca.teacher.booking.lines'">
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">
+                                            <strong>One-on-One Lesson</strong>
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong>Student:</strong> <t t-esc="record.booking_order_id.order_id.partner_id.name" /><br />
+                                            <strong>Date:</strong> <t t-esc="record.lesson_date_local" /><br />
+<!--                                             <strong>Time:</strong> <t t-esc="record.availablity_date.strftime('%I:%M %p')" /> -->
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Completed Master Class -->
+                        <t t-if="record._name == 'master.classes'">
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success">
+                                            <strong>Master Class</strong>
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong>Date:</strong> <t t-esc="record.datetime_from.strftime('%d %B %Y')" /><br />
+                                            <strong>Time:</strong> <t t-esc="record.datetime_from.strftime('%I:%M %p')" />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/completed-lessons?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/completed-lessons?page=%d' % p">
+                                    <t t-esc="p" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/completed-lessons?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+            <t t-else="">
+                <p class="text-center">No completed lessons available.</p>
+            </t>
+        </div>
+    </template>
+</odoo>

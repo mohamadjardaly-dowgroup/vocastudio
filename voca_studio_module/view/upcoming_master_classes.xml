@@ -1,0 +1,95 @@
+<odoo>
+    <template id="upcoming_masters_partial" name="Upcoming Masters Partial">
+        <div>
+            <t t-if="upcoming_masters">
+                <div class="row">
+                    <t t-foreach="upcoming_masters" t-as="master_data">
+                        <t t-set="master" t-value="master_data['master_class']"/>
+                        <t t-set="seats_booked" t-value="master_data['seats_booked']"/>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <strong>Master Class:</strong> <t t-esc="master.name" />
+                                    </h5>
+                                    <p class="card-text">
+                                        <strong>Start Date:</strong>
+                                        <t t-if="master.date">
+                                            <t t-esc="master.date.strftime('%d %B %Y')" />
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">Not Available</span>
+                                        </t>
+                                        <t t-if="master.datetime_from">
+                                            <br />
+                                            <strong>From:</strong>
+                                            <t t-if="master.datetime_from">
+                                                <t t-esc="master_data['start_time'].strftime('%I:%M %p')"/>
+                                                <!-- <t t-esc="master.datetime_from.strftime('%I:%M %p')"/> -->
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">Not Available</span>
+                                            </t>
+                                        </t>
+                                        <t t-if="master.datetime_to">
+                                            <strong>To:</strong>
+                                            <t t-if="master.datetime_to">
+                                                <t t-esc="master_data['end_time'].strftime('%I:%M %p')"/>
+                                                <!-- <t t-esc="master.datetime_to.strftime('%I:%M %p')"/> -->
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">Not Available</span>
+                                            </t>
+                                        </t>
+                                        <br />
+                                        <strong>Seats Booked:</strong> <t t-esc="int(seats_booked)" /><br />
+                                    </p>
+                                    <t t-if="master.zoom">
+                                        <a t-att-href="master.zoom" class="btn btn-primary btn-block" target="_blank">
+                                            Join Meeting
+                                        </a>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Google Meet link not available.</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-masters?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-masters?page=%d' % p">
+                                    <t t-esc="p" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" t-att-href="'/my_dashboard/upcoming-masters?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+            <t t-else="">
+                <h4>Here are your upcoming master lessons</h4>
+                <button class="btn btn-primary">
+                    <a href="/master_class/cat/1" style="color:white;">
+                        Add a Master Class
+                    </a>
+                </button>
+            </t>
+        </div>
+    </template>
+</odoo>

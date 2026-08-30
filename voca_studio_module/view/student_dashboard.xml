@@ -1,0 +1,112 @@
+<odoo>
+    <template id="my_dashboard_template" name="My Dashboard">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="card text-center mb-4 p-4">
+                    <h4>Welcome to Your Dashboard!</h4>
+                </div>
+
+                <!-- Tab Navigation -->
+                <nav class="nav nav-tabs" id="lessonTabs" role="tablist">
+                    <a class="nav-link active" id="upcoming-lessons-tab" data-bs-toggle="tab" href="#upcoming-lessons" role="tab" aria-controls="upcoming-lessons" aria-selected="true" onclick="loadUpcomingLessons()">
+                        Upcoming Lessons
+                    </a>
+                    <a class="nav-link" id="upcoming-masters-tab" data-bs-toggle="tab" href="#upcoming-masters" role="tab" aria-controls="upcoming-masters" aria-selected="false" onclick="loadUpcomingMasters()">
+                        Master Classes
+                    </a>
+                    <a class="nav-link" id="completed-lessons-tab" data-bs-toggle="tab" href="#completed-lessons" role="tab" aria-controls="completed-lessons" aria-selected="false" onclick="loadCompletedLessons()">
+                        Completed Lessons
+                    </a>
+                </nav>
+
+                <!-- Tab Content -->
+                <div class="tab-content mt-4">
+                    <!-- Upcoming Lessons Tab -->
+                    <div class="tab-pane fade show active" id="upcoming-lessons" role="tabpanel" aria-labelledby="upcoming-lessons-tab">
+                        <div id="upcoming-lessons-content">
+                        </div>
+                        <script>
+                                // Automatically load upcoming lessons on page load
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    loadUpcomingLessons();
+                                });
+
+                                function loadUpcomingLessons(page = 1) {
+                                    fetch(`/my_dashboard/upcoming-lessons?page=${page}`)
+                                        .then(response => response.text())
+                                        .then(html => {
+                                            document.getElementById('upcoming-lessons-content').innerHTML = html;
+
+                                            // Add event listeners to the pagination links
+                                            const paginationLinks = document.querySelectorAll('#upcoming-lessons-content .page-link');
+                                            paginationLinks.forEach(link => {
+                                                link.addEventListener('click', function (event) {
+                                                    event.preventDefault();
+                                                    const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                                    loadUpcomingLessons(newPage);
+                                                });
+                                            });
+                                        })
+                                        .catch(error => {
+                                            console.error('Error loading upcoming lessons:', error);
+                                        });
+                                }
+                            </script>
+                    </div>
+                     <!-- Upcoming Master Products Tab -->
+                    <div class="tab-pane fade" id="upcoming-masters" role="tabpanel" aria-labelledby="upcoming-masters-tab">
+                        <div id="upcoming-masters-content"></div>
+                        <script>
+                            function loadUpcomingMasters(page = 1) {
+                                fetch(`/my_dashboard/upcoming-masters?page=${page}`)
+                                    .then(response => response.text())
+                                    .then(html => {
+                                        document.getElementById('upcoming-masters-content').innerHTML = html;
+
+                                        const paginationLinks = document.querySelectorAll('#upcoming-masters-content .page-link');
+                                        paginationLinks.forEach(link => {
+                                            link.addEventListener('click', function (event) {
+                                                event.preventDefault();
+                                                const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                                loadUpcomingMasters(newPage);
+                                            });
+                                        });
+                                    })
+                                    .catch(error => console.error('Error loading upcoming masters:', error));
+                            }
+
+                        </script>
+                    </div>
+                    <!-- Completed Lessons Tab -->
+                    <div class="tab-pane fade" id="completed-lessons" role="tabpanel" aria-labelledby="completed-lessons-tab">
+                        <div id="completed-lessons-content">
+                            <script>
+                                function loadCompletedLessons(page = 1) {
+                                    fetch(`/my_dashboard/completed-lessons?page=${page}`)
+                                        .then(response => response.text())
+                                        .then(html => {
+                                            document.getElementById('completed-lessons-content').innerHTML = html;
+
+                                            // Add event listeners to the pagination links
+                                            const paginationLinks = document.querySelectorAll('#completed-lessons-content .page-link');
+                                            paginationLinks.forEach(link => {
+                                                link.addEventListener('click', function (event) {
+                                                    event.preventDefault();
+                                                    const newPage = parseInt(new URL(this.href).searchParams.get('page'));
+                                                    loadCompletedLessons(newPage);
+                                                });
+                                            });
+                                        })
+                                        .catch(error => {
+                                            console.error('Error loading completed lessons:', error);
+                                        });
+                                }
+
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

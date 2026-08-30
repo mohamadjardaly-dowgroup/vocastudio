@@ -1,0 +1,111 @@
+<odoo>
+    <template id="teacher_master_classes_partial" name="Teacher Master Classes Partial">
+        <div>
+            <t t-if="master_classes">
+                <div class="row">
+                    <t t-foreach="master_classes" t-as="master_data">
+                        <t t-set="master_class" t-value="master_data['master_class']"/>
+                        <!-- <t t-set="students" t-value="record['students']"/> -->
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <strong>Master Class:</strong> <t t-esc="master_class.name" />
+                                    </h5>
+                                    <p class="card-text">
+                                        <strong>Date:</strong> 
+                                        <t t-if="master_class.date">
+                                            <t t-esc="master_class.date.strftime('%d %B %Y')" />
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">Not Available</span>
+                                        </t>
+                                        <br/>
+                                        <strong>From:</strong> 
+                                        <t t-if="master_class.datetime_from">
+                                            <t t-esc="master_data['start_time'].strftime('%I:%M %p')"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">Not Available</span>  
+                                        </t>
+                                        <strong>To:</strong> 
+                                        <t t-if="master_class.datetime_from">
+                                            <t t-esc="master_data['end_time'].strftime('%I:%M %p')"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">Not Available</span>  
+                                        </t>
+                                    </p>
+                                    
+                                    <!-- Button Section -->
+                                    <div class="d-flex justify-content-between">
+                                        <t t-if="master_class.zoom">
+                                            <a t-att-href="master_class.zoom" class="btn btn-primary flex-grow-1 me-2" target="_blank">
+                                                Join Meeting
+                                            </a>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted flex-grow-1">No Meeting Link</span>
+                                        </t>
+
+                                        <form action="/teacher_dashboard/mark_masterclass_completed" method="post">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                            <input type="hidden" name="masterclass_id" t-att-value="master_class.id" />
+                                            <button type="submit" class="btn btn-success flex-grow-1">
+                                                Mark as Completed
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- View Students -->
+                                    <!-- <div class="mt-3">
+                                        <button class="btn btn-sm btn-secondary toggle-students" t-att-data-id="master_class.id">
+                                            View Students
+                                        </button>
+                                        <ul class="student-list mt-2 d-none" t-att-id="'student-list-' + str(master_class.id)">
+                                            <t t-if="students">
+                                                <t t-foreach="students" t-as="student">
+                                                    <li><t t-esc="student.name" /></li>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">No Students Enrolled</span>
+                                            </t>
+                                        </ul>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <t t-if="page > 1">
+                            <li class="page-item">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/master-classes?page=%d' % (page - 1)">Previous</a>
+                            </li>
+                        </t>
+                        <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                            <li t-att-class="'page-item ' + ('active' if p == page else '')">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/master-classes?page=%d' % p">
+                                    <t t-esc="p" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="page &lt; total_pages">
+                            <li class="page-item">
+                                <a class="page-link" href="#" t-att-href="'/teacher_dashboard/master-classes?page=%d' % (page + 1)">Next</a>
+                            </li>
+                        </t>
+                    </ul>
+                </nav>
+            </t>
+            <t t-else="">
+                <p class="text-center">No master classes assigned.</p>
+            </t>
+        </div>
+    </template>
+</odoo>

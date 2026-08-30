@@ -1,0 +1,235 @@
+<odoo>
+    <template id="voca_fields" inherit_id="auth_signup.fields" name="Add Voca custom fields">
+    <xpath expr="//input[@name='login']" position="attributes">
+            <attribute name="oninput">validateEmail(this)</attribute>
+            <attribute name="placeholder">Enter a valid email</attribute>
+            <attribute name="class">form-control email-validation</attribute>
+        </xpath>
+        <xpath expr="//label[@for='login']" position="replace">
+            <label for="login">Email Address</label>
+        </xpath>
+
+        <xpath expr="//div[hasclass('field-name')]" position="replace">
+            <script type="text/javascript">
+                // Function to toggle fields based on role selection
+                function toggleFields(selectElement) {
+                    const genderField = document.getElementById('gender_field');
+                    const phoneField = document.getElementById('phone_field');
+                    const uploadField = document.getElementById('upload_field');
+                    const instrumentField = document.getElementById('instrument_field');
+                    const levelField = document.getElementById('level_field');
+
+                    // Show or hide fields based on the selected value
+                    if (selectElement.value === 'teacher') {
+                        phoneField.style.display = 'block';
+                        uploadField.style.display = 'block';
+                        instrumentField.style.display = 'block';
+                        levelField.style.display = 'none';
+                    } else if (selectElement.value === 'stu') {
+                        phoneField.style.display = 'none';
+                        uploadField.style.display = 'none';
+                        instrumentField.style.display = 'none';
+                        levelField.style.display = 'block';
+                    }
+                }
+
+                // Real-time email validation
+                function validateEmail(input) {
+                    const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                    if (!emailPattern.test(input.value)) {
+                        input.setCustomValidity('Please enter a valid email address.');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+
+                // Real-time phone number validation
+                function validatePhone(input) {
+                    const phonePattern = /^\d+$/;  // Only allows digits (0-9)
+                    
+                    if (!phonePattern.test(input.value)) {
+                        input.setCustomValidity('Phone number must contain only digits (e.g., 123456789).');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+                function validateName(input) {
+                    var restrictedWords = ["free", "promo", "bitcoin", "money", "offer"];
+                    var specialChars = /[^a-zA-Z\s]/;  // Only allow letters and spaces
+
+                    var name = input.value.toLowerCase();
+
+                    // Check for restricted words
+                    for (let word of restrictedWords) {
+                        if (name.includes(word)) {
+                            input.setCustomValidity("Username contains restricted words!");
+                            return;
+                        }
+                    }
+
+                    // Check for special characters
+                    if (specialChars.test(input.value)) {
+                        input.setCustomValidity("No special characters allowed in the name!");
+                        return;
+                    }
+
+                    // Check minimum length
+                    if (input.value.length &lt; 3) {
+                        input.setCustomValidity("Name must be at least 3 characters long!");
+                        return;
+                    }
+
+                input.setCustomValidity(""); 
+                }
+            </script>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="nickname">Full Name</label>
+                    <input type="text" name="nickname" id="nickname"
+                           class="form-control form-control-sm" required="required"
+                           placeholder="Enter your full name"
+                           t-att-readonly="'readonly' if only_passwords else None"
+                           t-att-autofocus="'autofocus' if login and not only_passwords else None" oninput="validateName(this)" />
+                </div>
+            </div>
+
+            <!-- <div class="row mb-3">
+                <div class="col-12">
+                    <label for="login">Email</label>
+                    <input type="email" name="login" id="login"
+                           class="form-control form-control-sm" required="required"
+                           placeholder="Enter your email address"
+                           oninput="validateEmail(this)" />
+                </div>
+            </div> -->
+
+            <div class="row mb-3">
+                <!-- Phone Label (Spanning Both Fields) -->
+                <label class="col-12">Phone</label>
+
+                <!-- Country Code Dropdown -->
+                <div class="col-6">
+                    <select name="country_id" id="country_id" class="form-control">
+                        <t t-foreach="request.env['res.country'].sudo().search([])" t-as="country">
+                            <option t-att-value="country.id"
+                                    t-att-data-phone-code="country.phone_code if country.phone_code else 'N/A'"
+                                    t-att-selected="'selected' if country.id == default_country_id else None">
+                                +<t t-esc="country.phone_code or 'No Code'"/> <t t-esc="country.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+
+                <!-- Phone Number Input -->
+                <div class="col-6">
+                    <input class="form-control" type="tel" name="phone"
+                        id="phone"
+                        placeholder="e.g. 123456789"
+                        required="required"
+                        oninput="validatePhone(this)"/>
+                </div>
+            </div>
+
+
+            <div class="row mb-3" id="gender_field" style="display:block;">
+    <div class="col-12">
+        <label for="gender">Gender</label>
+        <select class="form-control p-1" name="gender">
+            <option value="" disabled="disabled" selected="selected">Select gender ..</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+    </div>
+</div>
+
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="control-label" for="birthday">Date of Birth</label>
+                    <input type="date" name="birthday" id="birthday_date"
+                           class="form-control datepicker" required="required"
+                           placeholder="dd/mm/yyyy" />
+                </div>
+            </div>
+            <div id="level_field"  class="col-12">
+                <label for="level">Level</label>
+                <select name="level" id="level" class="form-control">
+                    <option value="" disabled="disabled" selected="selected">Select Level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced/Professional</option>
+                </select>
+            </div>
+
+            <div t-if="role == 'teacher'" id="upload_field" style="display:block;">
+                 <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="instrument">Instrument</label>
+                        <input type="text" name="instrument" id="instrument"  required="required"
+                            class="form-control form-control-sm"
+                            placeholder="e.g., Guitar, Piano" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="control-label" for="attachment_ids">Upload your CV</label>
+                        <input type="file" id="attachment_ids" name="filename" required="required" />
+                        <input type="hidden" id="file_base64_dict" name="file_base64_dict" />
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                // Convert uploaded file to Base64 and store in a hidden field
+                document.getElementById('attachment_ids').addEventListener('change', function(event) {
+                    const files = event.target.files;
+                    const fileBase64Dict = {};
+                    const convertFileToBase64 = (file) => {
+                        return new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                const base64String = reader.result.split(',')[1];
+                                resolve(base64String);
+                            };
+                            reader.onerror = reject;
+                            reader.readAsDataURL(file);
+                        });
+                    };
+                    const promises = Array.from(files).map(async (file) => {
+                        const base64 = await convertFileToBase64(file);
+                        fileBase64Dict[file.name] = base64;
+                    });
+                    Promise.all(promises).then(() => {
+                        document.getElementById('file_base64_dict').value = JSON.stringify(fileBase64Dict);
+                    });
+                });
+            </script>
+        </xpath>
+         <xpath expr="//input[@name='confirm_password']" position="after">
+            <div class="row mb-3 mt-3">
+                <div class="col-12">
+                    <input type="checkbox" name="terms" id="terms" required="required" onchange="validateTerms()"/>
+                    <label for="terms">
+                        I accept the <a href="/terms-conditions" target="_blank">Terms and Conditions</a>
+                    </label>
+                    <p id="terms-error" style="color: red; display: none;">You must accept the Terms and Conditions.</p>
+                </div>
+            </div>
+        </xpath>
+
+        <script>
+            function validateTerms() {
+                var checkbox = document.getElementById("terms");
+                var errorText = document.getElementById("terms-error");
+
+                if (!checkbox.checked) {
+                    errorText.style.display = "block";
+                } else {
+                    errorText.style.display = "none";
+                }
+            }
+
+        </script>
+    </template>
+</odoo>

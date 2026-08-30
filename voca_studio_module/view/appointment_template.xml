@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="voca_studio_module.teacher_profile_card">
+            <style>
+                .grid-container {
+                display: grid;
+                justify-content: center;
+                align-content: center;
+                grid-template-columns: auto auto auto;
+                gap: 1.5rem;
+                }
+                .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                }
+
+                .card {
+                border-radius: 25px;
+                border: 1px solid #e0e0e0;
+                padding: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                display: flex;
+                align-items: center;
+
+                /* Align the content to the center */
+                }
+
+                .card-body {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+
+                .card-left {
+                flex: 1;
+                text-align: left;
+                }
+
+                .card-right {
+                flex: 2;
+                text-align: left;
+                margin-left: 15px;
+                }
+
+                .card-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .btn-primary {
+                background-color: #00c4cc;
+                border-color: #00c4cc;
+                }
+
+                .btn-link {
+                color: #00c4cc;
+                }
+
+                .rounded-circle {
+                border-radius: 50%;
+                }
+
+                .row {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                }
+
+                .col-md-6 {
+                max-width: 50%;
+                padding: 10px;
+                box-sizing: border-box;
+                }
+
+                .back-button {
+                margin-top: 20px;
+                background-color: #f5f5f5;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                }
+
+                .back-button:hover {
+                background-color: #ddd;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <!--                                    <button class="back-button" onclick="window.location.href='/'">Back</button>-->
+                <script>
+                    var selectedCategoryId = null;
+
+                    function setCategoryId(element) {
+                    console.log("sssssssssssssssssssss ",element.id);
+
+                    selectedCategoryId = element.value;
+                    console.log("Selected Category ID: ", selectedCategoryId);
+
+                    }
+                </script>
+
+                <div class="container">
+                    <div>
+                        <div class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
+                            <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto w-100">
+                                <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible justify-content-center">
+                                    <t t-foreach="categories" t-as="c">
+                                        <li style="margin-right: 15px;"
+                                        >
+                                            <input type="radio"
+                                                   t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                                   class="btn-check pe-none parent-category"
+                                                   t-att-id="c.id"
+
+                                                   t-att-value="c.id"/>
+                                            <div class="back-button">
+
+
+                                                <a
+                                                        onclick="setCategoryId(this)"
+                                                        t-attf-href="/teacher_profile/cat/#{c.id}?{{ keep_query() }}"
+                                                        t-att-id="c.id">
+                                                    <div
+                                                            t-att-alt="c.name "/>
+                                                    <span t-field="c.name"/>
+                                                </a>
+
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </t>
+        </template>
+        <template id="voca_studio_module.teacher_profile_card_with_category">
+            <style>
+                .grid-container {
+                display: grid;
+                justify-content: center;
+                align-content: center;
+                grid-template-columns: auto auto auto;
+                gap: 1.5rem;
+                }
+                .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                }
+
+                .card {
+                border-radius: 25px;
+                border: 1px solid #e0e0e0;
+                padding: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                display: flex;
+                align-items: center;
+
+                /* Align the content to the center */
+                }
+
+                .card-body {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+
+                .card-left {
+                flex: 1;
+                text-align: left;
+                }
+
+                .card-right {
+                flex: 2;
+                text-align: left;
+                margin-left: 15px;
+                }
+
+                .card-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .btn-primary {
+                background-color: #00c4cc;
+                border-color: #00c4cc;
+                }
+
+                .btn-link {
+                color: #00c4cc;
+                }
+
+                .rounded-circle {
+                border-radius: 50%;
+                }
+
+                .row {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                }
+
+                .col-md-6 {
+                max-width: 50%;
+                padding: 10px;
+                box-sizing: border-box;
+                }
+
+                .back-button {
+                margin-top: 20px;
+                background-color: #f5f5f5;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                }
+
+                .back-button:hover {
+                background-color: #ddd;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <div class="grid-container">
+                        <t t-foreach="teachers" t-as="teacher" t-key="teacher.id">
+                            <div>
+                                <div class="card" style="height:335px;border-radius: 25px;">
+                                    <div class="card-body">
+                                        <!-- Left Section for Profile Image -->
+                                        <div class="card-left">
+                                            <img class="rounded-circle"
+                                                 t-attf-src="data:image/*;base64,{{teacher.image_1920}}"
+                                                 alt="Teacher Image"
+                                                 width="100" height="100"/>
+                                        </div>
+                                        <!-- Right Section for Name, Experience, and Details -->
+                                        <div class="card-right">
+                                            <h4 class="card-title">
+                                                <span t-field="teacher.instructor.name"/>
+                                            </h4>
+                                            <p class="card-text">
+                                                <span t-field="teacher.experience"/>
+                                            </p>
+                                            <div class="center">
+                                                <!-- Tags -->
+                                                <div style="display:flex">
+                                                    <t t-foreach="teacher.tag_ids" t-as="tag">
+                                                        <div class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
+                                                            <span class="badge o_wslides_channel_tag o_tag_color_3"
+                                                                  t-field="tag.name"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <!-- Short Bio -->
+                                                <p>
+                                                    <span t-field="teacher.about"/>
+                                                </p>
+
+
+                                                <!--                                                Book Lessons Button-->
+                                                <!--                                                <a href="/teacher_profile/#{teacher.id}" class="btn btn-primary">Book-->
+                                                <!--                                                    lessons-->
+                                                <!--                                                </a>-->
+                                                <a t-attf-href="/teacher_profile/#{teacher.id}?{{ keep_query() }}">See
+                                                    Full Profile
+                                                </a>
+                                                <!--                                                <button class="back-button"-->
+                                                <!--                                                        onclick="window.location.href='/online-appointment'">Book-->
+                                                <!--                                                    lessons-->
+                                                <!--                                                </button>-->
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+            </t>
+        </template>
+        <template id="voca_studio_module.teacher_profile_template" name="Teacher Full Profile">
+            <style>
+                .lesson-packages {
+                font-family: Arial, sans-serif;
+                }
+
+                .lesson-packages .package-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .lesson-packages .discount {
+                color: red;
+                font-weight: bold;
+                }
+
+                .lesson-packages .strikethrough {
+                text-decoration: line-through;
+                color: #888;
+                margin-left: 5px;
+                }
+
+                .lesson-packages .price {
+                font-weight: bold;
+                color: #000;
+                }
+
+                .lesson-packages td {
+                padding: 8px 16px;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+                    <t t-foreach="teacher" t-as="teacher">
+                        <div class="profile-header text-center">
+
+                            <img class="rounded-circle mb-3" t-attf-src="data:image/*;base64,{{teacher.image_1920}}"
+                                 alt="Teacher Image" width="150" height="150"/>
+                            <h2>
+                                <span t-field="teacher.instructor.name"/>
+                            </h2>
+                            <h5>
+                                <!--                        <span t-field="teacher.instructor.job_position"/>-->
+                            </h5>
+                        </div>
+                        <div class="profile-body" style="text-align:center">
+                            <h3>Years of teaching</h3>
+                            <p>
+                                <span t-field="teacher.experience"/>
+                                years of teaching
+                            </p>
+                            <h3>Languages</h3>
+                            <p>
+                                <span t-field="teacher.language"/>
+                            </p>
+                            <h3>Genres</h3>
+                            <p>
+                                <span t-field="teacher.tag_ids"/>
+                            </p>
+                            <h3>About</h3>
+                            <p t-field="teacher.about"/>
+                            <h3>What you will Learn</h3>
+                            <p t-field="teacher.learning_bio"/>
+                        </div>
+                        <div class="lesson-packages" style="text-align:center">
+                            <h4>Lessons packages</h4>
+                            <table style="display:inline-flex;
+">
+                                <tbody>
+                                    <t t-foreach="teacher.packaging_ids" t-as="package">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="package.name"/>
+                                            </td>
+                                            <td class="price">
+                                                <t t-esc="package.price"/>
+                                            </td>
+                                            <td class="price">
+                                                <t t-esc="package.package_time"/>
+                                            </td>
+                                            <td class="price">
+                                                <a t-attf-href="/online-booking/package/#{teacher.id}/#{package.id}?{{ keep_query() }}"
+                                                   class="btn btn-primary">
+                                                    Book Now
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <!-- Package 1 (No Discount) -->
+
+                                    <!-- Package 2 (With Discount) -->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>4 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">5% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 136</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 129</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
+
+                                    <!--                                    </tr>-->
+                                    <!--                                    &lt;!&ndash; Package 3 (With Discount) &ndash;&gt;-->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>8 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">10% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 272</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 245</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
+
+                                    <!--                                    </tr>-->
+                                    <!--                                    &lt;!&ndash; Package 4 (With Discount) &ndash;&gt;-->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td>12 lessons</td>-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="discount">15% off</td>&ndash;&gt;-->
+                                    <!--                                        &lt;!&ndash;                                        <td class="strikethrough">USD 408</td>&ndash;&gt;-->
+                                    <!--                                        <td class="price">USD 347</td>-->
+                                    <!--                                        <td class="price">-->
+                                    <!--                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"-->
+                                    <!--                                               class="btn btn-primary">-->
+                                    <!--                                                Book Now-->
+                                    <!--                                            </a>-->
+                                    <!--                                        </td>-->
+
+                                    <!--                                    </tr>-->
+
+                                </tbody>
+
+                            </table>
+                            <!--                            <div>-->
+                            <!--                                <a href="#" onclick="window.location.href='/online-appointment'"-->
+                            <!--                                   class="btn btn-secondary">-->
+                            <!--                                    Book Lessons-->
+                            <!--                                </a>-->
+
+
+                            <!--                            </div>-->
+                        </div>
+
+                        <t t-foreach="videos" t-as="video">
+                            <div class="col-md-4">
+                                <div class="video-container">
+                                    <video width="320" height="240" style="display: none;">
+                                        <source t-att-src="'/web/content/' + str(video.id) + '?download=true'"
+                                                type="video/mp4"/>
+                                    </video>
+                                    <p class="text-center">Click to play the video</p>
+                                </div>
+                                <!--                                <p t-field="video.name"/>-->
+                            </div>
+                        </t>
+                    </t>
+
+                </div>
+            </t>
+
+            <script type="text/javascript">
+                function playVideo(videoContainer) {
+                var video = videoContainer.querySelector('video');
+                video.style.display = 'block';
+                videoContainer.querySelector('p').style.display = 'none';
+                video.play();
+                }
+            </script>
+        </template>
+        <template id="voca_studio_module.available_days_list">
+            <style>
+                /* Style for the list */
+                .available-days-list {
+                list-style-type: none;
+                padding: 0;
+                }
+
+                .available-days-list li {
+                padding: 10px;
+                margin-bottom: 5px;
+                background-color: #f8f9fa; /* Light background for list items */
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                }
+
+                .available-days-list li:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                }
+            </style>
+            <div class="container">
+                <h3>Available Days</h3>
+                <ul class="available-days-list">
+                    <!-- Loop through available days -->
+
+                    <li>
+                        Sunday <!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Mnon <!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Tue<!-- Display the day name or date -->
+                    </li>
+                    <li>
+                        Wed <!-- Display the day name or date -->
+                    </li>
+                    <!--                    <t t-foreach="available_days" t-as="day">-->
+                    <!--                        <li>-->
+                    <!--                            <span t-esc="day"/> &lt;!&ndash; Display the day name or date &ndash;&gt;-->
+                    <!--                        </li>-->
+                    <!--                    </t>-->
+                </ul>
+            </div>
+        </template>
+        <template id="voca_studio_module.available_days_list_with_times">
+            <style>
+                /* Style for the list */
+                .available-days-list {
+                list-style-type: none; /* Remove default bullet points */
+                padding: 0;
+                }
+
+                .available-days-list .day-item {
+                padding: 10px;
+                margin-bottom: 5px;
+                background-color: #f8f9fa; /* Light background for list items */
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                cursor: pointer;
+                }
+
+                .available-days-list .day-item:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                }
+
+                /* Hide available times initially */
+                .available-times {
+                display: none;
+                margin-top: 10px;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 10px;
+                border-radius: 5px;
+                }
+
+                /* Show available times when the div is clicked */
+                .available-times.show {
+                display: block;
+                }
+
+                /* Style for selected time */
+                .available-times ul li.selected {
+                background-color: #007bff; /* Blue background for selected time */
+                color: white; /* White text for selected time */
+                cursor: pointer;
+                }
+
+                .available-times ul li:hover {
+                background-color: #e9ecef; /* Slightly darker on hover */
+                cursor: pointer;
+                }
+
+                /* Disabled day item */
+                .day-item.disabled {
+                pointer-events: none;
+                opacity: 0.6; /* Make disabled days look faded */
+                }
+
+                /* Disabled time slot */
+                .available-times ul li.disabled {
+                pointer-events: none;
+                opacity: 0.6; /* Make disabled time slots look faded */
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <h3>Available Days and Times</h3>
+                    <ul class="available-days-list">
+
+                        <!-- JavaScript function to handle clicks -->
+                        <script>
+                            function toggleTimes(event) {
+                            const selectedDay = event.currentTarget;
+                            const timesDiv = selectedDay.querySelector('.available-times');
+                            timesDiv.classList.toggle('show'); // Toggle available times
+                            }
+
+                            function selectTime(event) {
+                            const selectedTime = event.currentTarget;
+                            const timeSlots = selectedTime.parentElement.querySelectorAll('li');
+
+                            // Deselect all other time slots within the same day
+                            timeSlots.forEach(time => {
+                            time.classList.remove('selected');
+                            time.classList.add('disabled'); // Disable all other time slots
+                            });
+
+                            // Toggle 'selected' class on the clicked time slot and enable it
+                            selectedTime.classList.add('selected');
+                            selectedTime.classList.remove('disabled');
+
+                            // Disable other days when a time is selected
+                            const allDays = document.querySelectorAll('.day-item');
+                            allDays.forEach(day => {
+                            if (!day.contains(selectedTime)) {
+                            day.classList.add('disabled');
+                            }
+                            });
+                            }
+
+                            // Optional: To allow unselecting the time slot
+                            function toggleSelectTime(event) {
+                            const selectedTime = event.currentTarget;
+
+                            // If time is already selected, allow unselecting it
+                            if (selectedTime.classList.contains('selected')) {
+                            selectedTime.classList.remove('selected');
+
+                            // Re-enable all time slots for the current day
+                            const timeSlots = selectedTime.parentElement.querySelectorAll('li');
+                            timeSlots.forEach(time => {
+                            time.classList.remove('disabled');
+                            });
+
+                            // Re-enable all day items
+                            const allDays = document.querySelectorAll('.day-item');
+                            allDays.forEach(day => {
+                            day.classList.remove('disabled');
+                            });
+                            } else {
+                            selectTime(event); // Select the time if it's not already selected
+                            }
+                            }
+                        </script>
+
+                        <!-- Day 1 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Sun <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">3:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">4:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">5:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Day 2 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Monday <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">6:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">7:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">8:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Day 3 -->
+                        <div class="day-item" onclick="toggleTimes(event)">
+                            Tuesday <!-- Display the day name -->
+                            <div class="available-times">
+                                <ul>
+                                    <li onclick="toggleSelectTime(event)">10:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">11:00pm</li>
+                                    <li onclick="toggleSelectTime(event)">12:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </ul>
+
+                    <div class="booking-schedule">
+                        <h2>Available Booking Times for
+                            <t t-esc="teacher.name"/>
+                        </h2>
+                        <div t-if="bookings_by_day">
+                            <ul>
+                                <t t-foreach="bookings_by_day.items()" t-as="day_time">
+                                    <li>
+                                        <strong>Day:
+                                            <t t-esc="day_time[0]"/>
+                                        </strong>
+                                        <ul>
+                                            <t t-foreach="day_time[1]" t-as="time">
+                                                <li>Time:
+                                                    <t t-esc="time"/>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                        <div t-else="">
+                            <p>No available booking times.</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="voca_studio_module.add_available_date">
+            <t t-call="portal.portal_layout">
+                <t t-set="additional_title">Contact Details</t>
+                <div class="book_show" style="margin-block:auto;">
+                    <form class="form-control" action="/teacher/add_date" method="post">
+                        <div style="text-align: center;">
+                            <h3>Add Time</h3>
+                        </div>
+                        <input type="hidden" name="date_time_dict"/>
+
+                        <div id="date_slots_container">
+                            <!-- Initial Date and Time Slot Section -->
+                            <div class="date-slot-group" style="margin-bottom: 10px;">
+                                <table>
+                                    <tr>
+                                        <th>Date:</th>
+                                        <td>
+                                            <input id="choose_date"
+                                                   name="show_date[]"
+                                                   class="form-control"
+                                                   type="datetime-local"
+                                                   required="1"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- Remove button for additional date-slot groups -->
+                                <button type="button" class="btn btn-danger remove-date-slot" style="display: none;">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Button to Add More Dates and Slots -->
+                        <div style="text-align: center; margin-top: 10px;">
+                            <button type="button" class="btn btn-secondary" id="add_date_slot">+ Add More</button>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary" style="width:-webkit-fill-available;">
+                                Add time
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </t>
+
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                // Get the Add button and container for date slots
+                const addButton = document.getElementById('add_date_slot');
+                const dateSlotsContainer = document.getElementById('date_slots_container');
+
+                // Function to clone and add new date-slot fields
+                addButton.addEventListener('click', function() {
+                // Clone the first date-slot-group
+                const newDateSlot = document.querySelector('.date-slot-group').cloneNode(true);
+
+                // Clear the input field for the new cloned date-slot group
+                const dateInput = newDateSlot.querySelector('input[type="datetime-local"]');
+                dateInput.value = ''; // Clear date
+
+                // Show the remove button for cloned slots
+                const removeButton = newDateSlot.querySelector('.remove-date-slot');
+                removeButton.style.display = 'block';
+
+                // Add event listener to the remove button
+                removeButton.addEventListener('click', function() {
+                newDateSlot.remove(); // Remove the cloned date-slot-group
+                });
+
+                // Append the cloned date-slot-group to the container
+                dateSlotsContainer.appendChild(newDateSlot);
+                });
+                });
+            </script>
+        </template>
+        <template id="voca_studio_module.master_class_cat">
+            <t t-call="portal.portal_layout">
+                <script>
+                    var selectedCategoryId = null;
+                    function setCategoryId(element) {
+                    selectedCategoryId = element.value;
+                    console.log("Selected Category ID: ", selectedCategoryId);
+
+                    }
+                </script>
+
+                <div class="container">
+
+                    <div>
+                        <div class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
+                            <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto w-100">
+                                <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible justify-content-evenly">
+                                    <t t-foreach="categories" t-as="c">
+                                        <li style="margin-right: 15px;">
+                                            <input type="radio"
+                                                   t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                                   class="btn-check pe-none parent-category" t-att-id="c.id"
+                                                   t-att-value="c.id"/>
+                                            <div class="back-button text-center d-flex flex-column align-items-center">
+                                                <a onclick="setCategoryId(this)"
+                                                   t-attf-href="/master_class/cat/#{c.id}?{{ keep_query() }}"
+                                                   t-att-id="c.id">
+                                                    <img t-att-src="'/web/image/master.classes.categories/%d/image_1920' % c.id"
+                                                         alt="Category Image"
+                                                         style="width:100px; height: 100px; border-radius: 50%;"
+                                                         class="img-fluid mb-2"/>
+                                                </a>
+                                                <a onclick="setCategoryId(this)"
+                                                   t-attf-href="/master_class/cat/#{c.id}?{{ keep_query() }}"
+                                                   t-att-id="c.id">
+                                                    <span class="text-center" t-field="c.name"
+                                                          style="margin-top: 10px;"/>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </t>
+        </template>
+        <template id="voca_studio_module.master_class_card_with_category">
+            <link rel="stylesheet" href="/voca_studio_module/static/src/css/portal_form.css"/>
+
+
+            <t t-call="portal.portal_layout">
+                <div class="container" style="padding-bottom:10px">
+                    <div class="grid-container">
+                        <t t-foreach="master" t-as="master" t-key="master.id">
+                            <div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-right text-center">
+                                            <img class="rounded-circle"
+                                                 t-attf-src="data:image/*;base64,{{master.image_1920}}"
+                                                 alt="Master Image" width="100" height="100"/>
+
+                                            <h4 class="card-title">
+                                                <span t-field="master.instructor.name"/>
+                                            </h4>
+
+                                            <div class="center text-center">
+                                                <!-- Tags -->
+
+                                                <!-- Short Bio -->
+
+                                                <span class="text-center" t-field="master.time"/>
+                                                <span class="text-center" t-field="master.total_hours"/>
+                                                <span class="text-center" t-field="master.lectures"/>
+
+
+                                                Full Profile Button
+                                                <a class="text-center"
+                                                   t-attf-href="/master_profile/#{master.id}?{{ keep_query() }}">See
+                                                    Full Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+
+            </t>
+        </template>
+
+
+        <template id="voca_studio_module.master_profile_template" name="Master Full Profile">
+            <style>
+                .lesson-packages {
+                font-family: Arial, sans-serif;
+                }
+
+                .lesson-packages .package-title {
+                font-weight: bold;
+                font-size: 1.2rem;
+                }
+
+                .lesson-packages .discount {
+                color: red;
+                font-weight: bold;
+                }
+
+                .lesson-packages .strikethrough {
+                text-decoration: line-through;
+                color: #888;
+                margin-left: 5px;
+                }
+
+                .lesson-packages .price {
+                font-weight: bold;
+                color: #000;
+                }
+
+                .lesson-packages td {
+                padding: 8px 16px;
+                }
+            </style>
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <a href="#" onclick="window.history.back()" class="btn btn-secondary">Back</a>
+                    <t t-foreach="masters" t-as="master">
+                        <div class="profile-header text-center">
+
+                            <img class="rounded-circle mb-3" t-attf-src="data:image/*;base64,{{master.image_1920}}"
+                                 alt="Teacher Image" width="150" height="150"/>
+                            <h2>
+                                <span t-field="master.instructor.name"/>
+                            </h2>
+                            <h5>
+                                <!--                        <span t-field="master.instructor.job_position"/>-->
+                            </h5>
+                        </div>
+                        <div class="profile-body" style="text-align:center">
+                            <h3>Time</h3>
+                            <p>
+                                <span t-field="master.time"/>
+
+                            </p>
+                            <h3>Total Hours </h3>
+                            <p>
+                                <span t-field="master.total_hours"/>
+                            </p>
+                            <h3>Lectures</h3>
+                            <p>
+                                <span t-field="master.lectures"/>
+                            </p>
+
+                              <h3>Description</h3>
+                            <p>
+                                <span t-field="master.description"/>
+                            </p>
+
+                             <a t-attf-href="/booking/master/#{master.id}?{{ keep_query() }}"
+                                                   class="btn btn-primary">
+                                                    Book Now
+                                                </a>
+
+                        </div>
+<!--                        <div class="lesson-packages" style="text-align:center">-->
+<!--                            <h4>Lessons packages</h4>-->
+<!--                            <table style="display:inline-flex;-->
+<!--">-->
+<!--                                <tbody>-->
+<!--                                    <t t-foreach="teacher.packaging_ids" t-as="package">-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <t t-esc="package.name"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <t t-esc="package.price"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <t t-esc="package.package_time"/>-->
+<!--                                            </td>-->
+<!--                                            <td class="price">-->
+<!--                                                <a t-attf-href="/online-booking/package/#{teacher.id}/#{package.id}?{{ keep_query() }}"-->
+<!--                                                   class="btn btn-primary">-->
+<!--                                                    Book Now-->
+<!--                                                </a>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                    &lt;!&ndash; Package 1 (No Discount) &ndash;&gt;-->
+
+<!--                                    &lt;!&ndash; Package 2 (With Discount) &ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>4 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">5% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 136</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 129</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    &lt;!&ndash; Package 3 (With Discount) &ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>8 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">10% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 272</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 245</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    &lt;!&ndash; Package 4 (With Discount) &ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                    <tr>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td>12 lessons</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="discount">15% off</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        &lt;!&ndash;                                        <td class="strikethrough">USD 408</td>&ndash;&gt;&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">USD 347</td>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        <td class="price">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            <a t-attf-href="/online-booking/#{teacher.id}?{{ keep_query() }}"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                               class="btn btn-primary">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                                Book Now&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                            </a>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                        </td>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                                    </tr>&ndash;&gt;-->
+
+<!--                                </tbody>-->
+
+<!--                            </table>-->
+<!--                            &lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <a href="#" onclick="window.location.href='/online-appointment'"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   class="btn btn-secondary">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                    Book Lessons&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                </a>&ndash;&gt;-->
+
+
+<!--                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                        </div>-->
+
+                    </t>
+
+                </div>
+            </t>
+
+        </template>
+
+
+    </data>
+</odoo>
